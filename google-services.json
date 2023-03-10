@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "593723067966",
+    "project_id": "rideshare-e63db",
+    "storage_bucket": "rideshare-e63db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593723067966:android:3498f194d665efa1544b6f",
+        "android_client_info": {
+          "package_name": "com.moiz210.cabApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593723067966-ori66ufo4a4g0j02hhgc41prn4d5air1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC98s6-3pz4nbDimZMDqiQxMl2AgIufKiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593723067966-ori66ufo4a4g0j02hhgc41prn4d5air1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "593723067966-fop22l4k6cce5uqg4auucoi39ikrh6ck.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "come.brutech.rideshare"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
