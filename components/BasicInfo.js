@@ -1,10 +1,47 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Image, TouchableHighlight, View,Text,StyleSheet,Dimensions,Pressable } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import Logo from "../assets/person-icon-5.png"
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set } from "firebase/database";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
+	authDomain: "rideshare2-f8d19.firebaseapp.com",
+	projectId: "rideshare2-f8d19",
+	storageBucket: "rideshare2-f8d19.appspot.com",
+	messagingSenderId: "255084167707",
+	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
+	measurementId: "G-Q18F5FLBH2",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 const BasicInfo = (props) => {
     const { navigation, route } = props;
+	const [Name, setName] = useState("");
+	const [Email, setEmail] = useState("");
+	const [DOB, setDOB] = useState("");
+	 const handleChangeName = (name) => {
+			setName(name);
+		};
+		const handleChangeEmail = (email) => {
+			setEmail(email);
+		};
+		const handleChangeGender = (DOB) => {
+			setDOB(DOB);
+		};
+		const Submit = () => {
+			const db = getDatabase();
+			set(ref(db, "Drivers/" + "BasicInfo/"+Email), {
+				Fullname: Name,
+				Email: Email,
+				DOB: DOB,
+				
+			});
+		};
+	
   return (
 		<View
 			style={{
@@ -36,7 +73,7 @@ const BasicInfo = (props) => {
 						style={{
 							marginTop: 10,
 							paddingTop: 10,
-							borderColor: "#fcc200",
+							borderColor: "#2153CC",
 							borderRadius: 40,
 							borderWidth: 1,
 							paddingBottom: 10,
@@ -62,6 +99,8 @@ const BasicInfo = (props) => {
 				style={styles.input}
 				label="Enter Tour Name"
 				placeholder="Ahmed Ali"
+				onChangeText={handleChangeName}
+				value={Name}
 			/>
 			<Text
 				style={{
@@ -78,6 +117,8 @@ const BasicInfo = (props) => {
 				style={styles.input}
 				label="Enter your DOB"
 				placeholder="Enter your DOB"
+				onChangeText={handleChangeGender}
+				value={DOB}
 			/>
 			<Text
 				style={{
@@ -94,10 +135,19 @@ const BasicInfo = (props) => {
 				style={styles.input}
 				label="Enter your Email"
 				placeholder="Enter your Email"
+				onChangeText={handleChangeEmail}
+				value={Email}
 			/>
 			<Pressable
 				onPress={() => {
-					navigation.replace("DriverReg");
+					// navigation.replace("Dashboard");
+					try {
+						Submit();
+						//  navigation.replace("Dashboard");
+						navigation.navigate("DriverReg");
+					} catch (error) {
+						console.log(error);
+					}
 				}}
 			>
 				<Text style={styles.button}>Next</Text>
@@ -120,7 +170,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#2153CC",
 		color: "white",
 		padding: 15,
 		shadowColor: "#000",

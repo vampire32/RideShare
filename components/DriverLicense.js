@@ -63,7 +63,7 @@ const DriverLicense = () => {
 					<View style>
 						<Text
 							style={{
-								borderColor: "#fcc200",
+								borderColor: "#2153CC",
 								borderRadius: 40,
 								borderWidth: 1,
 								width: "30%",
@@ -98,7 +98,7 @@ const DriverLicense = () => {
 					<View style>
 						<Text
 							style={{
-								borderColor: "#fcc200",
+								borderColor: "#2153CC",
 								borderRadius: 40,
 								borderWidth: 1,
 								width: "30%",
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: android.width,
 		height: android.height,
-		backgroundColor: "#fff",
+		backgroundColor: "#2153CC",
 	},
 	Text: {
 		color: "#ffff",
@@ -136,8 +136,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
-		color: "white",
+		backgroundColor: "#ffff",
+		color: "#2153CC",
 		padding: 15,
 		shadowColor: "#000",
 		shadowOffset: {

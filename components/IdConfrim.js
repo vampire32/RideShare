@@ -12,6 +12,7 @@ const IdConfrim = (props) => {
 					textAlign: "center",
 					fontSize: 28,
 					fontWeight: "bold",
+					color: "#2153CC",
 				}}
 			>
 				ID Confirmation
@@ -33,20 +34,28 @@ const IdConfrim = (props) => {
 						marginTop: 10,
 						marginBottom: 20,
 						fontSize: 16,
-						borderColor: "#fcc200",
+						borderColor: "#2153CC",
 						borderRadius: 40,
 						borderWidth: 1,
 						paddingBottom: 10,
 						paddingLeft: 20,
 						paddingRight: 20,
 						paddingTop: 10,
+						color: "#2153CC",
 					}}
 				>
 					Add Photo
 				</Text>
 			</View>
 
-			<Text style={{ textAlign: "justify", fontSize: 16, lineHeight: 30 }}>
+			<Text
+				style={{
+					textAlign: "justify",
+					fontSize: 16,
+					lineHeight: 30,
+					color: "#2153CC",
+				}}
+			>
 				Bring the drivers license in front of you and take a photo as an example
 				{"\n"}
 				The Photo should clearly show the face and your driver license The Photo
@@ -80,7 +89,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#2153CC",
 		color: "white",
 		padding: 15,
 		shadowColor: "#000",

@@ -26,6 +26,7 @@ import FindingCustomers from "./FindingCustomers";
 import CheckingSeats from "./CheckingSeats";
 import CustomerRoute from "./CustomerRoute";
 import ThankYouRIde from "./ThankYouRIde";
+import ChatScreen from "./ChatScreen";
 const Stack = createNativeStackNavigator();
 
 const MainStackNavigator = () => {
@@ -50,7 +51,13 @@ const MainStackNavigator = () => {
 			<Stack.Screen
 				name="UserRegistration"
 				component={UserRegistration}
-				options={{ headerShown: false }}
+				options={{
+					headerShown: true,
+					headerBackVisible: false,
+					title: "Create Account",
+					headerTitleAlign: "center",
+					headerTintColor: "#2153CC",
+				}}
 			/>
 			<Stack.Screen
 				name="Dashboard"
@@ -140,6 +147,11 @@ const MainStackNavigator = () => {
 			<Stack.Screen
 				name="ThankYouRIde"
 				component={ThankYouRIde}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="ChatScreen"
+				component={ChatScreen}
 				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>

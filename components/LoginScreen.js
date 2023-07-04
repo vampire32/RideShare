@@ -1,22 +1,22 @@
 import React, { useState,useRef } from 'react';
-import { StyleSheet, View, Image, ImageBackground, Text,TextInput,Button,Dimensions,TouchableHighlight } from "react-native";
+import { StyleSheet, View, Image, ImageBackground, Text,TextInput,Button,Dimensions,TouchableHighlight,Pressable } from "react-native";
 import auth from '@react-native-firebase/auth';
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import bg from "../assets/images/bg.png";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/loginbg.png";
 import PhoneInput from "react-native-phone-number-input";
 try {
 	firebase.initializeApp({
-		apiKey: "AIzaSyApXe3W_5MsAs4kbP6PLVDNQSzoMSEiS1k",
-		authDomain: "rideshare-e63db.firebaseapp.com",
-		projectId: "rideshare-e63db",
-		storageBucket: "rideshare-e63db.appspot.com",
-		messagingSenderId: "593723067966",
-		appId: "1:593723067966:web:8e82734b96f6265c544b6f",
-		measurementId: "G-L1KLQTD7C1",
+		apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
+		authDomain: "rideshare2-f8d19.firebaseapp.com",
+		projectId: "rideshare2-f8d19",
+		storageBucket: "rideshare2-f8d19.appspot.com",
+		messagingSenderId: "255084167707",
+		appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
+		measurementId: "G-Q18F5FLBH2",
 	});
 } catch (err) {
 	// ignore app already initialized error in snack
@@ -47,98 +47,91 @@ const phoneInput = useRef(null);
 	return (
 		<>
 			<View style={styles.container}>
-				<ImageBackground source={bg} resizeMode="cover">
-					<View style={styles.container}>
-						<Text style={styles.welcomeTo}>Welcome To</Text>
-						<View
-							style={{
-								backgroundColor: "#043F96",
-								borderRadius: 90,
-								marginTop: 20,
-							}}
-						>
-							<Image source={Logo} style={{ width: 150, height: 150 }}></Image>
-						</View>
+				<Image
+					source={Logo}
+					style={{ width: 300, height: 300, marginTop: 20 }}
+				></Image>
 
-						<FirebaseRecaptchaVerifierModal
-							ref={recaptchaVerifier}
-							firebaseConfig={firebaseConfig}
-						/>
-						<View
-							style={{
-								flex: 1,
-								backgroundColor: "#043F96",
-								width: android.width,
-								borderTopLeftRadius: 30,
-								borderTopRightRadius: 30,
-								marginTop: 100,
-							}}
-						>
-							<Text
-								style={{
-									marginTop: 40,
-									marginLeft: 10,
-									marginBottom: 10,
-									color: "#ffff",
-									fontSize: 18,
-									fontWeight: "bold",
-								}}
-							>
-								Enter phone number
+				<FirebaseRecaptchaVerifierModal
+					ref={recaptchaVerifier}
+					firebaseConfig={firebaseConfig}
+				/>
+				<View
+					style={{
+						flex: 1,
+						backgroundColor: "#2153CC",
+						width: android.width,
+						borderTopLeftRadius: 30,
+						borderTopRightRadius: 30,
+						marginTop: 50,
+					}}
+				>
+					<Text
+						style={{
+							marginTop: 40,
+							marginLeft: 10,
+							marginBottom: 10,
+							color: "#ffff",
+							fontSize: 18,
+							fontWeight: "bold",
+						}}
+					>
+						Enter phone number
+					</Text>
+					<PhoneInput
+						containerStyle={{
+							width: android.width,
+							borderRadius: 90,
+						}}
+						textContainerStyle={{ borderRadius: 90 }}
+						ref={phoneInput}
+						defaultValue={phoneNumber}
+						defaultCode="PK"
+						layout="first"
+						withShadow
+						autoFocus
+						onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
+						onChangeFormattedText={(text) => {
+							setPhoneNumber(text);
+						}}
+					/>
+
+					<Pressable
+						onPress={async () => {
+							// The FirebaseRecaptchaVerifierModal ref implements the
+							// FirebaseAuthApplicationVerifier interface and can be
+							// passed directly to `verifyPhoneNumber`.
+							try {
+								const phoneProvider = new firebase.auth.PhoneAuthProvider();
+								await phoneProvider
+									.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current)
+									.then(setVerificationId);
+								//   console.log(verificationId)
+
+								//   props.navigation.navigate("Account", {
+								// 		screen: "Profile",
+								// 		params: { Phone: phoneNumber },
+								// 	});
+
+								props.navigation.navigate("Verification", {
+									verificationId: verificationId,
+									Phone: phoneNumber,
+								});
+							} catch (err) {
+								showMessage({
+									text: `Error: ${err.message}`,
+									color: "red",
+								});
+							}
+						}}
+					>
+						<View style={styles.button}>
+							<Text style={{ color: "#2153CC", fontWeight: "bold" }}>
+								Get OTP
 							</Text>
-							<PhoneInput
-								containerStyle={{
-									width: android.width,
-									borderRadius: 90,
-                  
-								}}
-								textContainerStyle={{ borderRadius: 90 }}
-								ref={phoneInput}
-								defaultValue={phoneNumber}
-								defaultCode="PK"
-								layout="first"
-								withShadow
-								autoFocus
-								onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
-								onChangeFormattedText={(text) => {
-									setPhoneNumber(text);
-								}}
-							/>
-							<TouchableHighlight
-								onPress={async () => {
-									// The FirebaseRecaptchaVerifierModal ref implements the
-									// FirebaseAuthApplicationVerifier interface and can be
-									// passed directly to `verifyPhoneNumber`.
-									try {
-										const phoneProvider = new firebase.auth.PhoneAuthProvider();
-										await phoneProvider
-											.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current)
-											.then(setVerificationId);
-                      console.log(verificationId)
-                      	
-										 props.navigation.navigate("Verification",{verificationId:verificationId});
-                    
-									
-									} 
-                 
-                  catch (err) {
-										showMessage({
-											text: `Error: ${err.message}`,
-											color: "red",
-										});
-									}
-                  
-								}}
-							>
-								<View style={styles.button}>
-									<Text style={{ color: "white", fontWeight: "bold" }}>
-										Get OTP
-									</Text>
-								</View>
-							</TouchableHighlight>
 						</View>
-					</View>
-				</ImageBackground>
+					</Pressable>
+				</View>
 			</View>
 		</>
 	);
@@ -170,8 +163,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
-		color: "white",
+		backgroundColor: "#fff",
+		
 		padding: 15,
 		shadowColor: "#000",
 		shadowOffset: {

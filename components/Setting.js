@@ -7,6 +7,8 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 
 function Profile(props) {
 	const [ModalVisible, setModalVisible] = useState(false);
+		const { navigation, route } = props;
+	
 	return (
 		<View style={styles.container}>
 			<ImageBackground source={bg} resizeMode="cover" style={styles.container}>
@@ -111,7 +113,7 @@ function Profile(props) {
 							fontWeight: "bold",
 						}}
 					>
-						Male
+						male
 					</Text>
 					<Text style={{ padding: 24 }}></Text>
 				</View>

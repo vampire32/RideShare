@@ -17,8 +17,8 @@ const Splash =(props) => {
   
   useEffect(() => {
     setTimeout(() => {
-    //   props.navigation.navigate("Login")
-	  props.navigation.replace("ThankYouRIde");
+      props.navigation.navigate("Login");
+	//   props.navigation.replace("Dashboard");
     }, 3000);
     
   
@@ -29,16 +29,11 @@ const Splash =(props) => {
   
     return (
 			<View style={styles.container}>
-				
-					<View style={styles.image}>
-						<View style={{ flexDirection: "column", alignItems: "center" }}>
-							<Text style={styles.text}>Welcome to</Text>
-							<Image source={BG} style={{ width: 350, height: 350 }} />
-							{/* <Text style={styles.text}>Welcome To</Text>
-							<Text style={styles.text}>Ride Sahre</Text> */}
-						</View>
-					</View>
-				
+				<View style={{ flexDirection: "column", alignItems: "center" }}>
+					<Text style={styles.text}>Welcome to RideShare</Text>
+					<Image source={BG} style={{ width: 300, height: 200 }} />
+					<Text style={styles.text2}>Share with Love !</Text>
+				</View>
 			</View>
 		);
   }
@@ -48,20 +43,27 @@ const Splash =(props) => {
 			flex: 1,
 			with: android.width * 1.2,
 			height: android.height * 1.2,
-			backgroundColor: "#043F96",
-		},
-		image: {
-			flex: 1,
+			backgroundColor: "#2153CC",
 			flexDirection: "column",
 			justifyContent: "center",
-			// backgroundColor: "#1F4690",
-			justifyContent: "center",
 		},
+		// image: {
+		// 	flex: 1,
+
+		// 	// backgroundColor: "#1F4690",
+		// },
 		text: {
 			color: "white",
 			fontSize: 32,
 
 			fontWeight: "bold",
+			textAlign: "center",
+		},
+		text2: {
+			color: "white",
+			fontSize: 22,
+
+			
 			textAlign: "center",
 		},
 		bg: {

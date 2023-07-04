@@ -20,19 +20,13 @@ const Dashboard = () => {
 	return (
 		<View>
 			<Pressable style={styles.floatTopButton} onPress={openDrawer}>
-				<EvilIcons name="navicon" size={30} color="#fff" />
+				<EvilIcons name="navicon" size={30} color="#2153CC" />
 			</Pressable>
 			<View style={styles.map}>
 				<MapVieww />
 			</View>
 			<View style={styles.bottomContainer}>
-				<ImageBackground
-					style={styles.bottomContainer}
-					source={bg}
-					resizeMode="cover"
-				>
-					<HomeSearch />
-				</ImageBackground>
+				<HomeSearch />
 			</View>
 		</View>
 	);
@@ -54,7 +48,7 @@ const styles = StyleSheet.create({
 		left: 20,
 		padding: 10,
 		borderRadius: 50,
-		backgroundColor: "#fcc200",
+		backgroundColor: "#fff",
 		zIndex: 4,
 		justifyContent: "center",
 		alignItems: "center",

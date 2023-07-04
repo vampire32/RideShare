@@ -13,6 +13,7 @@ const DriverReg = (props) => {
 					textAlign: "center",
 					fontSize: 28,
 					fontWeight: "bold",
+					color:"white"
 				}}
 			>
 				Welcome To Driver Mode
@@ -41,7 +42,7 @@ const DriverReg = (props) => {
 							borderColor: "#808080",
 						}}
 					>
-						<Icon name="info" color="#fcc200" size={40} />
+						<Icon name="info" color="#2153CC" size={40} />
 						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
 							Basic Information
 						</Text>
@@ -61,7 +62,7 @@ const DriverReg = (props) => {
 							borderColor: "#808080",
 						}}
 					>
-						<Icon name="drive-eta" color="#fcc200" size={40} />
+						<Icon name="drive-eta" color="#2153CC" size={40} />
 						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
 							Vechlie Information
 						</Text>
@@ -81,7 +82,7 @@ const DriverReg = (props) => {
 							borderColor: "#808080",
 						}}
 					>
-						<Icon name="badge" color="#fcc200" size={40} />
+						<Icon name="badge" color="#2153CC" size={40} />
 						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
 							ID Confirmation
 						</Text>
@@ -101,7 +102,7 @@ const DriverReg = (props) => {
 							borderColor: "#808080",
 						}}
 					>
-						<Icon name="badge" color="#fcc200" size={40} />
+						<Icon name="badge" color="#2153CC" size={40} />
 						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
 							Driver Licence
 						</Text>
@@ -121,7 +122,7 @@ const DriverReg = (props) => {
 							borderColor: "#808080",
 						}}
 					>
-						<Icon name="badge" color="#fcc200" size={40} />
+						<Icon name="badge" color="#2153CC" size={40} />
 						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
 							CNIC
 						</Text>
@@ -141,6 +142,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: android.width,
 		height: android.height * 1.5,
+		backgroundColor: "#2153CC",
 	},
 	Text: {
 		color: "#ffff",
@@ -150,8 +152,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
-		color: "white",
+		backgroundColor: "#fff",
+		color: "#2153CC",
 		padding: 15,
 		shadowColor: "#000",
 		shadowOffset: {
@@ -168,9 +170,9 @@ const styles = StyleSheet.create({
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
 		borderTopRightRadius: 20,
-        textAlign:'center',
-        fontSize:18,
-        fontWeight:'bold',
+		textAlign: "center",
+		fontSize: 18,
+		fontWeight: "bold",
 
 		marginTop: "50%",
 	},

@@ -2,92 +2,91 @@ import React, { Component } from "react";
 import { StyleSheet, View, Image, Text,Button,Dimensions,ImageBackground,TouchableHighlight } from "react-native";
 import Car from '../assets/car.png'
 import bg from "../assets/images/bg.png";
+import MapVieww from "./CurrentLocation";
 
 function SelectSeat(props) {
 	return (
 		<View style={styles.container}>
-			<ImageBackground
-				source={bg}
-				resizeMode="cover"
-				style={{ backgroundColor: "#FFFFFF50" }}
-			>
-				<View style={styles.imageStack}>
-					<Image source={Car} resizeMode="stretch" style={styles.image}></Image>
-				</View>
+			<View style={styles.map}>
+				<MapVieww />
+			</View>
 
-				{/* <Button
+			{/* <Button
 				style={styles.cupertinoButtonPurple}
 			></Button> */}
-				<View
-					style={{
-						backgroundColor: "#043F9695",
-						borderTopStartRadius: 15,
-						borderTopEndRadius: 15,
-						paddingBottom: 300,
+			<View
+				style={{
+					backgroundColor: "#2153CC",
+					borderTopStartRadius: 15,
+					borderTopEndRadius: 15,
+					paddingBottom: 300,
+				}}
+			>
+				<View style={{ flexDirection: "row", marginStart: 5, marginTop: 10 }}>
+					<View
+						style={{ backgroundColor: "blue", padding: 10, width: 10 }}
+					></View>
+					<Text style={{ marginStart: 3, color: "#fff" }}>Male</Text>
+				</View>
+				<View style={{ flexDirection: "row", marginStart: 5 }}>
+					<View
+						style={{ backgroundColor: "pink", padding: 10, width: 10 }}
+					></View>
+					<Text style={{ marginStart: 3, color: "#fff" }}>Female</Text>
+				</View>
+				<View style={{ flexDirection: "row", marginStart: 5 }}>
+					<View
+						style={{ backgroundColor: "yellow", padding: 10, width: 10 }}
+					></View>
+					<Text style={{ marginStart: 3, color: "#fff" }}>Driver</Text>
+				</View>
+				<View style={styles.group2}>
+					<View style={styles.rectRow}>
+						<View style={styles.rect}>
+							<Text style={styles.loremIpsum}>1</Text>
+						</View>
+
+						<View style={styles.rect1}>
+							<Text style={styles.driver}>Driver</Text>
+						</View>
+					</View>
+					<View style={styles.rect2Row}>
+						<View style={styles.rect2}>
+							<Text style={styles.loremIpsum2}>2</Text>
+						</View>
+						<View style={styles.rect3}>
+							<Text style={styles.loremIpsum3}>3</Text>
+						</View>
+						<View style={styles.rect4}>
+							<Text style={styles.loremIpsum4}>4</Text>
+						</View>
+					</View>
+				</View>
+				<TouchableHighlight
+					onPress={() => {
+						props.navigation.replace("RouteScreen");
 					}}
 				>
-					<View style={{ flexDirection: "row", marginStart: 5, marginTop: 10 }}>
-						<View
-							style={{ backgroundColor: "blue", padding: 10, width: 10 }}
-						></View>
-						<Text style={{ marginStart: 3 }}>Male</Text>
+					<View style={styles.button}>
+						<Text style={{ color: "#2153CC", fontWeight: "bold" }}>Done</Text>
 					</View>
-					<View style={{ flexDirection: "row", marginStart: 5 }}>
-						<View
-							style={{ backgroundColor: "pink", padding: 10, width: 10 }}
-						></View>
-						<Text style={{ marginStart: 3 }}>Female</Text>
-					</View>
-					<View style={{ flexDirection: "row", marginStart: 5 }}>
-						<View
-							style={{ backgroundColor: "yellow", padding: 10, width: 10 }}
-						></View>
-						<Text style={{ marginStart: 3 }}>Driver</Text>
-					</View>
-					<View style={styles.group2}>
-						<View style={styles.rectRow}>
-							<View style={styles.rect}>
-								<Text style={styles.loremIpsum}>1</Text>
-							</View>
-
-							<View style={styles.rect1}>
-								<Text style={styles.driver}>Driver</Text>
-							</View>
-						</View>
-						<View style={styles.rect2Row}>
-							<View style={styles.rect2}>
-								<Text style={styles.loremIpsum2}>2</Text>
-							</View>
-							<View style={styles.rect3}>
-								<Text style={styles.loremIpsum3}>3</Text>
-							</View>
-							<View style={styles.rect4}>
-								<Text style={styles.loremIpsum4}>4</Text>
-							</View>
-						</View>
-					</View>
-					<TouchableHighlight
-						onPress={() => {
-							props.navigation.replace("RouteScreen");
-						}}
-					>
-						<View style={styles.button}>
-							<Text style={{ color: "white", fontWeight: "bold" }}>Done</Text>
-						</View>
-					</TouchableHighlight>
-				</View>
-			</ImageBackground>
+				</TouchableHighlight>
+			</View>
 		</View>
 	);
 }
 const android = Dimensions.get("window");
 const styles = StyleSheet.create({
+	map: {
+		height: "42%",
+		// marginBottom: -10,
+	},
 	container: {
 		flex: 1,
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#ffff",
 		color: "white",
 		padding: 15,
 		shadowColor: "#000",

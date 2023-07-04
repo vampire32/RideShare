@@ -4,15 +4,47 @@ import { TextInput } from 'react-native-paper'
 import Logo from "../assets/person-icon-5.png"
 import Icon from '../assets/free-car-icon-1057-thumb.png'
 import Icon2 from '../assets/cer.png'
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set } from "firebase/database";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
+	authDomain: "rideshare2-f8d19.firebaseapp.com",
+	projectId: "rideshare2-f8d19",
+	storageBucket: "rideshare2-f8d19.appspot.com",
+	messagingSenderId: "255084167707",
+	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
+	measurementId: "G-Q18F5FLBH2",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 const VechlieInfo = (props) => {
     const { navigation, route } = props;
+	const [Name, setName] = useState("");
+	const [Plate, setPlate] = useState("");
+	const handleChangeName = (name) => {
+		setName(name);
+	};
+	const handleChangeEmail = (Plate) => {
+		setEmail(Plate);
+	};
+	const Submit = () => {
+		const db = getDatabase();
+		set(ref(db, "Drivers/" + "VechileInfo/" + Name), {
+			Vechilename: Name,
+			Plate: Email,
+			
+		});
+	};
   return (
 		<View
 			style={{
 				backgroundColor: "#fff",
 				width: android.width,
 				height: android.height,
+				color: "#2153CC",
 			}}
 		>
 			<Text
@@ -22,6 +54,7 @@ const VechlieInfo = (props) => {
 					textAlign: "center",
 					fontSize: 28,
 					fontWeight: "bold",
+					color: "#2153CC",
 				}}
 			>
 				Vechlie Information
@@ -33,6 +66,7 @@ const VechlieInfo = (props) => {
 					marginBottom: 5,
 					fontSize: 12,
 					fontWeight: "bold",
+					color: "#2153CC",
 				}}
 			>
 				Vechlie Name and Color
@@ -41,6 +75,8 @@ const VechlieInfo = (props) => {
 				style={styles.input}
 				label="Vechlie Name and Color"
 				placeholder="Vechlie Name and Color"
+				onChangeText={handleChangeName}
+				value={Name}
 			/>
 			<Text
 				style={{
@@ -49,6 +85,7 @@ const VechlieInfo = (props) => {
 					fontSize: 12,
 					fontWeight: "bold",
 					marginTop: 10,
+					color: "#2153CC",
 				}}
 			>
 				Number Plate
@@ -57,6 +94,8 @@ const VechlieInfo = (props) => {
 				style={styles.input}
 				label="Enter your Number Plate"
 				placeholder="Enter your Number Plate"
+				onChangeText={handleChangeEmail}
+				value={Plate}
 			/>
 			<Text
 				style={{
@@ -65,6 +104,7 @@ const VechlieInfo = (props) => {
 					fontSize: 12,
 					fontWeight: "bold",
 					marginTop: 10,
+					color: "#2153CC",
 				}}
 			>
 				Photo Of Vechlie
@@ -79,12 +119,13 @@ const VechlieInfo = (props) => {
 					fontSize: 12,
 					fontWeight: "bold",
 					marginTop: 10,
+					color: "#2153CC",
 				}}
 			>
 				Ceritficate of your Vechlie
 			</Text>
 
-			<View style={{flexDirection:'row'}}>
+			<View style={{ flexDirection: "row" }}>
 				<Pressable>
 					<Image source={Icon2} style={{ width: 100, height: 100 }} />
 				</Pressable>
@@ -118,7 +159,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#2153CC",
 		color: "white",
 		padding: 15,
 		shadowColor: "#000",

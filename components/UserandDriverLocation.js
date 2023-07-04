@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import MapView, { Polyline, MapViewDirections } from "react-native-maps";
+import MapView, { Polyline, MapViewDirections ,Marker,} from "react-native-maps";
 import { point } from "@turf/helpers";
 import destination from "@turf/destination";
 import * as Location from "expo-location";
@@ -63,7 +63,7 @@ export class UserandDriverLocation extends React.Component {
 						}
 						return (
 							<>
-								<MapView.Marker
+								<Marker
 									coordinate={{
 										latitude: element.lat,
 										longitude: element.lon,
@@ -74,20 +74,23 @@ export class UserandDriverLocation extends React.Component {
 							</>
 						);
 					})}
-					<MapView.Marker
+					<Marker
 						coordinate={{
 							latitude: 33.6555,
 							longitude: 73.1556,
 						}}
 					/>
-					{/* <MapViewDirections
-						origin={{ latitude: 37.7749, longitude: -122.4194 }}
-						destination={{ latitude: 40.7128, longitude: -74.006 }}
-						apikey="89872e3dbamsh26eebc8f6f0abb2p12c528jsn3b9759627678"
-						strokeWidth={3}
-						strokeColor="hotpink"
+
+					{/* <Polyline
+						coordinate={{
+							latitude: 33.6555,
+							longitude: 73.1556,
+						}}
+						strokeWidth={6}
+						strokeColor="#000"
 					/> */}
 				</MapView>
+				<Text>Heloo</Text>
 			</View>
 		);
 	}
@@ -125,5 +128,5 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 });
+export default UserandDriverLocation
 
-export default UserandDriverLocation;

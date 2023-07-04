@@ -50,86 +50,80 @@ const HomeSearch = (props) => {
 	return (
 		<>
 			<View style={styles.container}>
-				<ImageBackground
-					source={bg}
-					style={styles.container}
-					resizeMode="cover"
-				>
-					{/* <View style={styles.flexCenter}>
+				{/* <View style={styles.flexCenter}>
 						<View style={styles.horizontalClip} />
 					</View> */}
 
-					<KeyboardAvoidingView>
-						<Text
-							style={{
-								fontSize: 18,
-								fontWeight: "bold",
-								marginTop: 20,
-								color: "#fff",
-							}}
-						>
-							Enter Pickup Location
-						</Text>
-						<TextInput placeholder="Pick-up Location" style={styles.input} />
-						<Text
-							style={{
-								fontSize: 18,
-								fontWeight: "bold",
-								marginTop: 10,
-								color: "#fff",
-							}}
-						>
-							Enter Destination
-						</Text>
-						<TextInput placeholder="Drop Off Location" style={styles.input} />
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "space-around",
-							}}
-						>
-							<TouchableHighlight onPress={showDatePicker}>
-								<View style={styles.Datebutton}>
-									<Text style={{ color: "white", fontWeight: "bold" }}>
-										{" "}
-										Set Date
-									</Text>
-									<DateTimePickerModal
-										isVisible={isDatePickerVisible}
-										mode="date"
-										onConfirm={handleConfirm}
-										onCancel={hideDatePicker}
-										style={{ width: 30 }}
-									/>
-								</View>
-							</TouchableHighlight>
-							<TouchableHighlight onPress={showTimePicker}>
-								<View style={styles.Datebutton}>
-									<Text style={{ color: "white", fontWeight: "bold" }}>
-										{" "}
-										Set Time
-									</Text>
-									<DateTimePickerModal
-										isVisible={isTimePickerVisible}
-										mode="time"
-										onConfirm={handleConfirm}
-										onCancel={hideTimePicker}
-										style={{ width: 30 }}
-									/>
-								</View>
-							</TouchableHighlight>
-						</View>
-						<TouchableHighlight
-							onPress={() => {
-								navigation.navigate("FindingDrivers");
-							}}
-						>
-							<View style={styles.button}>
-								<Text style={{ color: "white", fontWeight: "bold" }}>Done</Text>
+				<KeyboardAvoidingView style={{ paddingLeft: 10, paddingRight: 10 }}>
+					<Text
+						style={{
+							fontSize: 18,
+							fontWeight: "bold",
+							marginTop: 20,
+							color: "#fff",
+						}}
+					>
+						Enter Pickup Location
+					</Text>
+					<TextInput placeholder="Pick-up Location" style={styles.input} />
+					<Text
+						style={{
+							fontSize: 18,
+							fontWeight: "bold",
+							marginTop: 10,
+							color: "#fff",
+						}}
+					>
+						Enter Destination
+					</Text>
+					<TextInput placeholder="Drop Off Location" style={styles.input} />
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-around",
+						}}
+					>
+						<TouchableHighlight onPress={showDatePicker}>
+							<View style={styles.Datebutton}>
+								<Text style={{ color: "#2153CC", fontWeight: "bold" }}>
+									{" "}
+									Set Date
+								</Text>
+								<DateTimePickerModal
+									isVisible={isDatePickerVisible}
+									mode="date"
+									onConfirm={handleConfirm}
+									onCancel={hideDatePicker}
+									style={{ width: 30 }}
+								/>
 							</View>
 						</TouchableHighlight>
-					</KeyboardAvoidingView>
-				</ImageBackground>
+						<TouchableHighlight onPress={showTimePicker}>
+							<View style={styles.Datebutton}>
+								<Text style={{ color: "#2153CC", fontWeight: "bold" }}>
+									{" "}
+									Set Time
+								</Text>
+								<DateTimePickerModal
+									isVisible={isTimePickerVisible}
+									mode="time"
+									onConfirm={handleConfirm}
+									onCancel={hideTimePicker}
+									style={{ width: 30 }}
+								/>
+							</View>
+						</TouchableHighlight>
+					</View>
+					<TouchableHighlight
+						onPress={() => {
+							navigation.navigate("FindingDrivers");
+						}}
+					>
+						<View style={styles.button}>
+							<Text style={{ color: "#2153CC", fontWeight: "bold" }}>Done</Text>
+						</View>
+					</TouchableHighlight>
+				</KeyboardAvoidingView>
 			</View>
 		</>
 	);
@@ -142,12 +136,15 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingTop: 10,
 		paddingBottom: 20,
+		backgroundColor: "#2153CC",
+		borderTopLeftRadius: 20,
+		borderTopRightRadius: 20,
 	},
 	input: {
 		borderTopLeftRadius: 20,
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
-		width: android.width,
+
 		backgroundColor: "white",
 		height: 60,
 		borderTopRightRadius: 20,
@@ -160,7 +157,7 @@ const styles = StyleSheet.create({
 	button: {
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#fff",
 		color: "white",
 		padding: 15,
 		shadowColor: "#000",
@@ -184,7 +181,7 @@ const styles = StyleSheet.create({
 	},
 	Datebutton: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#fff",
 		color: "white",
 		padding: 15,
 		shadowColor: "#000",

@@ -1,12 +1,12 @@
 import React from "react";
-import { SafeAreaView,View,Image,Text } from "react-native";
+import { SafeAreaView,View,Image,Text,StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "@gorhom/bottom-sheet";
 import user from "../assets/images/avatar2.jpeg";
 import tw from "twrnc";
 import Icon from "react-native-vector-icons/MaterialIcons";
 const ActionSheet = (props) => {
-	const snapPoints = React.useMemo(() => ["12%", "50%", "70%"], []);
+	const snapPoints = React.useMemo(() => ["37%", "50%", "70%"], []);
 	const RBRef = React.useRef();
 
 	
@@ -17,6 +17,8 @@ const ActionSheet = (props) => {
 				index={0}
 				snapPoints={snapPoints}
 				handleIndicatorStyle={tw`bg-gray-300 w-16 h-1`}
+				contentContainerStyle={styles.contentContainer}
+				backgroundStyle={styles.contentContainer}
 			>
 				<View
 					style={{
@@ -41,7 +43,7 @@ const ActionSheet = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#fff",
 							marginTop: 25,
 
 							marginLeft: 50,
@@ -51,27 +53,55 @@ const ActionSheet = (props) => {
 						Amjad Khan
 					</Text>
 
-					<View
+					<Icon
+						name="call"
+						size={15}
+						color="#2153CC"
 						style={{
-							backgroundColor: "#54B435",
+							marginTop: 12,
+							backgroundColor: "#fff",
+							padding: 15,
 							borderRadius: 90,
-							borderWidth: 1,
-							paddingHorizontal: 15,
-							borderColor: "#fff",
-							marginLeft: 50,
+							marginLeft: 15,
 						}}
-					>
-						<Icon
-							name="call"
-							size={28}
-							color="#fff"
-							style={{ marginTop: 12 }}
-						/>
-					</View>
+					/>
+
+					<Icon
+						name="message"
+						size={15}
+						color="#2153CC"
+						style={{
+							marginTop: 12,
+							backgroundColor: "#fff",
+							padding: 15,
+							borderRadius: 90,
+							marginLeft: 15,
+						}}
+					/>
+					<Text style={{ color: "white", marginLeft: "42%" }}>BMW M5</Text>
+					<Text style={{ color: "white", marginLeft: "42%" }}>ISB 3390</Text>
+					<Text style={{ color: "white", marginLeft: "26%", marginTop: 20 }}>
+						Pick-up Point
+					</Text>
+					<Text style={{ color: "white", marginLeft: "26%" }}>
+						Hostel City Chak Shezad
+					</Text>
+					<Text style={{ color: "white", marginLeft: "26%", marginTop: 40 }}>
+						Drop-off point
+					</Text>
+					<Text style={{ color: "white", marginLeft: "26%" }}>
+						E-9 Main Margalla Road
+					</Text>
 				</View>
+
 				<View>
 					<Text
-						style={{ textAlign: "center", fontSize: 22, fontWeight: "bold" }}
+						style={{
+							textAlign: "center",
+							fontSize: 22,
+							fontWeight: "bold",
+							color: "white",
+						}}
 					>
 						Reviwes
 					</Text>
@@ -97,7 +127,7 @@ const ActionSheet = (props) => {
 									style={{
 										textAlign: "left",
 										fontSize: 18,
-										color: "#043F96",
+										color: "#fff",
 										marginTop: 25,
 
 										marginLeft: 10,
@@ -164,7 +194,7 @@ const ActionSheet = (props) => {
 									style={{
 										textAlign: "left",
 										fontSize: 18,
-										color: "#043F96",
+										color: "#fff",
 										marginTop: 25,
 
 										marginLeft: 10,
@@ -231,7 +261,7 @@ const ActionSheet = (props) => {
 									style={{
 										textAlign: "left",
 										fontSize: 18,
-										color: "#043F96",
+										color: "#fff",
 										marginTop: 25,
 
 										marginLeft: 10,
@@ -298,7 +328,7 @@ const ActionSheet = (props) => {
 									style={{
 										textAlign: "left",
 										fontSize: 18,
-										color: "#043F96",
+										color: "#fff",
 										marginTop: 25,
 
 										marginLeft: 10,
@@ -365,7 +395,7 @@ const ActionSheet = (props) => {
 									style={{
 										textAlign: "left",
 										fontSize: 18,
-										color: "#043F96",
+										color: "#fff",
 										marginTop: 25,
 
 										marginLeft: 10,
@@ -432,7 +462,7 @@ const ActionSheet = (props) => {
 									style={{
 										textAlign: "left",
 										fontSize: 18,
-										color: "#043F96",
+										color: "#fff",
 										marginTop: 25,
 
 										marginLeft: 10,
@@ -499,7 +529,7 @@ const ActionSheet = (props) => {
 									style={{
 										textAlign: "left",
 										fontSize: 18,
-										color: "#043F96",
+										color: "#fff",
 										marginTop: 25,
 
 										marginLeft: 10,
@@ -551,5 +581,10 @@ const ActionSheet = (props) => {
 		</>
 	);
 };
+const styles = StyleSheet.create({
+	contentContainer: {
+		backgroundColor: "#2153CC",
+	},
+});
 
 export default ActionSheet;

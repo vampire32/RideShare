@@ -16,7 +16,7 @@ import user from '../assets/images/avatar2.jpeg'
 const FindingDrivers = (props) => {
 	return (
 		<ScrollView>
-			<ImageBackground style={styles.container} source={bg} resizeMode="cover">
+			<View style={styles.container} >
 				<View style={{ flexDirection: "row", justifyContent: "center" }}>
 					<Text
 						style={{
@@ -45,7 +45,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 							marginTop: 25,
 
 							marginLeft: 50,
@@ -58,7 +58,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -68,7 +68,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -79,7 +79,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -89,7 +89,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -100,7 +100,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -110,7 +110,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -151,7 +151,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 							marginTop: 25,
 
 							marginLeft: 50,
@@ -164,7 +164,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -174,7 +174,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -185,7 +185,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -195,7 +195,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -206,7 +206,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -216,7 +216,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -225,7 +225,7 @@ const FindingDrivers = (props) => {
 					</Text>
 					<TouchableHighlight
 						onPress={() => {
-							navigation.replace("Dashboard");
+							props.navigation.replace("Dashboard");
 						}}
 					>
 						<View style={styles.button}>
@@ -234,7 +234,7 @@ const FindingDrivers = (props) => {
 					</TouchableHighlight>
 					<TouchableHighlight
 						onPress={() => {
-							navigation.replace("SelectSeat");
+							props.navigation.replace("SelectSeat");
 						}}
 					>
 						<View style={styles.button2}>
@@ -257,7 +257,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 							marginTop: 25,
 
 							marginLeft: 50,
@@ -270,7 +270,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -280,7 +280,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -291,7 +291,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -301,7 +301,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -312,7 +312,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 20,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 50,
 							fontWeight: "bold",
@@ -322,7 +322,7 @@ const FindingDrivers = (props) => {
 						style={{
 							textAlign: "center",
 							fontSize: 18,
-							color: "#043F96",
+							color: "#2153CC",
 
 							marginLeft: 125,
 						}}
@@ -348,7 +348,7 @@ const FindingDrivers = (props) => {
 						</View>
 					</TouchableHighlight>
 				</View>
-			</ImageBackground>
+			</View>
 		</ScrollView>
 	);
 };
@@ -358,6 +358,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		with: android.width * 1.2,
 		height: android.height * 1.2,
+		backgroundColor: "#2153CC",
 	},
 	image: {
 		flex: 1,
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
 	button: {
 		alignItems: "center",
 		backgroundColor: "white",
-		
+
 		padding: 13,
 		shadowColor: "#000",
 		shadowOffset: {
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
 	},
 	button2: {
 		alignItems: "center",
-		backgroundColor: "#FAD860",
+		backgroundColor: "#2153CC",
 		color: "white",
 		padding: 13,
 		shadowColor: "#000",

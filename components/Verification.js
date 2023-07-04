@@ -24,16 +24,17 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import OTPBG from "../assets/otpbg.png"
 
 try {
 	firebase.initializeApp({
-		apiKey: "AIzaSyApXe3W_5MsAs4kbP6PLVDNQSzoMSEiS1k",
-		authDomain: "rideshare-e63db.firebaseapp.com",
-		projectId: "rideshare-e63db",
-		storageBucket: "rideshare-e63db.appspot.com",
-		messagingSenderId: "593723067966",
-		appId: "1:593723067966:web:8e82734b96f6265c544b6f",
-		measurementId: "G-L1KLQTD7C1",
+		apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
+		authDomain: "rideshare2-f8d19.firebaseapp.com",
+		projectId: "rideshare2-f8d19",
+		storageBucket: "rideshare2-f8d19.appspot.com",
+		messagingSenderId: "255084167707",
+		appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
+		measurementId: "G-Q18F5FLBH2",
 	});
 } catch (err) {
 	// ignore app already initialized error in snack
@@ -60,86 +61,96 @@ const Verification = (props) => {
 	return (
 		<>
 			<View style={styles.container}>
-				<ImageBackground source={bg} resizeMode="cover">
-					<View style={styles.container}>
-						<View
+				<View style={styles.container}>
+					<View
+						style={{
+							flexDirection: "column",
+							alignItems: "center",
+							marginTop: 50,
+						}}
+					>
+						<Text
 							style={{
-								flexDirection: "column",
-								alignItems: "center",
-								marginTop: 120,
+								marginStart: 10,
+								color: "#fff",
+								fontSize: 36,
+								fontWeight: "bold",
+								backgroundColor: "#2153CC",
+								padding: 15,
+								borderRadius: 15,
 							}}
+						>
+							Enter OTP code
+						</Text>
+						<Image
+							source={OTPBG}
+							style={{ width: 250, height: 250, marginTop: 10 }}
+						></Image>
+						<Text style={{ color: "#2153CC",fontWeight:"bold",fontSize:12 }}>
+							We have sent a verification code to your mobile
+						</Text>
+						<TextInput
+							label=" Enter OTP"
+							style={styles.input}
+							// editable={!!verificationId}
+							placeholder="123456"
+							onChangeText={setVerificationCode}
+							keyboardType="phone-pad"
+							textColor="#ffff"
+							selectionColor="#ffff"
+						/>
+						<TouchableHighlight
+							onPress={async () => {
+								try {
+									// setVerificationId=props.id
+									const credential = firebase.auth.PhoneAuthProvider.credential(
+										(verificationId = route.params.verificationId),
+										verificationCode
+									);
+									await firebase.auth().signInWithCredential(credential);
+									console.log(verificationId);
+
+									navigation.navigate("UserRegistration", {
+										Phone: route.params.Phone,
+									});
+								} catch (err) {
+									showMessage({
+										text: `Error: ${err.message}`,
+										color: "red",
+									});
+									console.log(verificationId);
+								}
+							}}
+						>
+							<View style={styles.button}>
+								<Text style={{ color: "#fff", fontWeight: "bold" }}>
+									{" "}
+									Submit
+								</Text>
+							</View>
+						</TouchableHighlight>
+					</View>
+					{message ? (
+						<TouchableOpacity
+							style={[
+								StyleSheet.absoluteFill,
+								{ backgroundColor: 0xffffffee, justifyContent: "center" },
+							]}
+							onPress={() => showMessage(undefined)}
 						>
 							<Text
 								style={{
-									marginTop: 10,
-									marginStart: 10,
-									color: "#fff",
-									fontSize: 36,
-									fontWeight: "bold",
+									color: message.color || "blue",
+									fontSize: 17,
+									textAlign: "center",
+									margin: 20,
 								}}
 							>
-								Enter OTP code
+								{message.text}
 							</Text>
-							<TextInput
-								label=" Enter OTP"
-								style={styles.input}
-								// editable={!!verificationId}
-								placeholder="123456"
-								onChangeText={setVerificationCode}
-								keyboardType="phone-pad"
-							/>
-							<TouchableHighlight
-								onPress={async () => {
-									try {
-										// setVerificationId=props.id
-										const credential =
-											firebase.auth.PhoneAuthProvider.credential(
-												(verificationId = route.params.verificationId),
-												verificationCode
-											);
-										await firebase.auth().signInWithCredential(credential);
-										console.log(verificationId);
-
-										navigation.replace("UserRegistration");
-									} catch (err) {
-										showMessage({
-											text: `Error: ${err.message}`,
-											color: "red",
-										});
-										console.log(verificationId);
-									}
-								}}
-							>
-								<View style={styles.button}>
-									<Text style={{ color: "white", fontWeight: "bold" }}>
-										{" "}
-										verify OTP
-									</Text>
-								</View>
-							</TouchableHighlight>
-						</View>
-						{message ? (
-							<TouchableOpacity
-								style={[
-									StyleSheet.absoluteFill,
-									{ backgroundColor: 0xffffffee, justifyContent: "center" },
-								]}
-								onPress={() => showMessage(undefined)}
-							>
-								<Text
-									style={{
-										color: message.color || "blue",
-										fontSize: 17,
-										textAlign: "center",
-										margin: 20,
-									}}
-								>
-									{message.text}
-								</Text>
-							</TouchableOpacity>
-						) : undefined}
-					</View>
-				</ImageBackground>
+						</TouchableOpacity>
+					) : undefined}
+				</View>
 			</View>
 		</>
 	);
@@ -162,8 +173,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
-		color: "white",
+		backgroundColor: "#2153CC",
+		
 		padding: 15,
 		shadowColor: "#000",
 		shadowOffset: {
@@ -184,7 +195,7 @@ const styles = StyleSheet.create({
 		marginTop: 50,
 	},
 	input: {
-		marginTop: 80,
+		marginTop: 50,
 		borderTopLeftRadius: 20,
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
@@ -198,6 +209,7 @@ const styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.29,
 		shadowRadius: 4.65,
+		color: "#fff",
 
 		elevation: 7,
 	},

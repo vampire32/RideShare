@@ -39,7 +39,7 @@ const DigitalWallet = () => {
 						marginTop: 20,
 						fontSize: 20,
 						fontWeight: "bold",
-						color: "#fcc200",
+						color: "#2153CC",
 					}}
 				>
 					Amount :0.00
@@ -127,7 +127,7 @@ const DigitalWallet = () => {
 								<Pressable>
 									<Text
 										style={{
-											borderColor: "#fcc200",
+											borderColor: "#2153CC",
 											borderRadius: 40,
 											borderWidth: 1,
 											paddingBottom: 10,
@@ -146,7 +146,7 @@ const DigitalWallet = () => {
 								>
 									<Text
 										style={{
-											borderColor: "#fcc200",
+											borderColor: "#2153CC",
 											borderRadius: 40,
 											borderWidth: 1,
 											paddingBottom: 10,
@@ -233,7 +233,7 @@ const DigitalWallet = () => {
 								<Pressable>
 									<Text
 										style={{
-											borderColor: "#fcc200",
+											borderColor: "#2153CC",
 											borderRadius: 40,
 											borderWidth: 1,
 											paddingBottom: 10,
@@ -252,7 +252,7 @@ const DigitalWallet = () => {
 								>
 									<Text
 										style={{
-											borderColor: "#fcc200",
+											borderColor: "#2153CC",
 											borderRadius: 40,
 											borderWidth: 1,
 											paddingBottom: 10,
@@ -285,7 +285,7 @@ const DigitalWallet = () => {
 								fontSize: 24,
 								fontWeight: "bold",
 								marginTop: 20,
-								color: "#fcc200",
+								color: "#2153CC",
 							}}
 						>
 							EasyPaisa
@@ -297,7 +297,7 @@ const DigitalWallet = () => {
 								fontSize: 24,
 								fontWeight: "bold",
 								marginTop: 30,
-								color: "#fcc200",
+								color: "#2153CC",
 							}}
 						>
 							JazzCash
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#2153CC",
 		color: "white",
 		padding: 15,
 		shadowColor: "#000",

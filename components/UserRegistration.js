@@ -8,7 +8,10 @@ import {
 	Dimensions,
 	TouchableHighlight,
 	KeyboardAvoidingView,
+	
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+
 import DropDownPicker from "react-native-dropdown-picker";
 import Logo from "../assets/logo.png";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,6 +19,21 @@ import { BlurView } from "expo-blur";
 import bg from "../assets/images/bg2.png";
 import { TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set } from "firebase/database";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
+	authDomain: "rideshare2-f8d19.firebaseapp.com",
+	projectId: "rideshare2-f8d19",
+	storageBucket: "rideshare2-f8d19.appspot.com",
+	messagingSenderId: "255084167707",
+	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
+	measurementId: "G-Q18F5FLBH2",
+};
+
+const app = firebase.initializeApp(firebaseConfig)
+const database = getDatabase(app);
 
 const UserRegistration = (props) => {
 	const { navigation, route } = props;
@@ -25,113 +43,169 @@ const UserRegistration = (props) => {
 		{ label: "Male", value: "male" },
 		{ label: "Female", value: "female" },
 	]);
+	const [Name, setName] = useState("");
+	const [Email, setEmail] = useState("");
+	const [Gender, setGender] = useState("");
+	const [Phone, setPhone] = useState(route.params.Phone);
+	  const handleChangeName = (name) => {
+			setName(name);
+			
+
+			
+		};
+		  const handleChangeEmail = ( email) => {
+				
+				setEmail(email);
+				
+			};
+			  const handleChangeGender = (gender) => {
+					
+					setGender(gender);
+				};
+				  const handleChangePhone = (phone) => {
+						setPhone(phone);
+					};
+		// console.log(Name);
+		// console.log(Email);
+		// console.log(Gender)
+		const Submit=()=>{
+			const db = getDatabase();
+			set(ref(db, "users/" +Phone), {
+				Fullname: Name,
+				Email: Email,
+				Gender: Gender,
+				Phone:Phone
+			});
+		}
 	return (
 		<>
-			<ImageBackground source={bg} resizeMode="cover" >
-				<View
-					style={{
-						flexDirection:"column",
-						
-						alignItems: "center",
-						marginTop: 80,
-					}}
-				>
-					<View
+			<View
+				style={{
+					flexDirection: "column",
+
+					alignItems: "center",
+
+					backgroundColor: "#2153CC",
+				}}
+			>
+				<View style={{ marginTop: 20, marginStart: 20 }}>
+					<Text style={styles.Text}>Please Enter Correct Details</Text>
+				</View>
+				<ScrollView>
+					<BlurView
+						intensity={75}
 						style={{
-							backgroundColor: "#043F96",
-							borderRadius: 90,
+							paddingBottom: 300,
+							borderTopStartRadius: 15,
+							borderTopEndRadius: 15,
+							paddingLeft: 10,
+							paddingRight: 10,
+							marginTop: 20,
 						}}
 					>
-						<Image source={Logo} style={{ width: 150, height: 150 }}></Image>
-					</View>
-
-					<View style={{ marginTop: 20, marginStart: 20 }}>
-						<Text style={styles.Text}>Please Enter Correct Details</Text>
-					</View>
-					<ScrollView>
-						<BlurView
-							intensity={75}
+						<Text
 							style={{
-								paddingBottom: 300,
-								borderTopStartRadius: 15,
-								borderTopEndRadius: 15,
-								paddingLeft: 10,
-								paddingRight: 10,
-								marginTop: 20,
+								fontSize: 18,
+								fontWeight: "bold",
+								color: "#fff",
+								marginStart: 10,
+								paddingBottom: 10,
+								marginTop: 10,
 							}}
 						>
-							<Text
-								style={{
-									fontSize: 18,
-									fontWeight: "bold",
-									color: "#fff",
-									marginStart: 10,
-									paddingBottom: 10,
-									marginTop: 10,
-								}}
-							>
-								Full Name
-							</Text>
-							<TextInput
-								label="Enter Tour Name"
-								style={styles.input}
-								placeholder="Ahmed Ali"
-							/>
-							<Text
-								style={{
-									fontSize: 18,
-									fontWeight: "bold",
-									color: "#ffff",
-									marginStart: 10,
-									paddingBottom: 10,
-									marginTop: 10,
-								}}
-							>
-								Email
-							</Text>
-							<TextInput
-								label="info@mail.com"
-								style={styles.input}
-								placeholder="Ahmed Ali"
-							/>
-							<Text
-								style={{
-									fontSize: 18,
-									fontWeight: "bold",
-									color: "#fff",
-									marginStart: 10,
-									paddingBottom: 10,
-									marginTop: 10,
-								}}
-							>
-								Gender
-							</Text>
-							<DropDownPicker
-							style={{width:android.width/1.1 }}
-								placeholder="Select an gender"
-								open={open}
-								value={value}
-								items={items}
-								setOpen={setOpen}
-								setValue={setValue}
-								setItems={setItems}
-								multiple={false}
-							/>
-							<TouchableHighlight
-								onPress={() => {
-									navigation.replace("Dashboard");
-								}}
-							>
-								<View style={styles.button}>
-									<Text style={{ color: "white", fontWeight: "bold" }}>
-										Done
-									</Text>
-								</View>
-							</TouchableHighlight>
-						</BlurView>
-					</ScrollView>
-				</View>
-			</ImageBackground>
+							Full Name
+						</Text>
+						<TextInput
+							value={Name}
+							label="Enter Tour Name"
+							style={styles.input}
+							placeholder="Ahmed Ali"
+							onChangeText={handleChangeName}
+						/>
+						<Text
+							style={{
+								fontSize: 18,
+								fontWeight: "bold",
+								color: "#ffff",
+								marginStart: 10,
+								paddingBottom: 10,
+								marginTop: 10,
+							}}
+						>
+							Email
+						</Text>
+						<TextInput
+							value={Email}
+							label="info@mail.com"
+							style={styles.input}
+							placeholder="Ahmed Ali"
+							onChangeText={handleChangeEmail}
+						/>
+						<Text
+							style={{
+								fontSize: 18,
+								fontWeight: "bold",
+								color: "#ffff",
+								marginStart: 10,
+								paddingBottom: 10,
+								marginTop: 10,
+							}}
+						>
+							Phone Number
+						</Text>
+						<TextInput
+							value={Phone}
+							label="Phone Number"
+							style={styles.input}
+							placeholder="Ahmed Ali"
+							onChangeText={handleChangePhone}
+						/>
+						<Text
+							style={{
+								fontSize: 18,
+								fontWeight: "bold",
+								color: "#fff",
+								marginStart: 10,
+								paddingBottom: 10,
+								marginTop: 10,
+							}}
+						>
+							Gender
+						</Text>
+						<Picker
+							style={styles.input2}
+							selectedValue={Gender}
+							onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+						>
+							<Picker.Item label="Pick the Gender" value="male" />
+							<Picker.Item label="Male" value="male" />
+							<Picker.Item label="Female" value="female" />
+						</Picker>
+
+						<TouchableHighlight
+							onPress={() => {
+								// navigation.replace("Dashboard");
+								try {
+									Submit();
+									//  navigation.replace("Dashboard");
+									navigation.navigate("Dashboard", {
+										screen: "Profile",
+										params: { Phone: route.params.Phone },
+									});
+								} catch (error) {
+									console.log(error);
+								}
+							}}
+						>
+							<View style={styles.button}>
+								<Text style={{ color: "#2153CC", fontWeight: "bold" }}>
+									submit
+								</Text>
+							</View>
+						</TouchableHighlight>
+					</BlurView>
+				</ScrollView>
+			</View>
 		</>
 	);
 };
@@ -150,8 +224,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: "center",
-		backgroundColor: "#fcc200",
-		color: "white",
+		backgroundColor: "#fff",
+		
 		padding: 15,
 		shadowColor: "#000",
 		shadowOffset: {
@@ -187,6 +261,24 @@ const styles = StyleSheet.create({
 		shadowRadius: 4.65,
 
 		elevation: 7,
+	},
+	input2: {
+		borderTopLeftRadius: 20,
+		borderBottomLeftRadius: 20,
+		borderBottomRightRadius: 20,
+		width: android.width * 0.94,
+		height: 60,
+		borderTopRightRadius: 20,
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 3,
+		},
+		shadowOpacity: 0.29,
+		shadowRadius: 4.65,
+
+		elevation: 7,
+		backgroundColor: "#fff",
 	},
 });
 
