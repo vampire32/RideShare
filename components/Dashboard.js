@@ -10,6 +10,7 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Colors from "../assets/constants/Colors";
 import MapVieww from "./CurrentLocation";
 
+
 const Dashboard = () => {
 	const navigation = useNavigation();
 

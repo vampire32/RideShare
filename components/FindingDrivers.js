@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -11,12 +11,52 @@ import {
 	Button,
 } from "react-native";
 import bg from "../assets/images/bg2.png";
-import user from '../assets/images/avatar2.jpeg'
+import user from "../assets/images/avatar2.jpeg";
+
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set, get, onValue } from "firebase/database";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
+	authDomain: "rideshare2-f8d19.firebaseapp.com",
+	projectId: "rideshare2-f8d19",
+	storageBucket: "rideshare2-f8d19.appspot.com",
+	messagingSenderId: "255084167707",
+	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
+	measurementId: "G-Q18F5FLBH2",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 const FindingDrivers = (props) => {
+	const [pickUp, setpickUp] = useState();
+	const [destination, setdestination] = useState();
+
+	useEffect(() => {
+		const db = getDatabase();
+		const starCountRef = ref(db, "DriverPost/");
+		onValue(starCountRef, (snapshot) => {
+			const data = snapshot.val();
+			console.log(data.Pickup);
+			setpickUp(data.Pickup);
+			setdestination(data.Destination);
+		});
+
+		return () => {
+			db.off();
+		};
+	}, []);
+
+	// const databaseRef = firebase.database().ref("DriverPost/");
+	// databaseRef.on("value", (snapshot) => {
+	// 	const data = snapshot.val();
+	// 	console.log(data)
+	// 	// Handle the retrieved data here
+	// });
 	return (
 		<ScrollView>
-			<View style={styles.container} >
+			<View style={styles.container}>
 				<View style={{ flexDirection: "row", justifyContent: "center" }}>
 					<Text
 						style={{
@@ -115,7 +155,18 @@ const FindingDrivers = (props) => {
 							marginLeft: 125,
 						}}
 					>
-						Hostel City Chak Shezad
+						{pickUp}
+					</Text>
+					<Text
+						style={{
+							textAlign: "center",
+							fontSize: 18,
+							color: "#2153CC",
+
+							marginLeft: 125,
+						}}
+					>
+						{destination}
 					</Text>
 					<TouchableHighlight
 						onPress={() => {
@@ -435,6 +486,5 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 });
-
 
 export default FindingDrivers;

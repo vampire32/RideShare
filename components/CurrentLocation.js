@@ -1,11 +1,21 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity,Modal,TouchableHighlight } from 'react-native';
-import MapView from 'react-native-maps';
-import { point } from '@turf/helpers';
-import destination from '@turf/destination';
-import * as Location from 'expo-location';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import React from "react";
+import {
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	Modal,
+	TouchableHighlight,
+} from "react-native";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import { point } from "@turf/helpers";
+import destination from "@turf/destination";
+import * as Location from "expo-location";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import MapViewDirections from "react-native-maps-directions";
+const origin = { latitude: 33.65582, longitude: 73.155311 };
+const destinationss = { latitude: 33.707566, longitude: 73.014857 };
+const GOOGLE_MAPS_APIKEY = "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw";
 export default class MapVieww extends React.Component {
 	constructor(props) {
 		super(props);
@@ -96,7 +106,8 @@ export default class MapVieww extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<MapView
+				{/* <MapView
+					provider={PROVIDER_GOOGLE}
 					onRegionChangeComplete={this.onRegionChangeComplete}
 					style={styles.mapView}
 					showsUserLocation
@@ -123,6 +134,26 @@ export default class MapVieww extends React.Component {
 							/>
 						);
 					})}
+				</MapView> */}
+				<MapView
+					provider={PROVIDER_GOOGLE}
+					onRegionChangeComplete={this.onRegionChangeComplete}
+					style={styles.mapView}
+					showsUserLocation={true}
+					initialRegion={{
+						latitude: this.state.latitude,
+						longitude: this.state.longitude,
+						latitudeDelta: 0.02,
+						longitudeDelta: 0.02,
+					}}
+				>
+					<MapViewDirections
+						origin={origin}
+						destination={destinationss}
+						apikey={GOOGLE_MAPS_APIKEY}
+						strokeWidth={3}
+						strokeColor="hotpink"
+					/>
 				</MapView>
 				<View style={styles.centeredView}>
 					<Modal
@@ -135,7 +166,9 @@ export default class MapVieww extends React.Component {
 					>
 						<View style={styles.centeredView}>
 							<View style={styles.modalView}>
-								<Text style={{ fontSize: 28, fontWeight: "bold",color:"#fff" }}>
+								<Text
+									style={{ fontSize: 28, fontWeight: "bold", color: "#fff" }}
+								>
 									In Case Of Emergency!
 								</Text>
 								<TouchableHighlight>

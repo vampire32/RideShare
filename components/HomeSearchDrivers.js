@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
 	Text,
 	View,
@@ -9,53 +9,72 @@ import {
 	TouchableHighlight,
 	KeyboardAvoidingView,
 	TouchableOpacity,
-	Modal
-	
+	Modal,
 } from "react-native";
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import bg from "../assets/images/bg2.png";
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Colors from "../assets/constants/Colors";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set } from "firebase/database";
 
-const HomeSearch = (props) => {
+const firebaseConfig = {
+	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
+	authDomain: "rideshare2-f8d19.firebaseapp.com",
+	projectId: "rideshare2-f8d19",
+	storageBucket: "rideshare2-f8d19.appspot.com",
+	messagingSenderId: "255084167707",
+	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
+	measurementId: "G-Q18F5FLBH2",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const HomeSearchDrivers = (props) => {
 	const navigation = useNavigation();
-	 const [date, setDate] = useState(new Date(1598051730000));
-	  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-	  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
-	  const [modalVisible, setmodalVisible] = useState(false)
-	  const [modalVisible2, setmodalVisible2] = useState(false);
-	  const [AddressText, setAddressText] = useState("")
-	  const [Destination, setDestination] = useState("")
+	const [date, setDate] = useState(new Date(1598051730000));
+	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+	const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+	const [modelVisable, setmodelVisable] = useState(false);
+	const [pickUp, setpickUp] = useState("");
+	const [destination, setdestination] = useState("");
+	const handleChangePickup = (pickUp) => {
+		setpickUp(pickUp);
+	};
+	const handleChangeDestination = (destination) => {
+		setdestination(destination);
+	};
 
-	  const onVhangeAdress=(AddressText)=>{
-		setAddressText(AddressText)
-	  }
-		  
+	const showDatePicker = () => {
+		setDatePickerVisibility(true);
+	};
+	const showTimePicker = () => {
+		setTimePickerVisibility(true);
+	};
 
-				const showDatePicker = () => {
-					setDatePickerVisibility(true);
-				};
-				const showTimePicker = () => {
-					setTimePickerVisibility(true);
-				};
+	const hideDatePicker = () => {
+		setDatePickerVisibility(false);
+	};
+	const hideTimePicker = () => {
+		setTimePickerVisibility(false);
+	};
 
-				const hideDatePicker = () => {
-					setDatePickerVisibility(false);
-				};
-				const hideTimePicker = () => {
-					setTimePickerVisibility(false);
-				};
-
-				const handleConfirm = (date) => {
-					console.log("A date has been picked: ", date);
-					hideDatePicker();
-					hideTimePicker();
-				};
+	const handleConfirm = (date) => {
+		console.log("A date has been picked: ", date);
+		hideDatePicker();
+		hideTimePicker();
+	};
+	const Submit = () => {
+		const db = getDatabase();
+		set(ref(db, "DriverPost/"), {
+			Pickup: pickUp,
+			Destination: destination,
+		});
+	};
 
 	return (
 		<>
@@ -76,11 +95,10 @@ const HomeSearch = (props) => {
 						Enter Pickup Location
 					</Text>
 					<TextInput
-						placeholder={AddressText}
+						value={pickUp}
+						placeholder="Pick-up Location"
 						style={styles.input}
-						onTouchStart={() => {
-							setmodalVisible(true);
-						}}
+						onChangeText={handleChangePickup}
 					/>
 					<Text
 						style={{
@@ -93,11 +111,10 @@ const HomeSearch = (props) => {
 						Enter Destination
 					</Text>
 					<TextInput
-						placeholder={Destination}
+						value={destination}
+						placeholder="Drop Off Location"
 						style={styles.input}
-						onTouchStart={() => {
-							setmodalVisible2(true);
-						}}
+						onChangeText={handleChangeDestination}
 					/>
 					<View
 						style={{
@@ -138,7 +155,14 @@ const HomeSearch = (props) => {
 					</View>
 					<TouchableHighlight
 						onPress={() => {
-							navigation.navigate("FindingDrivers");
+							// navigation.replace("Dashboard");
+							try {
+								Submit();
+								//  navigation.replace("Dashboard");
+								setmodelVisable(true);
+							} catch (error) {
+								console.log(error);
+							}
 						}}
 					>
 						<View style={styles.button}>
@@ -148,90 +172,24 @@ const HomeSearch = (props) => {
 				</KeyboardAvoidingView>
 				<Modal
 					animationType="slide"
-					visible={modalVisible}
+					transparent={true}
+					visible={modelVisable}
 					onRequestClose={() => {
 						alert("Modal has been closed.");
 					}}
 				>
 					<View style={styles.centeredView}>
-						<TouchableHighlight
-							onPress={() => {
-								setmodalVisible(false);
-							}}
-						>
-							<Text
-								style={{
-									color: "white",
-									fontSize: 18,
-									marginLeft: 5,
-									marginTop: 5,
+						<View style={styles.modalView}>
+							<Text style={{ color: "white" }}>Request Sent</Text>
+							<Text style={{ color: "white" }}>Your request has send</Text>
+							<TouchableHighlight
+								onPress={() => {
+									setmodelVisable(false);
 								}}
 							>
-								Close
-							</Text>
-						</TouchableHighlight>
-
-						<GooglePlacesAutocomplete
-							styles={{
-								container: {
-									marginTop: 10,
-								},
-							}}
-							placeholder="Search"
-							onPress={(data, details = null) => {
-								// 'details' is provided when fetchDetails = true
-								console.log(data.description);
-								setAddressText(data.description);
-							}}
-							query={{
-								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
-								language: "en",
-							}}
-						/>
-					</View>
-				</Modal>
-				<Modal
-					animationType="slide"
-					visible={modalVisible2}
-					onRequestClose={() => {
-						alert("Modal has been closed.");
-					}}
-				>
-					<View style={styles.centeredView}>
-						<TouchableHighlight
-							onPress={() => {
-								setmodalVisible2(false);
-							}}
-						>
-							<Text
-								style={{
-									color: "white",
-									fontSize: 18,
-									marginLeft: 5,
-									marginTop: 5,
-								}}
-							>
-								Close
-							</Text>
-						</TouchableHighlight>
-
-						<GooglePlacesAutocomplete
-							styles={{
-								container: {
-									marginTop: 10,
-								},
-							}}
-							placeholder="Search"
-							onPress={(data, details = null) => {
-								// 'details' is provided when fetchDetails = true
-								console.log(data.description);
-								setDestination(data.description);
-							}}
-							query={{
-								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
-								language: "en",
-							}}
-						/>
+								<Text style={styles.button2}>Close</Text>
+							</TouchableHighlight>
+						</View>
 					</View>
 				</Modal>
 			</View>
@@ -239,7 +197,7 @@ const HomeSearch = (props) => {
 	);
 };
 
-export default HomeSearch;
+export default HomeSearchDrivers;
 const android = Dimensions.get("window");
 const styles = StyleSheet.create({
 	container: {
@@ -263,6 +221,20 @@ const styles = StyleSheet.create({
 		// 	width: 0,
 		// 	height: 3,
 		// },
+	},
+	button2: {
+		width: 150,
+		alignItems: "flex-end",
+		justifyContent: "flex-end",
+		backgroundColor: "white",
+		paddingHorizontal: 18,
+		paddingVertical: 12,
+		borderRadius: 20,
+		textAlign: "center",
+		color: "black",
+		fontSize: 18,
+		fontWeight: "500",
+		marginTop: 15,
 	},
 	button: {
 		alignItems: "center",
@@ -332,30 +304,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		// borderRadius: 8
 	},
-	button2: {
-		width: 150,
-		alignItems: "flex-end",
-		justifyContent: "flex-end",
-		backgroundColor: "#fcc200",
-		paddingHorizontal: 18,
-		paddingVertical: 12,
-		borderRadius: 20,
-		textAlign: "center",
-		color: "#fff",
-		fontSize: 18,
-		fontWeight: "500",
-		marginTop: 15,
-	},
-
-	buttonItem: {
-		textAlign: "center",
-	},
-	centeredView: {
-		flex: 1,
-		backgroundColor: "#043F96",
-		
-	},
-	
 	inputText: {
 		borderRadius: 38,
 		backgroundColor: "#e0e0e0",
@@ -425,5 +373,25 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		color: Colors.darkGrey,
 	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 22,
+	},
+	modalView: {
+		margin: 20,
+		backgroundColor: "#043F96",
+		borderRadius: 20,
+		padding: 35,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
 });
-

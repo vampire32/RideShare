@@ -23,6 +23,7 @@ import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Colors from "../assets/constants/Colors";
 import MapVieww from "./CurrentLocation";
+import HomeSearchDrivers from "./HomeSearchDrivers";
 
 
 const DriverDashboard = (props) => {
@@ -233,7 +234,7 @@ const DriverDashboard = (props) => {
 						source={bg}
 						resizeMode="cover"
 					>
-						<HomeSearch />
+						<HomeSearchDrivers/>
 					</ImageBackground>
 				</View>
 			</View>
