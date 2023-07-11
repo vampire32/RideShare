@@ -8,6 +8,9 @@ import bg from "../assets/images/bg.png";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import Logo from "../assets/loginbg.png";
 import PhoneInput from "react-native-phone-number-input";
+import * as SecureStore from "expo-secure-store";
+
+
 try {
 	firebase.initializeApp({
 		apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
@@ -112,7 +115,10 @@ const phoneInput = useRef(null);
 								// 		screen: "Profile",
 								// 		params: { Phone: phoneNumber },
 								// 	});
-
+								await SecureStore.setItemAsync("Phone", phoneNumber);
+								
+								let result = await SecureStore.getItemAsync("Phone");
+								console.log(result)
 								props.navigation.navigate("Verification", {
 									verificationId: verificationId,
 									Phone: phoneNumber,

@@ -28,13 +28,13 @@ import OTPBG from "../assets/otpbg.png"
 
 try {
 	firebase.initializeApp({
-		apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
-		authDomain: "rideshare2-f8d19.firebaseapp.com",
-		projectId: "rideshare2-f8d19",
-		storageBucket: "rideshare2-f8d19.appspot.com",
-		messagingSenderId: "255084167707",
-		appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
-		measurementId: "G-Q18F5FLBH2",
+		  apiKey: "AIzaSyBmsY_PWEV4H0YCyvq-ywmrC0sPkIYBdtQ",
+  authDomain: "ridesharing-11c82.firebaseapp.com",
+  projectId: "ridesharing-11c82",
+  storageBucket: "ridesharing-11c82.appspot.com",
+  messagingSenderId: "737125365343",
+  appId: "1:737125365343:web:e9943930333d849a93cdea",
+  measurementId: "G-ZF3JDW54Z6"
 	});
 } catch (err) {
 	// ignore app already initialized error in snack

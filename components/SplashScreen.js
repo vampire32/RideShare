@@ -9,16 +9,26 @@ import {
 } from "react-native";
 import BG from '../assets/logo.png'
 
-import BG2 from '../assets/images/RideShare-removebg-preview.png' 
-import { LinearGradient } from "expo-linear-gradient";
+import * as SecureStore from "expo-secure-store";
 
 
 const Splash =(props) => {
   
   useEffect(() => {
     setTimeout(() => {
-      props.navigation.navigate("Login");
-	//   props.navigation.replace("Dashboard");
+		
+			let result =  SecureStore.getItemAsync("Phone");
+			if (result!=null){
+				props.navigation.replace("Dashboard");
+
+			}
+			else{
+				props.navigation.navigate("Login");
+
+			}
+		
+      
+	//   
     }, 3000);
     
   
