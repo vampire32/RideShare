@@ -13,19 +13,20 @@ import * as SecureStore from "expo-secure-store";
 
 
 const Splash =(props) => {
+	const oneTimeLogin=async()=>{
+		let result = await SecureStore.getItemAsync("PhoneNum");
+		if (result != null) {
+			props.navigation.replace("Dashboard");
+		} else {
+			props.navigation.navigate("Login");
+		}
+
+	}
   
   useEffect(() => {
     setTimeout(() => {
-		
-			let result =  SecureStore.getItemAsync("Phone");
-			if (result!=null){
-				props.navigation.replace("Dashboard");
-
-			}
-			else{
-				props.navigation.navigate("Login");
-
-			}
+		oneTimeLogin()
+			
 		
       
 	//   

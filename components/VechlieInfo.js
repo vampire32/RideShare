@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Image, TouchableHighlight, View,Text,StyleSheet,Dimensions,Pressable } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import Logo from "../assets/person-icon-5.png"
@@ -6,15 +6,16 @@ import Icon from '../assets/free-car-icon-1057-thumb.png'
 import Icon2 from '../assets/cer.png'
 import firebase from "firebase/compat/app";
 import { getDatabase, ref, set } from "firebase/database";
+import * as ImagePicker from "expo-image-picker";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
-	authDomain: "rideshare2-f8d19.firebaseapp.com",
-	projectId: "rideshare2-f8d19",
-	storageBucket: "rideshare2-f8d19.appspot.com",
-	messagingSenderId: "255084167707",
-	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
-	measurementId: "G-Q18F5FLBH2",
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -24,6 +25,61 @@ const VechlieInfo = (props) => {
     const { navigation, route } = props;
 	const [Name, setName] = useState("");
 	const [Plate, setPlate] = useState("");
+	const [image, setImage] = useState(null);
+	const [image2, setImage2] = useState(null);
+	const [image3, setImage3] = useState(null);
+
+	const pickImage = async () => {
+		// No permissions request is necessary for launching the image library
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		console.log(result);
+
+		if (!result.canceled) {
+			setImage(result.assets[0].uri);
+			setImage2(result.assets[1].uri);
+			setImage3(result.assets[2].uri);
+
+		}
+	};
+	const pickImage2 = async () => {
+		// No permissions request is necessary for launching the image library
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		console.log(result);
+
+		if (!result.canceled) {
+			
+			setImage2(result.assets[0].uri);
+			
+		}
+	};
+	const pickImage3 = async () => {
+		// No permissions request is necessary for launching the image library
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		console.log(result);
+
+		if (!result.canceled) {
+			
+			setImage3(result.assets[0].uri);
+		}
+	};
 	const handleChangeName = (name) => {
 		setName(name);
 	};
@@ -97,21 +153,24 @@ const VechlieInfo = (props) => {
 				onChangeText={handleChangeEmail}
 				value={Plate}
 			/>
-			<Text
-				style={{
-					marginLeft: 5,
-					marginBottom: 5,
-					fontSize: 12,
-					fontWeight: "bold",
-					marginTop: 10,
-					color: "#2153CC",
-				}}
-			>
-				Photo Of Vechlie
-			</Text>
-			<Pressable>
-				<Image source={Icon} style={{ width: 100, height: 100 }} />
-			</Pressable>
+			<View>
+				<Text
+					style={{
+						marginLeft: 5,
+						marginBottom: 5,
+						fontSize: 12,
+						fontWeight: "bold",
+						marginTop: 10,
+						color: "#2153CC",
+					}}
+				>
+					Photo Of Vechlie
+				</Text>
+				<Pressable onPress={pickImage}>
+					<Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
+				</Pressable>
+			</View>
+
 			<Text
 				style={{
 					marginLeft: 5,
@@ -126,11 +185,11 @@ const VechlieInfo = (props) => {
 			</Text>
 
 			<View style={{ flexDirection: "row" }}>
-				<Pressable>
-					<Image source={Icon2} style={{ width: 100, height: 100 }} />
+				<Pressable onPress={pickImage2}>
+					<Image source={{ uri: image2 }} style={{ width: 100, height: 100 }} />
 				</Pressable>
-				<Pressable>
-					<Image source={Icon2} style={{ width: 100, height: 100 }} />
+				<Pressable onPress={pickImage3}>
+					<Image source={{ uri: image3 }} style={{ width: 100, height: 100 }} />
 				</Pressable>
 			</View>
 

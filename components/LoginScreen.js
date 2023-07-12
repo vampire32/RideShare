@@ -13,13 +13,13 @@ import * as SecureStore from "expo-secure-store";
 
 try {
 	firebase.initializeApp({
-		apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
-		authDomain: "rideshare2-f8d19.firebaseapp.com",
-		projectId: "rideshare2-f8d19",
-		storageBucket: "rideshare2-f8d19.appspot.com",
-		messagingSenderId: "255084167707",
-		appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
-		measurementId: "G-Q18F5FLBH2",
+		apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+		authDomain: "carsharing-10784.firebaseapp.com",
+		projectId: "carsharing-10784",
+		storageBucket: "carsharing-10784.appspot.com",
+		messagingSenderId: "1059995999394",
+		appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+		measurementId: "G-WXGTPM42JS",
 	});
 } catch (err) {
 	// ignore app already initialized error in snack
@@ -115,9 +115,9 @@ const phoneInput = useRef(null);
 								// 		screen: "Profile",
 								// 		params: { Phone: phoneNumber },
 								// 	});
-								await SecureStore.setItemAsync("Phone", phoneNumber);
+								await SecureStore.setItemAsync("PhoneNum", phoneNumber);
 								
-								let result = await SecureStore.getItemAsync("Phone");
+								let result = await SecureStore.getItemAsync("PhoneNum");
 								console.log(result)
 								props.navigation.navigate("Verification", {
 									verificationId: verificationId,

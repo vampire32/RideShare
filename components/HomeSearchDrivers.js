@@ -20,28 +20,42 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Colors from "../assets/constants/Colors";
 
 import firebase from "firebase/compat/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set,push,child ,update} from "firebase/database";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { getAuth } from "firebase/auth";
+import { Time } from "react-native-gifted-chat";
+import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
-	authDomain: "rideshare2-f8d19.firebaseapp.com",
-	projectId: "rideshare2-f8d19",
-	storageBucket: "rideshare2-f8d19.appspot.com",
-	messagingSenderId: "255084167707",
-	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
-	measurementId: "G-Q18F5FLBH2",
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
+const auth = getAuth(app);
 const HomeSearchDrivers = (props) => {
 	const navigation = useNavigation();
 	const [date, setDate] = useState(new Date(1598051730000));
+	const [time, settime] = useState(new Time(1200))
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 	const [modelVisable, setmodelVisable] = useState(false);
-	const [pickUp, setpickUp] = useState("");
-	const [destination, setdestination] = useState("");
+	const [pickUp, setpickUp] = useState([""]);
+	const [destination, setdestination] = useState([""]);
+	const [modalVisible, setmodalVisible] = useState(false);
+	const [modalVisible2, setmodalVisible2] = useState(false);
+	const [ID, setID] = useState(null)
+	const [phoneNumber, setphoneNumber] = useState("")
+		const oneTimeLogin = async () => {
+			
+			
+		};
 	const handleChangePickup = (pickUp) => {
 		setpickUp(pickUp);
 	};
@@ -63,17 +77,52 @@ const HomeSearchDrivers = (props) => {
 		setTimePickerVisibility(false);
 	};
 
-	const handleConfirm = (date) => {
-		console.log("A date has been picked: ", date);
+	const handleConfirmDate = (date) => {
+		const d= new Date(date)
+		const dates =d.getDate()
+		const month=d.getMonth()  
+		const year=d.getFullYear()
+		const NewDate=dates + "/"+month +"/"+year
+		console.log("A date has been picked: ", NewDate);
+		setDate(NewDate)
 		hideDatePicker();
+		
+	};
+	const handleConfirmTime = (time) => {
+		const t =new Date(time)
+		const hour= t.getHours()
+		const minutes=t.getMinutes()
+		const NewTime=hour +":"+ minutes
+	
+		settime(NewTime);
+		
+		console.log("A date has been picked: ", result);
+		
 		hideTimePicker();
 	};
-	const Submit = () => {
+	const randomNumber = Math.floor(Math.random() * 100) + 1;
+
+	const Submit = async() => {
+		let result = await SecureStore.getItemAsync("PhoneNum");
+		setphoneNumber(result);
+		console.log(phoneNumber)
+	
+		  const postData = {
+			Pickup:pickUp,
+			Destination:destination,
+			Date:date,
+			Time:time,
+			DriverNumber:phoneNumber
+			
+
+			};
 		const db = getDatabase();
-		set(ref(db, "DriverPost/"), {
-			Pickup: pickUp,
-			Destination: destination,
-		});
+		const newPostKey= push(child(ref(db), 'posts')).key;
+		  const updates = {};
+			
+			updates["/Driverposts/" + newPostKey] = postData;
+
+			return update(ref(db), updates);
 	};
 
 	return (
@@ -95,6 +144,9 @@ const HomeSearchDrivers = (props) => {
 						Enter Pickup Location
 					</Text>
 					<TextInput
+						onTouchStart={() => {
+							setmodalVisible(true);
+						}}
 						value={pickUp}
 						placeholder="Pick-up Location"
 						style={styles.input}
@@ -111,6 +163,9 @@ const HomeSearchDrivers = (props) => {
 						Enter Destination
 					</Text>
 					<TextInput
+						onTouchStart={() => {
+							setmodalVisible2(true);
+						}}
 						value={destination}
 						placeholder="Drop Off Location"
 						style={styles.input}
@@ -131,7 +186,7 @@ const HomeSearchDrivers = (props) => {
 								<DateTimePickerModal
 									isVisible={isDatePickerVisible}
 									mode="date"
-									onConfirm={handleConfirm}
+									onConfirm={handleConfirmDate}
 									onCancel={hideDatePicker}
 									style={{ width: 30 }}
 								/>
@@ -146,7 +201,7 @@ const HomeSearchDrivers = (props) => {
 								<DateTimePickerModal
 									isVisible={isTimePickerVisible}
 									mode="time"
-									onConfirm={handleConfirm}
+									onConfirm={handleConfirmTime}
 									onCancel={hideTimePicker}
 									style={{ width: 30 }}
 								/>
@@ -192,6 +247,94 @@ const HomeSearchDrivers = (props) => {
 						</View>
 					</View>
 				</Modal>
+				<Modal
+					animationType="slide"
+					visible={modalVisible}
+					onRequestClose={() => {
+						alert("Modal has been closed.");
+					}}
+				>
+					<View style={styles.centeredView2}>
+						<TouchableHighlight
+							onPress={() => {
+								setmodalVisible(false);
+							}}
+						>
+							<Text
+								style={{
+									color: "white",
+									fontSize: 18,
+									marginLeft: 5,
+									marginTop: 5,
+								}}
+							>
+								Close
+							</Text>
+						</TouchableHighlight>
+
+						<GooglePlacesAutocomplete
+							styles={{
+								container: {
+									marginTop: 10,
+								},
+							}}
+							placeholder="Search"
+							onPress={(data, details = null) => {
+								// 'details' is provided when fetchDetails = true
+								console.log(data.description);
+								setpickUp(data.description);
+							}}
+							query={{
+								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
+								language: "en",
+							}}
+						/>
+					</View>
+				</Modal>
+				<Modal
+					animationType="slide"
+					visible={modalVisible2}
+					onRequestClose={() => {
+						alert("Modal has been closed.");
+					}}
+				>
+					<View style={styles.centeredView2}>
+						<TouchableHighlight
+							onPress={() => {
+								setmodalVisible2(false);
+							}}
+						>
+							<Text
+								style={{
+									color: "white",
+									fontSize: 18,
+									marginLeft: 5,
+									marginTop: 5,
+								}}
+							>
+								Close
+							</Text>
+						</TouchableHighlight>
+
+						<GooglePlacesAutocomplete
+							styles={{
+								container: {
+									marginTop: 10,
+								},
+							}}
+							placeholder="Search"
+							onPress={(data, details = null) => {
+								// 'details' is provided when fetchDetails = true
+								console.log(data.description);
+								setdestination(data.description);
+							}}
+							query={{
+								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
+								language: "en",
+							}}
+						/>
+					</View>
+				</Modal>
 			</View>
 		</>
 	);
@@ -222,6 +365,11 @@ const styles = StyleSheet.create({
 		// 	height: 3,
 		// },
 	},
+	centeredView2: {
+		flex: 1,
+		backgroundColor: "#043F96",
+	},
+
 	button2: {
 		width: 150,
 		alignItems: "flex-end",

@@ -6,13 +6,13 @@ import firebase from "firebase/compat/app";
 import { getDatabase, ref, set } from "firebase/database";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDFIAI_UFALrxkghGndMneVBWy0DaZSrgw",
-	authDomain: "rideshare2-f8d19.firebaseapp.com",
-	projectId: "rideshare2-f8d19",
-	storageBucket: "rideshare2-f8d19.appspot.com",
-	messagingSenderId: "255084167707",
-	appId: "1:255084167707:web:4e2e75f495b93b91a5aebe",
-	measurementId: "G-Q18F5FLBH2",
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
