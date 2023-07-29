@@ -27,6 +27,11 @@ import CheckingSeats from "./CheckingSeats";
 import CustomerRoute from "./CustomerRoute";
 import ThankYouRIde from "./ThankYouRIde";
 import ChatScreen from "./ChatScreen";
+import DriversCards from "./DriversCards";
+import DriverRouteScreen from "./DriverRouteScreen";
+import CreatingPost from "./CreatingPost";
+import DriverPosts from "./DriverPosts";
+import DriverProfile from "./DriverProfile";
 const Stack = createNativeStackNavigator();
 
 const MainStackNavigator = () => {
@@ -152,6 +157,31 @@ const MainStackNavigator = () => {
 			<Stack.Screen
 				name="ChatScreen"
 				component={ChatScreen}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="DriverCards"
+				component={DriversCards}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="DriverRouteScreen"
+				component={DriverRouteScreen}
+				options={{ headerShown: true }}
+			/>
+			<Stack.Screen
+				name="DriverProfile"
+				component={DriverProfile}
+				options={{ headerShown: true }}
+			/>
+			<Stack.Screen
+				name="CreatingPost"
+				component={CreatingPost}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="DriverPost"
+				component={DriverPosts}
 				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>

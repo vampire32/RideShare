@@ -26,6 +26,7 @@ const Splash =(props) => {
   useEffect(() => {
     setTimeout(() => {
 		oneTimeLogin()
+		// props.navigation.replace("RouteScreen");
 			
 		
       

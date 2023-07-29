@@ -10,6 +10,8 @@ import HomeNavigator from './HomeNavigator'
 import { MainStackNavigator } from "./MainStackNavigator";
 import Profile from "./Setting";
 import DigitalWallet from "./DigitalWallet";
+import * as SecureStore from "expo-secure-store";
+import { useNavigation } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
@@ -19,8 +21,13 @@ const DummyScreen = (props) => (
 	</View>
 );
 
+const clear= async()=>{
+	await SecureStore.deleteItemAsync("PhoneNum")
 
-const DrawerNavigator = () => {
+}
+
+const DrawerNavigator = (props) => {
+	const navigation = useNavigation();
 	return (
 		// <NavigationContainer>
 		<Drawer.Navigator
@@ -44,8 +51,20 @@ const DrawerNavigator = () => {
 				component={Profile}
 			></Drawer.Screen>
 
-			<Drawer.Screen name="Help">
-				{() => <DummyScreen name="Help" />}
+			<Drawer.Screen name="Sign Out">
+				{() => {
+					
+						clear()
+						navigation.navigate("Login");
+						
+					
+						
+						
+					
+					
+					
+
+				}}
 			</Drawer.Screen>
 		</Drawer.Navigator>
 		// </NavigationContainer>

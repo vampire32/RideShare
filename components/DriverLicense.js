@@ -1,13 +1,80 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Text, View,Dimensions,StyleSheet ,TextInput,Image, Pressable} from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import Card from '../assets/card.jpg'
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set } from "firebase/database";
+import * as ImagePicker from "expo-image-picker";
+import * as SecureStore from "expo-secure-store";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 
-const DriverLicense = () => {
+const DriverLicense = (props) => {
+	const { navigation, route } = props;
+		const [linceseNumber, setlinceseNumber] = useState("");
+		const [image, setImage] = useState(null);
+		const [image2, setImage2] = useState(null);
+		const [phoneNumber, setphoneNumber] = useState("");
+		 const handleChangeName = (linceseNumbers) => {
+				setlinceseNumber(linceseNumbers)
+			};
+			const pickImage = async () => {
+				// No permissions request is necessary for launching the image library
+				let result = await ImagePicker.launchImageLibraryAsync({
+					mediaTypes: ImagePicker.MediaTypeOptions.All,
+					allowsEditing: true,
+					aspect: [4, 3],
+					quality: 1,
+				});
+
+				console.log(result);
+
+				if (!result.canceled) {
+					setImage(result.assets[0].uri);
+				}
+			};
+			const pickImage2 = async () => {
+				// No permissions request is necessary for launching the image library
+				let result = await ImagePicker.launchImageLibraryAsync({
+					mediaTypes: ImagePicker.MediaTypeOptions.All,
+					allowsEditing: true,
+					aspect: [4, 3],
+					quality: 1,
+				});
+
+				console.log(result);
+
+				if (!result.canceled) {
+					setImage2(result.assets[0].uri);
+				}
+			};
+			const Submit = async () => {
+				let result = await SecureStore.getItemAsync("PhoneNum");
+				setphoneNumber(result);
+				const db = getDatabase();
+
+				set(ref(db, "Drivers/" + `${result}/` + "DriverLincese/"), {
+					DriverLicense:linceseNumber,
+					frottimg:image,
+					backimg:image2
+
+				});
+			};
   return (
 		<View style={styles.container}>
-			<ScrollView >
+			<ScrollView>
 				<View
 					style={{
 						marginTop: 50,
@@ -40,6 +107,8 @@ const DriverLicense = () => {
 						keyboardType="name-phone-pad"
 						label="Lincese Number"
 						placeholder="Lincese Number"
+						onChangeText={handleChangeName}
+						value={linceseNumber}
 					/>
 				</View>
 				<View
@@ -52,7 +121,7 @@ const DriverLicense = () => {
 					}}
 				>
 					<Image
-						source={Card}
+						source={{ uri: image }}
 						style={{ width: 300, height: 200, marginTop: 30, marginLeft: 30 }}
 					/>
 					<Text
@@ -60,7 +129,7 @@ const DriverLicense = () => {
 					>
 						Front Side
 					</Text>
-					<View style>
+					<Pressable onPress={pickImage}>
 						<Text
 							style={{
 								borderColor: "#2153CC",
@@ -75,7 +144,7 @@ const DriverLicense = () => {
 						>
 							Add Photo
 						</Text>
-					</View>
+					</Pressable>
 				</View>
 				<View
 					style={{
@@ -87,7 +156,7 @@ const DriverLicense = () => {
 					}}
 				>
 					<Image
-						source={Card}
+						source={{ uri: image2 }}
 						style={{ width: 300, height: 200, marginTop: 30, marginLeft: 30 }}
 					/>
 					<Text
@@ -95,7 +164,7 @@ const DriverLicense = () => {
 					>
 						Front Side
 					</Text>
-					<View style>
+					<Pressable onPress={pickImage2}>
 						<Text
 							style={{
 								borderColor: "#2153CC",
@@ -106,16 +175,21 @@ const DriverLicense = () => {
 								paddingVertical: 10,
 								marginLeft: "35%",
 								marginTop: 10,
-                marginBottom:30
+								marginBottom: 30,
 							}}
 						>
 							Add Photo
 						</Text>
-					</View>
+					</Pressable>
 				</View>
-        <Pressable>
-          <Text style={styles.button}>Next</Text>
-        </Pressable>
+				<Pressable
+					onPress={() => {
+						Submit();
+						// navigation.navigate("DriverReg");
+					}}
+				>
+					<Text style={styles.button}>Next</Text>
+				</Pressable>
 			</ScrollView>
 		</View>
 	);

@@ -4,6 +4,8 @@ import { TextInput } from 'react-native-paper'
 import Logo from "../assets/person-icon-5.png"
 import firebase from "firebase/compat/app";
 import { getDatabase, ref, set } from "firebase/database";
+import * as ImagePicker from "expo-image-picker";
+import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -23,6 +25,8 @@ const BasicInfo = (props) => {
 	const [Name, setName] = useState("");
 	const [Email, setEmail] = useState("");
 	const [DOB, setDOB] = useState("");
+	const [image, setImage] = useState(null);
+	const [phoneNumber, setphoneNumber] = useState("");
 	 const handleChangeName = (name) => {
 			setName(name);
 		};
@@ -32,13 +36,30 @@ const BasicInfo = (props) => {
 		const handleChangeGender = (DOB) => {
 			setDOB(DOB);
 		};
-		const Submit = () => {
+		   const pickImage = async () => {
+					// No permissions request is necessary for launching the image library
+					let result = await ImagePicker.launchImageLibraryAsync({
+						mediaTypes: ImagePicker.MediaTypeOptions.All,
+						allowsEditing: true,
+						aspect: [4, 3],
+						quality: 1,
+					});
+
+					console.log(result);
+
+					if (!result.canceled) {
+						setImage(result.assets[0].uri);
+					}
+				};
+		const Submit = async() => {
+			let result = await SecureStore.getItemAsync("PhoneNum");
+		setphoneNumber(result);
 			const db = getDatabase();
-			set(ref(db, "Drivers/" + "BasicInfo/"+Email), {
+			set(ref(db, "Drivers/"+`${result}/` + "BasicInfo/"), {
 				Fullname: Name,
 				Email: Email,
 				DOB: DOB,
-				
+				Profilepic:image,
 			});
 		};
 	
@@ -66,9 +87,12 @@ const BasicInfo = (props) => {
 						height: 80,
 					}}
 				>
-					<Image source={Logo} style={{ width: 80, height: 80 }}></Image>
+					<Image
+						source={{ uri: image }}
+						style={{ width: 80, height: 80 }}
+					></Image>
 				</View>
-				<TouchableHighlight>
+				<TouchableHighlight onPress={pickImage}>
 					<Text
 						style={{
 							marginTop: 10,

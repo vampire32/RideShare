@@ -1,9 +1,52 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { FlatList, Image, View,Text,StyleSheet,Dimensions,Pressable } from 'react-native'
 import Logo from '../assets/der.jpg'
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set } from "firebase/database";
+import * as ImagePicker from "expo-image-picker";
+import * as SecureStore from "expo-secure-store";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
 
 const IdConfrim = (props) => {
    const { navigation, route } = props;
+   const [image, setImage] = useState(null);
+   	const [phoneNumber, setphoneNumber] = useState("");
+   const pickImage = async () => {
+			// No permissions request is necessary for launching the image library
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.All,
+				allowsEditing: true,
+				aspect: [4, 3],
+				quality: 1,
+			});
+
+			console.log(result);
+
+			if (!result.canceled) {
+				setImage(result.assets[0].uri);
+				
+			}
+		};
+		const Submit = async() => {
+			let result = await SecureStore.getItemAsync("PhoneNum");
+		setphoneNumber(result);
+			const db = getDatabase();
+			set(ref(db, "Drivers/" + `${result}/` + "idconfirm/"), {
+				picofViechile: image,
+			});
+		};
   return (
 		<View style={styles.container}>
 			<Text
@@ -26,26 +69,28 @@ const IdConfrim = (props) => {
 				}}
 			>
 				<Image
-					source={Logo}
+					source={{ uri: image }}
 					style={{ width: 150, height: 150, borderRadius: 20 }}
 				/>
-				<Text
-					style={{
-						marginTop: 10,
-						marginBottom: 20,
-						fontSize: 16,
-						borderColor: "#2153CC",
-						borderRadius: 40,
-						borderWidth: 1,
-						paddingBottom: 10,
-						paddingLeft: 20,
-						paddingRight: 20,
-						paddingTop: 10,
-						color: "#2153CC",
-					}}
-				>
-					Add Photo
-				</Text>
+				<Pressable onPress={pickImage}>
+					<Text
+						style={{
+							marginTop: 10,
+							marginBottom: 20,
+							fontSize: 16,
+							borderColor: "#2153CC",
+							borderRadius: 40,
+							borderWidth: 1,
+							paddingBottom: 10,
+							paddingLeft: 20,
+							paddingRight: 20,
+							paddingTop: 10,
+							color: "#2153CC",
+						}}
+					>
+						Add Photo
+					</Text>
+				</Pressable>
 			</View>
 
 			<Text
@@ -65,7 +110,8 @@ const IdConfrim = (props) => {
 
 			<Pressable
 				onPress={() => {
-					navigation.replace("DriverReg");
+					Submit()
+					props.navigation.replace("DriverReg");
 				}}
 			>
 				<Text style={styles.button}>Next</Text>

@@ -7,6 +7,7 @@ import Icon2 from '../assets/cer.png'
 import firebase from "firebase/compat/app";
 import { getDatabase, ref, set } from "firebase/database";
 import * as ImagePicker from "expo-image-picker";
+import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -28,6 +29,7 @@ const VechlieInfo = (props) => {
 	const [image, setImage] = useState(null);
 	const [image2, setImage2] = useState(null);
 	const [image3, setImage3] = useState(null);
+		const [phoneNumber, setphoneNumber] = useState("");
 
 	const pickImage = async () => {
 		// No permissions request is necessary for launching the image library
@@ -78,20 +80,25 @@ const VechlieInfo = (props) => {
 		if (!result.canceled) {
 			
 			setImage3(result.assets[0].uri);
+			console.log(image)
 		}
 	};
 	const handleChangeName = (name) => {
 		setName(name);
 	};
 	const handleChangeEmail = (Plate) => {
-		setEmail(Plate);
+		setPlate(Plate);
 	};
-	const Submit = () => {
+	const Submit = async() => {
+		let result = await SecureStore.getItemAsync("PhoneNum");
+		setphoneNumber(result);
 		const db = getDatabase();
-		set(ref(db, "Drivers/" + "VechileInfo/" + Name), {
+		set(ref(db, "Drivers/" + `${result}/` + "VechileInfo/"), {
 			Vechilename: Name,
-			Plate: Email,
-			
+			Plate: Plate,
+			picofViechile: image,
+			certfiFront: image2,
+			certfiback: image3,
 		});
 	};
   return (
@@ -195,7 +202,8 @@ const VechlieInfo = (props) => {
 
 			<Pressable
 				onPress={() => {
-					navigation.replace("DriverReg");
+					Submit()
+					props.navigation.replace("DriverReg");
 				}}
 			>
 				<Text style={styles.button}>Next</Text>

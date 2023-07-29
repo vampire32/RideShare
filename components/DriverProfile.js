@@ -1,5 +1,14 @@
-import React, { Component,useState,useEffect } from "react";
-import { StyleSheet, View, Image, Text,TouchableHighlight,ImageBackground,Dimensions,Modal } from "react-native";
+import React, { Component, useState, useEffect } from "react";
+import {
+	StyleSheet,
+	View,
+	Image,
+	Text,
+	TouchableHighlight,
+	ImageBackground,
+	Dimensions,
+	Modal,
+} from "react-native";
 import bg from "../assets/images/bg2.png";
 import { TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -22,37 +31,35 @@ const firebaseConfig = {
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
-function Profile(props) {
-	const [UserName, setUserName] = useState("")
-	const [UserEmail, setUserEmail] = useState("")
-	const [UserPhone, setUserPhone] = useState("")
-	const [UserGender, setUserGender] = useState("")
-	const [UserProfile, setUserProfile] = useState("")
+function DriverProfile(props) {
+	const [UserName, setUserName] = useState("");
+	const [UserEmail, setUserEmail] = useState("");
+	const [UserPhone, setUserPhone] = useState("");
+	const [UserGender, setUserGender] = useState("");
+	const [UserProfile, setUserProfile] = useState("");
 	const [ModalVisible, setModalVisible] = useState(false);
-		const { navigation, route } = props;
+	const { navigation, route } = props;
 	useEffect(() => {
-		const FecthData=async()=>{
+		const FecthData = async () => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
 			const db = getDatabase();
-			onValue(ref(db, `users/${result}`), (querySnapShot) => {
+			onValue(ref(db, `Drivers/${result}/BasicInfo`), (querySnapShot) => {
 				let data = querySnapShot.val() || {};
-				setUserName(data.Fullname)
-				setUserEmail(data.Email)
-				setUserPhone(data.Phone)
-				setUserGender(data.Gender)
-				setUserProfile(data.Profilepic)
+				setUserName(data.Fullname);
+				setUserEmail(data.Email);
+				setUserPhone(result);
+				setUserGender(data.Gender);
+				setUserProfile(data.Profilepic);
 			});
+		};
+		FecthData();
+	}, []);
 
-		}
-		FecthData()
-	  
-	}, [])
-	
 	return (
 		<View style={styles.container}>
 			<ImageBackground source={bg} resizeMode="cover" style={styles.container}>
 				<Image
-					source={{uri:UserProfile}}
+					source={{ uri: UserProfile }}
 					resizeMode="contain"
 					style={styles.image}
 				></Image>
@@ -131,31 +138,7 @@ function Profile(props) {
 					</Text>
 					<Text style={{ padding: 24 }}></Text>
 				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "space-around",
-					}}
-				>
-					<Icon2
-						name="venus-mars"
-						size={40}
-						color="#FFff"
-						style={{ marginTop: 20 }}
-					/>
-					<Text
-						style={{
-							marginTop: 25,
-							fontSize: 24,
-							color: "#fff",
-							fontWeight: "bold",
-						}}
-					>
-						{UserGender}
-					</Text>
-					<Text style={{ padding: 24 }}></Text>
-				</View>
+			
 
 				{/* <TouchableHighlight
 					onPress={() => {
@@ -257,7 +240,7 @@ const styles = StyleSheet.create({
 		height: 133,
 		marginTop: 50,
 		marginLeft: 127,
-		borderRadius:100,
+		borderRadius: 100,
 	},
 	button2: {
 		width: 150,
@@ -300,4 +283,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Profile;
+export default DriverProfile;

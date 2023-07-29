@@ -120,7 +120,7 @@ const phoneInput = useRef(null);
 								let result = await SecureStore.getItemAsync("PhoneNum");
 								console.log(result)
 								props.navigation.navigate("Verification", {
-									verificationId: verificationId,
+									verificationID: verificationId,
 									Phone: phoneNumber,
 								});
 							} catch (err) {

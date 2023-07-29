@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import {
 	Button,
 	DrawerLayoutAndroid,
@@ -11,6 +11,7 @@ import {
 	StatusBar,
 	SafeAreaView,
 	TouchableHighlight,
+	Dimensions
 } from "react-native";
 
 import HomeSearch from "./HomeSearch";
@@ -24,12 +25,66 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Colors from "../assets/constants/Colors";
 import MapVieww from "./CurrentLocation";
 import HomeSearchDrivers from "./HomeSearchDrivers";
-
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set, get, onValue, child } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import DriversCards from "./DriversCards";
+import * as SecureStore from "expo-secure-store";
+import DriverRouteScreen from "./DriverRouteScreen";
+import DriverPosts from "./DriverPosts";
+const android = Dimensions.get("window");
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 const DriverDashboard = (props) => {
 	const { navigation, route } = props;
 	  const drawer = useRef(null);
 		const [drawerPosition, setDrawerPosition] = useState("left");
+		const [dataExists, setDataExists] = useState(false);
+		const [DriverID, setDriverID] = useState("")
+		const [DriverName, setDriverName] = useState("")
+		useEffect(async() => {
+			let result=await SecureStore.getItemAsync("PhoneNum")
+			const db = getDatabase();
+			// onValue(ref(db,"users/"),(querySnapShot)=>{
+			// 	// let data2=querySnapShot. ||{};
+			// 	// console.log(data2)
+			// 	querySnapShot.forEach((chideSnapshot)=>{
+			// 		let data2=chideSnapshot.val() ||{};
+			// 		console.log(data2)
+			// 	})
+			// })
+			onValue(ref(db, "Seats/"), (querySnapShot)=>{
+				querySnapShot.forEach((chideSnapshot) => {
+					let data2 = chideSnapshot.child("DriverID").val();
+					console.log(data2);
+					setDriverID(data2)
+					console.log(DriverID)
+				});
+			});
+			onValue(ref(db,`DriverPosts/${DriverID}`),(querySnapShot)=>{
+				let data=querySnapShot.exists()
+				console.log(data)
+				setDataExists(data)
+				
+			})
+			onValue(ref(db,`Drivers${result}/BasicInfo`),(querySnapShot)=>{
+				let data=querySnapShot.val()||{}
+				setDriverName(data.Fullname)
+
+			})
+		 
+		}, [])
+		
 		const changeDrawerPosition = () => {
 			if (drawerPosition === "left") {
 				setDrawerPosition("right");
@@ -52,39 +107,12 @@ const DriverDashboard = (props) => {
 							<FontAwesome name="user" size={28} color={Colors.blackGrey} />
 						</View>
 						<View>
-							<Text style={styles.nameText}>Abdul Moiz</Text>
-							<View style={styles.flexRow}>
-								<Text style={styles.ratingText}>5.0</Text>
-								<FontAwesome name="star" size={8} color={Colors.mediumGrey} />
-							</View>
+							<Text style={styles.nameText}>{DriverName}</Text>
+							
 						</View>
 					</View>
 
-					<View style={styles.borderContainer}>
-						<Pressable
-							style={[styles.flexRow, { justifyContent: "space-between" }]}
-						>
-							<View style={styles.flexRow}>
-								<Text style={styles.textBold}>Messages</Text>
-								<View style={styles.circle} />
-							</View>
-							<View>
-								<SimpleLineIcons
-									name="arrow-right"
-									size={15}
-									color={Colors.white}
-								/>
-							</View>
-						</Pressable>
-					</View>
-
-					<Pressable style={{ marginTop: 10 }}>
-						<Text style={styles.textGrey}>Do more with your account</Text>
-					</Pressable>
-
-					<Pressable>
-						<Text style={styles.text}>Make money driving</Text>
-					</Pressable>
+					
 				</View>
 				<Pressable
 					onPress={() => {
@@ -126,7 +154,7 @@ const DriverDashboard = (props) => {
 				</Pressable>
 				<Pressable
 					onPress={() => {
-						navigation.replace("Profile");
+						navigation.replace("DriverProfile");
 					}}
 				>
 					<View
@@ -143,63 +171,9 @@ const DriverDashboard = (props) => {
 						</Text>
 					</View>
 				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("DriverLicense");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							Help
-						</Text>
-					</View>
-				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("CNIC");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							History
-						</Text>
-					</View>
-				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("FindingCustomers");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							Ride Requests
-						</Text>
-					</View>
-				</Pressable>
+				
+				
+				
 			</View>
 		);
 		const Item = ({ title, component }) => (
@@ -208,37 +182,25 @@ const DriverDashboard = (props) => {
 			</View>
 		);
 	return (
-		<DrawerLayoutAndroid
-			ref={drawer}
-			drawerWidth={300}
-			drawerPosition={drawerPosition}
-			renderNavigationView={navigationView}
-		>
-			<View>
-				{/* <Button
-					title="Open drawer"
-					onPress={() => drawer.current.openDrawer()}
-				/> */}
-				<Pressable
-					style={styles.floatTopButton}
-					onPress={() => drawer.current.openDrawer()}
-				>
-					<EvilIcons name="navicon" size={30} color="#fff" />
-				</Pressable>
-				<View style={styles.map}>
-					<MapVieww />
+		<>
+			<DrawerLayoutAndroid
+				ref={drawer}
+				drawerWidth={300}
+				drawerPosition={drawerPosition}
+				renderNavigationView={navigationView}
+			>
+				<View style={{ flex: 0.25 }}>
+					<View style={styles.floatTopButton}>
+						<Pressable onPress={() => drawer.current.openDrawer()}>
+							<EvilIcons name="navicon" size={30} color="#1F4690" />
+						</Pressable>
+						<Text style={{marginLeft:"30%",fontSize:20,fontWeight:"bold"}}>Driver Post</Text>
+					</View>
 				</View>
-				<View style={styles.bottomContainer}>
-					<ImageBackground
-						style={styles.bottomContainer}
-						source={bg}
-						resizeMode="cover"
-					>
-						<HomeSearchDrivers/>
-					</ImageBackground>
-				</View>
-			</View>
-		</DrawerLayoutAndroid>
+				
+				<DriverPosts />
+			</DrawerLayoutAndroid>
+		</>
 	);
 };
 const styles = StyleSheet.create({
@@ -322,25 +284,20 @@ const styles = StyleSheet.create({
 		borderTopEndRadius: 15,
 	},
 	floatTopButton: {
-		position: "absolute",
-		top: 50,
-		left: 20,
-		padding: 10,
-		borderRadius: 50,
-		backgroundColor: "#fcc200",
+		flexDirection:"row",
+		
+		top: 25,
+		left:10,
+		
+		width: android.width,
+		
+		backgroundColor: "#ffff",
 		zIndex: 4,
-		justifyContent: "center",
-		alignItems: "center",
+		justifyContent: "flex-start",
+		alignItems: "flex-start",
+		paddingVertical:20,
 
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 3,
-		},
-		shadowOpacity: 0.29,
-		shadowRadius: 4.65,
-
-		elevation: 7,
+		
 	},
 	container: {
 		flex: 1,

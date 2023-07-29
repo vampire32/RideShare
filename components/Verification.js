@@ -46,6 +46,7 @@ const Verification = (props) => {
 	const { navigation, route } = props;
 
 	const [verificationCode, setVerificationCode] = React.useState();
+	const [verificationId, setverificationId] = React.useState(route.params.verificationID);
 
 	const firebaseConfig = firebase.apps.length
 		? firebase.app().options
@@ -57,7 +58,7 @@ const Verification = (props) => {
 			  }
 			: undefined
 	);
-	let verificationId;
+	
 	return (
 		<>
 			<View style={styles.container}>
@@ -104,7 +105,7 @@ const Verification = (props) => {
 								try {
 									// setVerificationId=props.id
 									const credential = firebase.auth.PhoneAuthProvider.credential(
-										(verificationId = route.params.verificationId),
+										verificationId,
 										verificationCode
 									);
 									await firebase.auth().signInWithCredential(credential);
@@ -114,11 +115,9 @@ const Verification = (props) => {
 										Phone: route.params.Phone,
 									});
 								} catch (err) {
-									showMessage({
-										text: `Error: ${err.message}`,
-										color: "red",
-									});
+									alert("PLease Enter Correct Number again")
 									console.log(verificationId);
+									navigation.navigate("Login")
 								}
 							}}
 						>

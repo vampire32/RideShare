@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
 	Text,
 	View,
@@ -11,20 +11,22 @@ import {
 	TouchableOpacity,
 	Modal,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+
 import { TextInput } from "react-native-paper";
 import bg from "../assets/images/bg2.png";
+import * as SecureStore from "expo-secure-store";
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Colors from "../assets/constants/Colors";
 
 import firebase from "firebase/compat/app";
-import { getDatabase, ref, set,push,child ,update} from "firebase/database";
+import { getDatabase, ref, set,push,child ,update,onValue} from "firebase/database";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { getAuth } from "firebase/auth";
 import { Time } from "react-native-gifted-chat";
-import * as SecureStore from "expo-secure-store";
+import { useNavigation } from "@react-navigation/native";
+
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -52,10 +54,13 @@ const HomeSearchDrivers = (props) => {
 	const [modalVisible2, setmodalVisible2] = useState(false);
 	const [ID, setID] = useState(null)
 	const [phoneNumber, setphoneNumber] = useState("")
-		const oneTimeLogin = async () => {
-			
-			
-		};
+	const [Fullname, setFullname] = useState("")
+	const [profilepic, setprofilepic] = useState("")
+	const [carName, setcarName] = useState("")
+	const [carplate, setcarplate] = useState("")
+	const [DriverNum, setDriverNum] = useState("")
+	
+	
 	const handleChangePickup = (pickUp) => {
 		setpickUp(pickUp);
 	};
@@ -101,10 +106,35 @@ const HomeSearchDrivers = (props) => {
 		hideTimePicker();
 	};
 	const randomNumber = Math.floor(Math.random() * 100) + 1;
+	const oneTimeLogin = async () => {
+		
+	};
+useEffect(async() => {
+	let result = await SecureStore.getItemAsync("PhoneNum");
+	setphoneNumber(result);
+	
+	
+  const db =getDatabase()
+  onValue(ref(db, `Drivers/${result}/BasicInfo`), (querySnapShot) => {
+		let data = querySnapShot.val() || {};
+		console.log(data)
+		setFullname(data.Fullname)
+		setprofilepic(data.Profilepic)
+		
+	});
+	onValue(ref(db, `Drivers/${result}/VechileInfo`),(querySnapShot)=>{
+		let data2=querySnapShot.val()||{};
+		console.log(data2)
+		setcarName(data2.Vechilename)
+		setcarplate(data2.Plate)
+	});
+   
+
+  
+}, [])
 
 	const Submit = async() => {
-		let result = await SecureStore.getItemAsync("PhoneNum");
-		setphoneNumber(result);
+		
 		console.log(phoneNumber)
 	
 		  const postData = {
@@ -112,17 +142,30 @@ const HomeSearchDrivers = (props) => {
 			Destination:destination,
 			Date:date,
 			Time:time,
-			DriverNumber:phoneNumber
+			DriverNumber:phoneNumber,
+			Fullname:Fullname,
+			Profilepic:profilepic,
 			
 
 			};
 		const db = getDatabase();
-		const newPostKey= push(child(ref(db), 'posts')).key;
-		  const updates = {};
+		   push(ref(db, "/DriverPosts"), {
+					Pickup: pickUp,
+					Destination: destination,
+					Date: date,
+					Time: time,
+					Fullname: Fullname,
+					Profilepic: profilepic,
+					carName: carName,
+					carplate: carplate,
+					DriverNumber: phoneNumber,
+				});
+		// const newPostKey= push(child(ref(db), 'posts')).key;
+		//   const updates = {};
 			
-			updates["/Driverposts/" + newPostKey] = postData;
+		// 	updates["/Driverposts/" + `UID/${newPostKey}`] = postData;
 
-			return update(ref(db), updates);
+		// 	return update(ref(db), updates);
 	};
 
 	return (
@@ -240,6 +283,7 @@ const HomeSearchDrivers = (props) => {
 							<TouchableHighlight
 								onPress={() => {
 									setmodelVisable(false);
+									navigation.navigate("DriverDashboard");
 								}}
 							>
 								<Text style={styles.button2}>Close</Text>

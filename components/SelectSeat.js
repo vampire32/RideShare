@@ -1,10 +1,118 @@
-import React, { Component } from "react";
+import React, { Component ,useState,useEffect} from "react";
 import { StyleSheet, View, Image, Text,Button,Dimensions,ImageBackground,TouchableHighlight } from "react-native";
 import Car from '../assets/car.png'
 import bg from "../assets/images/bg.png";
 import MapVieww from "./CurrentLocation";
+import { Pressable } from "react-native";
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set, get, onValue,child } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import * as SecureStore from "expo-secure-store";
 
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 function SelectSeat(props) {
+	const [colorIndex, setColorIndex] = useState(0);
+	const [colorIndex2, setColorIndex2] = useState(0);
+	const [colorIndex3, setColorIndex3] = useState(0);
+	const [colorIndex4, setColorIndex4] = useState(0);
+	const colors = ["gray", "blue", "pink"];
+	const changeColor = () => {
+		// Increment the colorIndex, looping back to 0 when reaching the end of the colors array
+		setColorIndex((prevColorIndex) => (prevColorIndex + 1) % colors.length);
+	};
+	const changeColor2 = () => {
+		// Increment the colorIndex, looping back to 0 when reaching the end of the colors array
+		setColorIndex2((prevColorIndex2) => (prevColorIndex2 + 1) % colors.length);
+	};
+	const changeColor3 = () => {
+		// Increment the colorIndex, looping back to 0 when reaching the end of the colors array
+		setColorIndex3((prevColorIndex3) => (prevColorIndex3 + 1) % colors.length);
+	};
+	const changeColor4 = () => {
+		// Increment the colorIndex, looping back to 0 when reaching the end of the colors array
+		setColorIndex4((prevColorIndex3) => (prevColorIndex3 + 1) % colors.length);
+	};
+
+	const containerStyle = {
+		backgroundColor: colors[colorIndex],
+	};
+	const containerStyle2 = {
+		backgroundColor: colors[colorIndex2],
+	};
+	const containerStyle3 = {
+		backgroundColor: colors[colorIndex3],
+	};
+	const containerStyle4 = {
+		backgroundColor: colors[colorIndex4],
+	};
+	const [Name, setName] = useState("");
+	const [Email, setEmail] = useState("");
+	const [Gender, setGender] = useState("");
+	const [Phone, setPhone] = useState("");
+	const [Seat, setSeat] = useState("")
+	const [DriverID, setDriverID] = useState("")
+	useEffect(async() => {
+	  let result = await SecureStore.getItemAsync("PhoneNum");
+	  let driverid=await SecureStore.getItemAsync("DriverID")
+	  setDriverID(driverid)
+
+	  
+	
+  const db =getDatabase()
+  onValue(ref(db, `users/${result}`), (querySnapShot) => {
+		let data = querySnapShot.val() || {};
+		console.log(data)
+		setName(data.Fullname)
+		setPhone(data.Phone)
+		setGender(data.Gender)
+		
+		
+	});
+
+	
+    
+	
+	  
+	}, [])
+	let Seat1 = "1";
+	let Seat2 = "2";
+	let Seat3 = "3";
+	let Seat4 = "4";
+const handleChangeSeat1 = () => {
+	setSeat(Seat1);
+};
+const handleChangeSeat2 = () => {
+	setSeat(Seat2);
+};
+const handleChangeSeat3 = () => {
+	setSeat(Seat3);
+};
+const handleChangeSeat4 = () => {
+	setSeat(Seat4);
+};
+	const Submit = () => {
+		const db = getDatabase();
+		set(ref(db, "Seats/" + Phone), {
+			Fullname: Name,
+			
+			Gender: Gender,
+			Phone: Phone,
+			SeatNumber:Seat,
+			DriverID:DriverID,
+		});
+	};
+	
 	return (
 		<View style={styles.container}>
 			<View style={styles.map}>
@@ -42,28 +150,57 @@ function SelectSeat(props) {
 				</View>
 				<View style={styles.group2}>
 					<View style={styles.rectRow}>
-						<View style={styles.rect}>
-							<Text style={styles.loremIpsum}>1</Text>
-						</View>
+						<Pressable
+							onPress={() => {
+								changeColor();
+								handleChangeSeat1();
+							}}
+						>
+							<View style={[styles.rect, containerStyle]}>
+								<Text style={styles.loremIpsum}>1</Text>
+							</View>
+						</Pressable>
 
 						<View style={styles.rect1}>
 							<Text style={styles.driver}>Driver</Text>
 						</View>
 					</View>
 					<View style={styles.rect2Row}>
-						<View style={styles.rect2}>
-							<Text style={styles.loremIpsum2}>2</Text>
-						</View>
-						<View style={styles.rect3}>
-							<Text style={styles.loremIpsum3}>3</Text>
-						</View>
-						<View style={styles.rect4}>
-							<Text style={styles.loremIpsum4}>4</Text>
-						</View>
+						<Pressable
+							onPress={() => {
+								changeColor2();
+								handleChangeSeat2();
+							}}
+						>
+							<View style={[styles.rect2, containerStyle2]}>
+								<Text style={styles.loremIpsum}>2</Text>
+							</View>
+						</Pressable>
+						<Pressable
+							onPress={() => {
+								changeColor3();
+								handleChangeSeat3();
+							}}
+						>
+							<View style={[styles.rect3, containerStyle3]}>
+								<Text style={styles.loremIpsum}>3</Text>
+							</View>
+						</Pressable>
+						<Pressable
+							onPress={() => {
+								changeColor4();
+								handleChangeSeat4();
+							}}
+						>
+							<View style={[styles.rect4, containerStyle4]}>
+								<Text style={styles.loremIpsum}>4</Text>
+							</View>
+						</Pressable>
 					</View>
 				</View>
 				<TouchableHighlight
 					onPress={() => {
+						Submit();
 						props.navigation.replace("RouteScreen");
 					}}
 				>
@@ -151,7 +288,7 @@ const styles = StyleSheet.create({
 	rect: {
 		width: 79,
 		height: 70,
-		backgroundColor: "rgba(3,68,142,1)",
+		
 		shadowColor: "rgba(0,0,0,1)",
 		shadowOffset: {
 			width: 2,

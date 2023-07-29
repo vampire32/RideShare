@@ -1,9 +1,74 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Text, View,Dimensions,StyleSheet ,TextInput,Image, Pressable} from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import Card from '../assets/card2.jpg'
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set } from "firebase/database";
+import * as ImagePicker from "expo-image-picker";
+import * as SecureStore from "expo-secure-store";
 
-const CNIC = () => {
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+const CNIC = (props) => {
+	const { navigation, route } = props;
+	const [CnicNumber, setCnic] = useState("");
+	const [image, setImage] = useState(null);
+	const [image2, setImage2] = useState(null);
+	const [phoneNumber, setphoneNumber] = useState("");
+	const handleChangeName = (CnicNumbers) => {
+		setCnic(CnicNumbers);
+	};
+	const pickImage = async () => {
+		// No permissions request is necessary for launching the image library
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		console.log(result);
+
+		if (!result.canceled) {
+			setImage(result.assets[0].uri);
+		}
+	};
+	const pickImage2 = async () => {
+		// No permissions request is necessary for launching the image library
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		console.log(result);
+
+		if (!result.canceled) {
+			setImage2(result.assets[0].uri);
+		}
+	};
+	const Submit = async () => {
+			let result = await SecureStore.getItemAsync("PhoneNum");
+		const db = getDatabase();
+
+		set(ref(db, "Drivers/" + `${result}/` + "CINCinfo/"), {
+			DriverCnic: CnicNumber,
+			frottimg: image,
+			backimg: image2,
+		});
+	};
   return (
 		<View style={styles.container}>
 			<ScrollView>
@@ -39,6 +104,8 @@ const CNIC = () => {
 						keyboardType="name-phone-pad"
 						label="Lincese Number"
 						placeholder="Lincese Number"
+						onChangeText={handleChangeName}
+						value={CnicNumber}
 					/>
 				</View>
 				<View
@@ -51,7 +118,7 @@ const CNIC = () => {
 					}}
 				>
 					<Image
-						source={Card}
+						source={{ uri: image }}
 						style={{ width: 300, height: 200, marginTop: 30, marginLeft: 30 }}
 					/>
 					<Text
@@ -59,7 +126,7 @@ const CNIC = () => {
 					>
 						Front Side
 					</Text>
-					<View style>
+					<Pressable onPress={pickImage}>
 						<Text
 							style={{
 								borderColor: "#2153CC",
@@ -74,7 +141,7 @@ const CNIC = () => {
 						>
 							Add Photo
 						</Text>
-					</View>
+					</Pressable>
 				</View>
 				<View
 					style={{
@@ -86,7 +153,7 @@ const CNIC = () => {
 					}}
 				>
 					<Image
-						source={Card}
+						source={{ uri: image2 }}
 						style={{ width: 300, height: 200, marginTop: 30, marginLeft: 30 }}
 					/>
 					<Text
@@ -94,7 +161,7 @@ const CNIC = () => {
 					>
 						Front Side
 					</Text>
-					<View style>
+					<Pressable onPress={pickImage2}>
 						<Text
 							style={{
 								borderColor: "#2153CC",
@@ -110,9 +177,21 @@ const CNIC = () => {
 						>
 							Add Photo
 						</Text>
-					</View>
+					</Pressable>
 				</View>
-				<Pressable>
+				<Pressable onPress={async()=>{
+					try {
+						let result = await SecureStore.getItemAsync("PhoneNum");
+						setphoneNumber(result);
+						Submit();
+						// navigation.navigate("DriverReg");
+					} catch (error) {
+						console.log(error)
+						
+					}
+					
+					
+				}}>
 					<Text style={styles.button}>Next</Text>
 				</Pressable>
 			</ScrollView>

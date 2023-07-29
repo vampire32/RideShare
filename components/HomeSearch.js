@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import {
 	Text,
 	View,
@@ -20,9 +20,117 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Colors from "../assets/constants/Colors";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import firebase from "firebase/compat/app";
+import {
+	getDatabase,
+	ref,
+	set,
+	push,
+	child,
+	update,
+	onValue,
+} from "firebase/database";
+import * as SecureStore from "expo-secure-store";
+import MapVieww from "./CurrentLocation";
+// import * as Location from "expo-location";
+// navigator.geolocation = require('@react-native-community/geolocation');
+// navigator.geolocation = require('react-native-geolocation-service');
+
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
 
 
 const HomeSearch = (props) => {
+	const [UserInput, setUserInput] = useState("")
+	
+
+	
+	const [UserName, setUserName] = useState("")
+	const [UserPic, setUserPic] = useState("")
+	const [UserPhoneNum, setUserPhoneNum] = useState("")
+	const [UserSeat, setUserSeat] = useState("")
+	const [isLoading, setisLoading] = useState(true)
+	  const [Latitude, setLatitude] = useState("");
+		const [longtitude, setlongtitude] = useState("");
+		const [Latitude2, setLatitude2] = useState("");
+		const [longtitude2, setlongtitude2] = useState("");
+		const [UserLatitude, setUserLatitude] = useState("");
+		const [Userlongtitude, setUserlongtitude] = useState("");
+		const [UserLatitude2, setUserLatitude2] = useState("");
+		const [Userlongtitude2, setUserlongtitude2] = useState("");
+		const [RidePrice, setRidePrice] = useState("")
+		const deg2rad = (angle) => {
+			return angle * (Math.PI / 180);
+		};
+		const calculateDistance = () => {
+			const R = 6371; // Earth's radius in kilometers
+
+			const dLat = deg2rad(Latitude2 - Latitude);
+			const dLon = deg2rad(longtitude2 - longtitude);
+
+			const a =
+				Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+				Math.cos(deg2rad(Latitude)) *
+					Math.cos(deg2rad(Latitude2)) *
+					Math.sin(dLon / 2) *
+					Math.sin(dLon / 2);
+
+			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+			const distance = R * c;
+			console.log(distance)
+			const PetPricePerKM=5;
+			const MaintainceCOst=5;
+			const DriverProfit=5;
+			const KMPrice=Math.round( distance*(PetPricePerKM+MaintainceCOst+DriverProfit))
+			console.log(KMPrice)
+			setRidePrice(KMPrice)
+			return KMPrice;
+		};
+		const settingCordinates=()=>{
+			let userlat1=parseFloat(Latitude)
+			let userlong=parseFloat(longtitude)
+			let userlat2=parseFloat(Latitude2)
+			let userlong2=parseFloat(longtitude2)
+			setUserLatitude(userlat1)
+			setUserlongtitude(userlong)
+			setUserLatitude2(userlat2)
+			setUserlongtitude2(userlong2)
+		}
+		
+	useEffect(async () => {
+		
+		
+		let result = await SecureStore.getItemAsync("PhoneNum");
+
+		const db = getDatabase();
+		onValue(ref(db, `users/${result}`), (querySnapShot) => {
+			let data = querySnapShot.val() || {};
+			setUserName(data.Fullname)
+			setUserPic(data.Profilepic)
+			
+			
+		});
+		onValue(ref(db,`Seats/${result}`),(querySnapShot)=>{
+			let data2 =querySnapShot.val()||{};
+			setUserPhoneNum(data2.Phone)
+			setUserSeat(data2.SeatNumber)
+			
+		})
+	}, []);
+	
 	const navigation = useNavigation();
 	 const [date, setDate] = useState(new Date(1598051730000));
 	  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -31,6 +139,9 @@ const HomeSearch = (props) => {
 	  const [modalVisible2, setmodalVisible2] = useState(false);
 	  const [AddressText, setAddressText] = useState("")
 	  const [Destination, setDestination] = useState("")
+	  const [modelVisable3, setmodelVisable3] = useState(false)
+	
+	  
 
 	  const onVhangeAdress=(AddressText)=>{
 		setAddressText(AddressText)
@@ -56,9 +167,39 @@ const HomeSearch = (props) => {
 					hideDatePicker();
 					hideTimePicker();
 				};
+				
+
+				
+const Submit = async () => {
+	let result = await SecureStore.getItemAsync("PhoneNum");
+
+	const db = getDatabase();
+	push(ref(db, `/UserPosts`), {
+		Fullname: UserName,
+		Pickup: AddressText,
+		dropoff: Destination,
+		RidePrice:RidePrice,
+		userPic:UserPic,
+		userPhone:result,
+		
+		Latitude:UserLatitude,
+		longtitude:Userlongtitude,
+		Latitude2:UserLatitude2,
+		longtitude2:Userlongtitude2,
+	});
+	// const newPostKey= push(child(ref(db), 'posts')).key;
+	//   const updates = {};
+
+	// 	updates["/Driverposts/" + `UID/${newPostKey}`] = postData;
+
+	// 	return update(ref(db), updates);
+};
 
 	return (
 		<>
+			
+				
+			
 			<View style={styles.container}>
 				{/* <View style={styles.flexCenter}>
 						<View style={styles.horizontalClip} />
@@ -137,8 +278,17 @@ const HomeSearch = (props) => {
 						</TouchableHighlight>
 					</View>
 					<TouchableHighlight
-						onPress={() => {
-							navigation.navigate("FindingDrivers");
+						onPress={async() => {
+							calculateDistance();
+							
+							await SecureStore.setItemAsync("lat3", Latitude);
+								await SecureStore.setItemAsync("long3", longtitude);
+								await SecureStore.setItemAsync("lat2", Latitude2);
+								await SecureStore.setItemAsync("long2", longtitude2);
+								 settingCordinates();
+								
+								setmodelVisable3(true);
+							
 						}}
 					>
 						<View style={styles.button}>
@@ -172,16 +322,24 @@ const HomeSearch = (props) => {
 						</TouchableHighlight>
 
 						<GooglePlacesAutocomplete
+							GooglePlacesDetailsQuery={{ fields: "geometry" }}
+							fetchDetails={true}
 							styles={{
 								container: {
 									marginTop: 10,
 								},
 							}}
 							placeholder="Search"
-							onPress={(data, details = null) => {
+							onPress={async (data, details = null) => {
 								// 'details' is provided when fetchDetails = true
-								console.log(data.description);
+								console.log(data);
 								setAddressText(data.description);
+								console.log(JSON.stringify(details.geometry.location));
+								let lat3 = JSON.stringify(details.geometry.location.lat);
+								let long3 = JSON.stringify(details.geometry.location.lng);
+								
+								setLatitude(lat3);
+								setlongtitude(long3);
 							}}
 							query={{
 								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
@@ -216,22 +374,55 @@ const HomeSearch = (props) => {
 						</TouchableHighlight>
 
 						<GooglePlacesAutocomplete
+							GooglePlacesDetailsQuery={{ fields: "geometry" }}
+							fetchDetails={true}
 							styles={{
 								container: {
 									marginTop: 10,
 								},
 							}}
 							placeholder="Search"
-							onPress={(data, details = null) => {
+							onPress={async (data, details = null) => {
 								// 'details' is provided when fetchDetails = true
-								console.log(data.description);
+								console.log(details);
 								setDestination(data.description);
+								console.log(JSON.stringify(details.geometry.location));
+								let lat2 = JSON.stringify(details.geometry.location.lat);
+								let long2 = JSON.stringify(details.geometry.location.lng);
+								console.log(lat2);
+								
+								setLatitude2(lat2);
+								setlongtitude2(long2);
 							}}
 							query={{
 								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
 								language: "en",
 							}}
 						/>
+					</View>
+				</Modal>
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={modelVisable3}
+					onRequestClose={() => {
+						alert("Modal has been closed.");
+					}}
+				>
+					<View style={styles.centeredView}>
+						<View style={styles.modalView}>
+							<Text style={{ color: "white" }}>Request Sent</Text>
+							<Text style={{ color: "white" }}>Your request has send</Text>
+							<TouchableHighlight
+								onPress={() => {
+									setmodelVisable3(false);
+									Submit();
+									navigation.navigate("FindingDrivers");
+								}}
+							>
+								<Text style={styles.button2}>Close</Text>
+							</TouchableHighlight>
+						</View>
 					</View>
 				</Modal>
 			</View>
@@ -242,6 +433,10 @@ const HomeSearch = (props) => {
 export default HomeSearch;
 const android = Dimensions.get("window");
 const styles = StyleSheet.create({
+	map: {
+		height: "40%",
+		// marginBottom: -10,
+	},
 	container: {
 		flex: 1,
 		paddingTop: 10,
@@ -353,9 +548,8 @@ const styles = StyleSheet.create({
 	centeredView: {
 		flex: 1,
 		backgroundColor: "#043F96",
-		
 	},
-	
+
 	inputText: {
 		borderRadius: 38,
 		backgroundColor: "#e0e0e0",

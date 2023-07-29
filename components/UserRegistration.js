@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import {
 	StyleSheet,
 	Text,
@@ -20,7 +20,11 @@ import bg from "../assets/images/bg2.png";
 import { TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import firebase from "firebase/compat/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, onValue, ref, set } from "firebase/database";
+import user from "../assets/images/avatar2.jpeg";
+import * as ImagePicker from "expo-image-picker";
+import { Pressable } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -36,6 +40,7 @@ const app = firebase.initializeApp(firebaseConfig)
 const database = getDatabase(app);
 
 const UserRegistration = (props) => {
+	
 	const { navigation, route } = props;
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("gender");
@@ -47,6 +52,44 @@ const UserRegistration = (props) => {
 	const [Email, setEmail] = useState("");
 	const [Gender, setGender] = useState("");
 	const [Phone, setPhone] = useState(route.params.Phone);
+	const [image, setImage] = useState(null);
+	useEffect(() => {
+		const FecthData = async () => {
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			const db = getDatabase();
+			onValue(ref(db, `users/${result}`), (querySnapShot) => {
+				let data = querySnapShot.exists();
+				if (data=true) {
+					navigation.replace("Dashboard");
+					
+				} else {
+					console.log("Data not Exist")
+					
+				}
+				
+			});
+		};
+		FecthData();
+
+		
+	  
+	}, [])
+	
+	const pickImage = async () => {
+		// No permissions request is necessary for launching the image library
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		console.log(result);
+
+		if (!result.canceled) {
+			setImage(result.assets[0].uri);
+		}
+	};
 	  const handleChangeName = (name) => {
 			setName(name);
 			
@@ -74,7 +117,8 @@ const UserRegistration = (props) => {
 				Fullname: Name,
 				Email: Email,
 				Gender: Gender,
-				Phone:Phone
+				Phone:Phone,
+				Profilepic:image,
 			});
 		}
 	return (
@@ -103,6 +147,19 @@ const UserRegistration = (props) => {
 							marginTop: 20,
 						}}
 					>
+						<Pressable onPress={pickImage}>
+							<Image
+								source={{ uri: image }}
+								style={{
+									width: 80,
+									height: 80,
+									borderRadius: 90,
+									marginLeft: "35%",
+									marginTop: 10,
+								}}
+							/>
+						</Pressable>
+
 						<Text
 							style={{
 								fontSize: 18,

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { View, Text, StyleSheet, Pressable,TouchableHighlight } from "react-native";
 import {
 	DrawerContentScrollView,
@@ -7,8 +7,36 @@ import {
 import Colors from "../assets/constants/Colors";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set, get, onValue, child } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import DriversCards from "./DriversCards";
+import * as SecureStore from "expo-secure-store";
+import Reviews from "./Reviews";
 
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 const CustomDrawer = (props) => {
+	const [UserName, setUserName] = useState("")
+	useEffect(async() => {
+		let result=await SecureStore.getItemAsync("PhoneNum")
+		const db=getDatabase()
+		onValue(ref(db,`users/${result}`),(querySnapShot)=>{
+			let data=querySnapShot.val()||{}
+			setUserName(data.Fullname)
+		})
+	 
+	}, [])
+	
 	const { navigation, route } = props;
 	return (
 		<DrawerContentScrollView {...props}>
@@ -24,39 +52,14 @@ const CustomDrawer = (props) => {
 						<FontAwesome name="user" size={28} color={Colors.blackGrey} />
 					</View>
 					<View>
-						<Text style={styles.nameText}>Abdul Moiz</Text>
+						<Text style={styles.nameText}>{UserName}</Text>
 						<View style={styles.flexRow}>
-							<Text style={styles.ratingText}>5.0</Text>
-							<FontAwesome name="star" size={8} color={Colors.mediumGrey} />
+							
 						</View>
 					</View>
 				</View>
 
-				<View style={styles.borderContainer}>
-					<Pressable
-						style={[styles.flexRow, { justifyContent: "space-between" }]}
-					>
-						<View style={styles.flexRow}>
-							<Text style={styles.textBold}>Messages</Text>
-							<View style={styles.circle} />
-						</View>
-						<View>
-							<SimpleLineIcons
-								name="arrow-right"
-								size={15}
-								color={Colors.white}
-							/>
-						</View>
-					</Pressable>
-				</View>
-
-				<Pressable style={{ marginTop: 10 }}>
-					<Text style={styles.textGrey}>Do more with your account</Text>
-				</Pressable>
-
-				<Pressable>
-					<Text style={styles.text}>Make money driving</Text>
-				</Pressable>
+				
 			</View>
 			<DrawerItemList {...props} />
 			<View

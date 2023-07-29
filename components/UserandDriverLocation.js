@@ -1,10 +1,29 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import MapView, { Polyline, MapViewDirections ,Marker,} from "react-native-maps";
+import { StyleSheet, Text, View, TouchableOpacity,Dimensions } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { point } from "@turf/helpers";
 import destination from "@turf/destination";
 import * as Location from "expo-location";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import firebase from "firebase/compat/app";
+import { getDatabase, ref, set, get, onValue, child } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import DriversCards from "./DriversCards";
+import * as SecureStore from "expo-secure-store";
+import DriverRouteCards from "./DriverRouteCards";
+import { useNavigation, useRoute } from "@react-navigation/native";
+const android = Dimensions.get("window");
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 export class UserandDriverLocation extends React.Component {
 	constructor(props) {
 		super(props);
@@ -16,6 +35,7 @@ export class UserandDriverLocation extends React.Component {
 			east: null,
 			latitude: 33.6555,
 			longitude: 73.1556,
+			markerData:[],
 		};
 	}
 
@@ -28,6 +48,20 @@ export class UserandDriverLocation extends React.Component {
 	}
 
 	async componentDidMount() {
+		const db = getDatabase();
+		onValue(ref(db, "UserPosts/"), (querySnapShot) => {
+			let data = querySnapShot.val() || {};
+
+			const list = [];
+
+			for (let key in data ? data : []) {
+				list.push({ key, ...data[key] });
+			}
+			this.setState({
+				...this.state,
+				markerData:list
+			})
+		});
 		try {
 			let { status } = await Location.requestForegroundPermissionsAsync();
 			if (status !== "granted") {
@@ -44,53 +78,32 @@ export class UserandDriverLocation extends React.Component {
 
 	
 	render() {
+		const data=this.state.markerData;
+		
+		
 		return (
 			<View style={styles.container}>
 				<MapView
 					style={styles.mapView}
 					showsUserLocation
 					initialRegion={{
-						latitude: this.state.latitude,
-						longitude: this.state.longitude,
-						latitudeDelta: 0.02,
-						longitudeDelta: 0.02,
+						latitude: this.state.latitude, // Initial map center latitude
+						longitude: this.state.longitude, // Initial map center longitude
+						latitudeDelta: 0.0922,
+						longitudeDelta: 0.0421,
 					}}
 				>
-					{this.state.elements.map((element) => {
-						let title = "current";
-						if (element.tags["name"] !== undefined) {
-							title = element.tags["name"];
-						}
-						return (
-							<>
-								<Marker
-									coordinate={{
-										latitude: element.lat,
-										longitude: element.lon,
-									}}
-									title={title}
-									key={"id_" + element.id}
-								/>
-							</>
-						);
-					})}
-					<Marker
-						coordinate={{
-							latitude: 33.6555,
-							longitude: 73.1556,
-						}}
-					/>
-
-					{/* <Polyline
-						coordinate={{
-							latitude: 33.6555,
-							longitude: 73.1556,
-						}}
-						strokeWidth={6}
-						strokeColor="#000"
-					/> */}
+					{/* Render markers dynamically using map() */}
+					{data.map((location) => (
+						<Marker
+							key={location.key}
+							coordinate={{
+								latitude: location.Latitude2,
+								longitude: location.longtitude2,
+							}}
+						/>
+					))}
 				</MapView>
-				<Text>Heloo</Text>
 			</View>
 		);
 	}
