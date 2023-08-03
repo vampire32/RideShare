@@ -1,5 +1,11 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity,Dimensions } from "react-native";
+import React, { Component } from "react";
+import {
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	Dimensions,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { point } from "@turf/helpers";
 import destination from "@turf/destination";
@@ -12,6 +18,8 @@ import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
 import DriverRouteCards from "./DriverRouteCards";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import MapViewDirections from "react-native-maps-directions";
+import maekerpin from "../assets/Marker.png";
 const android = Dimensions.get("window");
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -24,7 +32,8 @@ const firebaseConfig = {
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
-export class UserandDriverLocation extends React.Component {
+
+export class DriverPickupDroffLocation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -35,36 +44,48 @@ export class UserandDriverLocation extends React.Component {
 			east: null,
 			latitude: 33.6555,
 			longitude: 73.1556,
-			markerData:[],
+            latitude2: 33.6555,
+			longtitude2: 73.1556,
+			markerData: [],
 		};
 	}
 
-	updateState(location) {
-		this.setState({
-			...this.state,
-			latitude: location.coords.latitude,
-			longitude: location.coords.longitude,
-		});
-	}
+	// updateState(location) {
+	// 	this.setState({
+	// 		...this.state,
+	// 		latitude: location.coords.latitude,
+	// 		longitude: location.coords.longitude,
+	// 	});
+	// }
 
 	async componentDidMount() {
+		let result = await SecureStore.getItemAsync("PhoneNum");
+        
+        let result2 =await SecureStore.getItemAsync("DriverID")
+        
+        
+
 		const db = getDatabase();
-		
-		onValue(ref(db, "UserPosts/"), (querySnapShot) => {
-			querySnapShot.forEach((childSnapShot)=>{
-				let data = childSnapShot.val() || {};
+		onValue(ref(db, `DriverPosts/`), (querySnapShot) => {
+            querySnapShot.forEach((childSnapShot)=>{
+                let data2= childSnapShot.child(result2).val()||{}
+                console.log(data2)
+                
 
-				const list = [];
+								// const list = [];
 
-				for (let key in data ? data : []) {
-					list.push({ key, ...data[key] });
-				}
-				this.setState({
-					...this.state,
-					markerData: list,
-				});
+								// for (let key in data2 ? data2 : []) {
+								// 	list.push({ key, ...data2[key] });
+								// }
+								this.setState({
+									...this.state,
+									latitude: data2.Latitude,
+									longitude: data2.longtitude,
+									latitude2: data2.Latitude2,
+									longtitude2: data2.longtitude2,
+								});
+            })
 
-			})
 			
 		});
 		try {
@@ -78,14 +99,8 @@ export class UserandDriverLocation extends React.Component {
 			console.log(error);
 		}
 	}
-
-
-
-	
 	render() {
-		const data=this.state.markerData;
-		
-		
+          const data = this.state.markerData;
 		return (
 			<View style={styles.container}>
 				<MapView
@@ -99,21 +114,42 @@ export class UserandDriverLocation extends React.Component {
 					}}
 				>
 					{/* Render markers dynamically using map() */}
-					{data.map((location) => (
+
+					<>
 						<Marker
-							key={location.key}
 							coordinate={{
-								latitude: location.Latitude2,
-								longitude: location.longtitude2,
+								latitude: this.state.latitude2,
+								longitude: this.state.longtitude2,
 							}}
+							image={maekerpin}
 						/>
-					))}
+						<Marker
+							
+							coordinate={{
+								latitude: this.state.latitude,
+								longitude: this.state.longitude,
+							}}
+							image={maekerpin}
+						/>
+						<MapViewDirections
+							origin={{
+								latitude: this.state.latitude,
+								longitude: this.state.longitude,
+							}}
+							destination={{
+								latitude: this.state.latitude2,
+								longitude: this.state.longtitude2,
+							}}
+							apikey="AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw"
+							strokeWidth={3}
+							strokeColor="blue"
+						/>
+					</>
 				</MapView>
 			</View>
 		);
 	}
 }
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -146,5 +182,4 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 });
-export default UserandDriverLocation
-
+export default DriverPickupDroffLocation;

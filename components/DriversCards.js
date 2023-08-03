@@ -28,7 +28,7 @@ const DriversCards = ({profilepic,Driverid,DriverNumber,carname,Pickup,Destinati
 
 	return (
 		
-			<Pressable onPress={Driverid} style={styles.box}>
+			<Pressable  style={styles.box}>
 				<Image
 					source={{ uri: profilepic }}
 					style={{
@@ -141,6 +141,7 @@ const DriversCards = ({profilepic,Driverid,DriverNumber,carname,Pickup,Destinati
 				</TouchableHighlight>
 				<TouchableHighlight
 					onPress={() => {
+						Driverid()
 						navigation.navigate("SelectSeat");
 					}}
 				>

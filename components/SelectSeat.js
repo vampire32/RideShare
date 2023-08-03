@@ -8,6 +8,7 @@ import firebase from "firebase/compat/app";
 import { getDatabase, ref, set, get, onValue,child } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import * as SecureStore from "expo-secure-store";
+import DriverPickupDroffLocation from "./DriverPickupDroffLocation";
 
 
 const firebaseConfig = {
@@ -62,24 +63,25 @@ function SelectSeat(props) {
 	const [Phone, setPhone] = useState("");
 	const [Seat, setSeat] = useState("")
 	const [DriverID, setDriverID] = useState("")
-	useEffect(async() => {
-	  let result = await SecureStore.getItemAsync("PhoneNum");
-	  let driverid=await SecureStore.getItemAsync("DriverID")
-	  setDriverID(driverid)
+	useEffect(() => {
+		const fetch=async()=>{
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			let driverid = await SecureStore.getItemAsync("DriverID");
+			setDriverID(driverid);
 
+			const db = getDatabase();
+			onValue(ref(db, `users/${result}`), (querySnapShot) => {
+				let data = querySnapShot.val() || {};
+				console.log(data);
+				setName(data.Fullname);
+				setPhone(data.Phone);
+				setGender(data.Gender);
+			});
+
+
+		}
+		fetch()
 	  
-	
-  const db =getDatabase()
-  onValue(ref(db, `users/${result}`), (querySnapShot) => {
-		let data = querySnapShot.val() || {};
-		console.log(data)
-		setName(data.Fullname)
-		setPhone(data.Phone)
-		setGender(data.Gender)
-		
-		
-	});
-
 	
     
 	
@@ -116,7 +118,7 @@ const handleChangeSeat4 = () => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.map}>
-				<MapVieww />
+				<DriverPickupDroffLocation/>
 			</View>
 
 			{/* <Button

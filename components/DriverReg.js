@@ -1,9 +1,46 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { View,Text,Dimensions,StyleSheet,Pressable } from 'react-native'
 import Icon from "react-native-vector-icons/MaterialIcons";
+
+import firebase from "firebase/compat/app";
+import { getDatabase, onValue, ref, set } from "firebase/database";
+import user from "../assets/images/avatar2.jpeg";
+import * as ImagePicker from "expo-image-picker";
+
+import * as SecureStore from "expo-secure-store";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 const android = Dimensions.get("window");
 const DriverReg = (props) => {
 	const { navigation, route } = props;
+	useEffect(() => {
+		const FecthData = async () => {
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			const db = getDatabase();
+			onValue(ref(db, `Drivers/${result}`), (querySnapShot) => {
+				let data = querySnapShot.exists();
+				if ((data = true)) {
+					navigation.replace("DriverDashboard");
+				} else {
+					console.log("Data not Exist");
+				}
+			});
+		};
+		FecthData();
+	 
+	}, [])
+	
 
   return (
 		<View style={styles.container}>

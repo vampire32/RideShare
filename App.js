@@ -21,37 +21,8 @@ import DrawerNavigator from "./components/DrawNavigator";
 const App =()=>{
 	return (
 		<>
-			<NavigationContainer>
+			<NavigationContainer >
 				<DrawerNavigator/>
-				{/* <Stack.Navigator initialRouteName="SplashScreen">
-					<Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-					<Stack.Screen
-						name="SplashScreen"
-						component={SplashScreen}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="Login"
-						component={Login}
-						options={{ headerShown: false }}
-					/>
-
-					<Stack.Screen
-						name="Verification"
-						component={Verification}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="UserRegistration"
-						component={UserRegistration}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="Dashboard"
-						component={Dashboard}
-						options={{ headerShown: false }}
-					/>
-				</Stack.Navigator> */}
 			</NavigationContainer>
 		</>
 	);

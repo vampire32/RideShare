@@ -46,20 +46,19 @@ const FindingDrivers = (props) => {
 		
 		// const Ref = getDatabase().ref("Drivers");
 		onValue(ref(db, "DriverPosts/"), (querySnapShot) => {
-			let data = querySnapShot.val() || {};
-			
-			
-			
-			
-const list = [];
-			 
-				for (let key in data ? data : []) {
-					list.push({ key, ...data[key] });
+			querySnapShot.forEach((chidSnapshot)=>{
+					let data = chidSnapshot.val() || {};
+
+					const list = [];
+
+					for (let key in data ? data : []) {
+						list.push({ key, ...data[key] });
+					}
+					setTasksList(list);
 					
-				
-				}
-				setTasksList(list)
-					
+
+			})
+		
 				
 				
 				

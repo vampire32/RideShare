@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { SafeAreaView,View,Image,Text,StyleSheet,FlatList } from "react-native";
+import { SafeAreaView,View,Image,Text,StyleSheet,FlatList,Linking, Pressable } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "@gorhom/bottom-sheet";
 import user from "../assets/images/avatar2.jpeg";
@@ -10,6 +10,7 @@ import { getDatabase, ref, set, get, onValue, child } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
+import { useNavigation } from "@react-navigation/native";
 import Reviews from "./Reviews";
 
 const firebaseConfig = {
@@ -24,43 +25,54 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const ActionSheet = (props) => {
+	const navigation = useNavigation();
 	const [DriverName, setDriverName] = useState("")
 	const [CarName, setCarName] = useState("")
 	const [Carplate, setCarplate] = useState("")
 	const [Driverpic, setDriverpic] = useState()
 	const [pickUp, setpickUp] = useState("")
+	const [DriverNumber, setDriverNumber] = useState("")
 	const [tripEnd, settripEnd] = useState(false)
 	const [Review, setReview] = useState([])
 	const snapPoints = React.useMemo(() => ["37%", "50%", "70%"], []);
 	const RBRef = React.useRef();
-	useEffect(async() => {
-	  let result = await SecureStore.getItemAsync("DriverID");
-	  const db = getDatabase();
+	useEffect(() => {
+		const fetch=async()=>{
+			 let result = await SecureStore.getItemAsync("PhoneNum");
+			 
+			 let result2 = await SecureStore.getItemAsync("DriverID");
+			 console.log(result2)
 
-		// const Ref = getDatabase().ref("Drivers");
-		onValue(ref(db, `DriverPosts/${result}`), (querySnapShot) => {
-			let data = querySnapShot.val() || {};
-			setDriverName(data.Fullname)
-			setCarName(data.carName)
-			setCarplate(data.carplate)
-			setDriverpic(data.Profilepic)
-			setpickUp(data.Pickup)
+				const db = getDatabase();
 
-			
-		});
-		onValue(ref(db, "Reviws/"),(querySnapShot)=>{
-			querySnapShot.forEach((childSnapShot)=>{
-				let DriverID=childSnapShot.child("DriverID").val()
-				if (DriverID==result) {
-					settripEnd(true)
+				// const Ref = getDatabase().ref("Drivers");
+				onValue(ref(db, `DriverPosts/${result}/${result2}`), (querySnapShot) => {
 					
-				} else {
-					settripEnd(false)
-					console.log("Drivernotexist")
+						let data = querySnapShot.val() || {};
+						console.log(data)
+						setDriverName(data.Fullname);
+						setCarName(data.carName);
+						setCarplate(data.carplate);
+						setDriverpic(data.Profilepic);
+						setpickUp(data.Pickup);
+						setDriverNumber(data.DriverNumber);
 					
-				}
-			})
-		});
+				});
+				onValue(ref(db, "Reviws/"), (querySnapShot) => {
+					querySnapShot.forEach((childSnapShot) => {
+						let DriverID = childSnapShot.child("DriverID").val();
+						if (DriverID == result2) {
+							settripEnd(true);
+						} else {
+							settripEnd(false);
+							console.log("Drivernotexist");
+						}
+					});
+				});
+
+		}
+		fetch()
+	 
 		
 	}, [])
 	useEffect(() => {
@@ -126,32 +138,41 @@ const renderTask = ({ item }) => {
 					>
 						{DriverName}
 					</Text>
-
-					<Icon
-						name="call"
-						size={15}
-						color="#2153CC"
-						style={{
-							marginTop: 12,
-							backgroundColor: "#fff",
-							padding: 15,
-							borderRadius: 90,
-							marginLeft: 15,
+					<Pressable
+						onPress={() => {
+							Linking.openURL(`tel:${DriverNumber}`);
 						}}
-					/>
+					>
+						<Icon
+							name="call"
+							size={15}
+							color="#2153CC"
+							style={{
+								marginTop: 12,
+								backgroundColor: "#fff",
+								padding: 15,
+								borderRadius: 90,
+								marginLeft: 15,
+							}}
+						/>
+					</Pressable>
+					<Pressable onPress={()=>{
+						navigation.navigate("ChatScreen")
+					}}>
+						<Icon
+							name="message"
+							size={15}
+							color="#2153CC"
+							style={{
+								marginTop: 12,
+								backgroundColor: "#fff",
+								padding: 15,
+								borderRadius: 90,
+								marginLeft: 15,
+							}}
+						/>
+					</Pressable>
 
-					<Icon
-						name="message"
-						size={15}
-						color="#2153CC"
-						style={{
-							marginTop: 12,
-							backgroundColor: "#fff",
-							padding: 15,
-							borderRadius: 90,
-							marginLeft: 15,
-						}}
-					/>
 					<Text style={{ color: "white", marginLeft: "42%" }}>{CarName}</Text>
 					<Text style={{ color: "white", marginLeft: "42%" }}>{Carplate}</Text>
 					<Text style={{ color: "white", marginLeft: "26%", marginTop: 20 }}>
@@ -172,11 +193,9 @@ const renderTask = ({ item }) => {
 						Reviwes
 					</Text>
 					<FlatList
-						
 						data={Review}
 						renderItem={renderTask}
 						keyExtractor={(item) => item.key}
-						
 					/>
 				</View>
 			</BottomSheet>

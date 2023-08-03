@@ -11,6 +11,34 @@ import Colors from "../assets/constants/Colors";
 import MapVieww from "./CurrentLocation";
 import UserandDriverLocation from "./UserandDriverLocation";
 import * as SecureStore from "expo-secure-store";
+import firebase from "firebase/compat/app";
+import {
+	getDatabase,
+	ref,
+	set,
+	get,
+	onValue,
+	child,
+	push,
+	remove,
+} from "firebase/database";
+import { getAuth } from "firebase/auth";
+import DriversCards from "./DriversCards";
+
+
+
+
+const firebaseConfig = {
+	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
+	authDomain: "carsharing-10784.firebaseapp.com",
+	projectId: "carsharing-10784",
+	storageBucket: "carsharing-10784.appspot.com",
+	messagingSenderId: "1059995999394",
+	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
+	measurementId: "G-WXGTPM42JS",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 
 const Dashboard = () => {
@@ -20,23 +48,40 @@ const Dashboard = () => {
 	const [lat2, setlat2] = useState();
 	const [long2, setlong2] = useState();
 	 const [refreshing, setRefreshing] = useState(false);
+	 const [DriverID, setDriverID] = useState("");
+		const [DriverNum, setDriverNum] = useState("");
+		const [IDexist, setIDexist] = useState(false);
 	 const onRefresh = React.useCallback(() => {
 			setRefreshing(true);
 			setTimeout(() => {
 				setRefreshing(false);
 			}, 2000);
 		}, []);
-	useEffect(async() => {
-	  let lat11=await SecureStore.getItemAsync("lat")
-	  let long11= await SecureStore.getItemAsync("long")
-	  let lat22 =  await SecureStore.getItemAsync("lat2");
-		let long22 =  await SecureStore.getItemAsync("long2");
-		
-		setlat1(lat11)
-		setlong1(long11)
-		setlat2(lat22)
-		setlong2(long22)
-		console.log(lat1)
+	useEffect(() => {
+		const fetch=async()=>{
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			const db = getDatabase();
+			onValue(ref(db, `UserPosts/${result}`), (querSnapShot) => {
+				let data2 = querSnapShot.exists();
+				if (data2 == true) {
+					navigation.navigate("RouteScreen");
+				} else {
+					navigation.navigate("Dashboard");
+				}
+			});
+			let lat11 = await SecureStore.getItemAsync("lat");
+			let long11 = await SecureStore.getItemAsync("long");
+			let lat22 = await SecureStore.getItemAsync("lat2");
+			let long22 = await SecureStore.getItemAsync("long2");
+
+			setlat1(lat11);
+			setlong1(long11);
+			setlat2(lat22);
+			setlong2(long22);
+			console.log(lat1);
+
+		}
+		fetch()
 
 	}, [])
 	

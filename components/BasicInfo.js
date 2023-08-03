@@ -54,6 +54,7 @@ const BasicInfo = (props) => {
 		const Submit = async() => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
 		setphoneNumber(result);
+		console.log(result)
 			const db = getDatabase();
 			set(ref(db, "Drivers/"+`${result}/` + "BasicInfo/"), {
 				Fullname: Name,
@@ -168,7 +169,7 @@ const BasicInfo = (props) => {
 					try {
 						Submit();
 						//  navigation.replace("Dashboard");
-						navigation.navigate("DriverReg");
+						// navigation.navigate("DriverReg");
 					} catch (error) {
 						console.log(error);
 					}

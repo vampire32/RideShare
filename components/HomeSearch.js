@@ -110,25 +110,28 @@ const HomeSearch = (props) => {
 			setUserlongtitude2(userlong2)
 		}
 		
-	useEffect(async () => {
-		
-		
+	useEffect(() => {
+		const fetch=async()=>{
+			
 		let result = await SecureStore.getItemAsync("PhoneNum");
 
 		const db = getDatabase();
 		onValue(ref(db, `users/${result}`), (querySnapShot) => {
 			let data = querySnapShot.val() || {};
-			setUserName(data.Fullname)
-			setUserPic(data.Profilepic)
-			
-			
+			setUserName(data.Fullname);
+			setUserPic(data.Profilepic);
 		});
-		onValue(ref(db,`Seats/${result}`),(querySnapShot)=>{
-			let data2 =querySnapShot.val()||{};
-			setUserPhoneNum(data2.Phone)
-			setUserSeat(data2.SeatNumber)
-			
-		})
+		onValue(ref(db, `Seats/${result}`), (querySnapShot) => {
+			let data2 = querySnapShot.val() || {};
+			setUserPhoneNum(data2.Phone);
+			setUserSeat(data2.SeatNumber);
+		});
+
+		}
+		fetch()
+
+		
+		
 	}, []);
 	
 	const navigation = useNavigation();
@@ -172,21 +175,27 @@ const HomeSearch = (props) => {
 				
 const Submit = async () => {
 	let result = await SecureStore.getItemAsync("PhoneNum");
-
+if (AddressText==""&&Destination=="") {
+	alert("Please provide the pick and drop deatils")
+	
+} else {
 	const db = getDatabase();
-	push(ref(db, `/UserPosts`), {
+	push(ref(db, `/UserPosts/`+`${result}`), {
 		Fullname: UserName,
 		Pickup: AddressText,
 		dropoff: Destination,
-		RidePrice:RidePrice,
-		userPic:UserPic,
-		userPhone:result,
-		
-		Latitude:UserLatitude,
-		longtitude:Userlongtitude,
-		Latitude2:UserLatitude2,
-		longtitude2:Userlongtitude2,
+		RidePrice: RidePrice,
+		userPic: UserPic,
+		userPhone: result,
+
+		Latitude: UserLatitude,
+		longtitude: Userlongtitude,
+		Latitude2: UserLatitude2,
+		longtitude2: Userlongtitude2,
 	});
+	navigation.navigate("FindingDrivers");
+}
+	
 	// const newPostKey= push(child(ref(db), 'posts')).key;
 	//   const updates = {};
 
@@ -279,15 +288,23 @@ const Submit = async () => {
 					</View>
 					<TouchableHighlight
 						onPress={async() => {
-							calculateDistance();
-							
-							await SecureStore.setItemAsync("lat3", Latitude);
+							if (AddressText==""&&Destination=="") {
+								alert("Please Provide Pickup and Dropoff ")
+
+								
+							} else {
+								calculateDistance();
+
+								await SecureStore.setItemAsync("lat3", Latitude);
 								await SecureStore.setItemAsync("long3", longtitude);
 								await SecureStore.setItemAsync("lat2", Latitude2);
 								await SecureStore.setItemAsync("long2", longtitude2);
-								 settingCordinates();
-								
+								settingCordinates();
+
 								setmodelVisable3(true);
+								
+							}
+							
 							
 						}}
 					>
@@ -409,15 +426,15 @@ const Submit = async () => {
 						alert("Modal has been closed.");
 					}}
 				>
-					<View style={styles.centeredView}>
-						<View style={styles.modalView}>
+					<View style={styles.centeredView2}>
+						<View style={styles.modalView2}>
 							<Text style={{ color: "white" }}>Request Sent</Text>
 							<Text style={{ color: "white" }}>Your request has send</Text>
 							<TouchableHighlight
 								onPress={() => {
 									setmodelVisable3(false);
 									Submit();
-									navigation.navigate("FindingDrivers");
+									
 								}}
 							>
 								<Text style={styles.button2}>Close</Text>
@@ -618,6 +635,27 @@ const styles = StyleSheet.create({
 		marginRight: 15,
 		fontSize: 14,
 		color: Colors.darkGrey,
+	},
+	centeredView2: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 22,
+	},
+	modalView2: {
+		margin: 20,
+		backgroundColor: "#043F96",
+		borderRadius: 20,
+		padding: 35,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
 	},
 });
 

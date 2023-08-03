@@ -142,13 +142,7 @@ const DriversCard2 = ({
 					<Text style={{ fontWeight: "bold" }}>Delete Post</Text>
 				</View>
 			</TouchableHighlight>
-			<TouchableHighlight
-				
-			>
-				<View style={styles.button2}>
-					<Text style={{ color: "white", fontWeight: "bold" }}>update Post</Text>
-				</View>
-			</TouchableHighlight>
+			
 		</Pressable>
 	);
 };

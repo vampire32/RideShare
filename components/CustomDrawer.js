@@ -27,13 +27,17 @@ const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const CustomDrawer = (props) => {
 	const [UserName, setUserName] = useState("")
-	useEffect(async() => {
-		let result=await SecureStore.getItemAsync("PhoneNum")
-		const db=getDatabase()
-		onValue(ref(db,`users/${result}`),(querySnapShot)=>{
-			let data=querySnapShot.val()||{}
-			setUserName(data.Fullname)
-		})
+	useEffect(() => {
+		const fetch= async()=>{
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			const db = getDatabase();
+			onValue(ref(db, `users/${result}`), (querySnapShot) => {
+				let data = querySnapShot.val() || {};
+				setUserName(data.Fullname);
+			});
+
+		}
+		
 	 
 	}, [])
 	

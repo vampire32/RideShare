@@ -6,6 +6,12 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+     "fonts": [
+    {
+      "family": "OpenSans-Regular",
+      "asset": "./assets/fonts/OpenSans-Regular.ttf",
+    },
+  ],
      "plugins": [
       [
         "expo-image-picker",

@@ -59,6 +59,14 @@ const HomeSearchDrivers = (props) => {
 	const [carName, setcarName] = useState("")
 	const [carplate, setcarplate] = useState("")
 	const [DriverNum, setDriverNum] = useState("")
+	const [Latitude, setLatitude] = useState("");
+	const [longtitude, setlongtitude] = useState("");
+	const [Latitude2, setLatitude2] = useState("");
+	const [longtitude2, setlongtitude2] = useState("");
+	const [UserLatitude, setUserLatitude] = useState("");
+	const [Userlongtitude, setUserlongtitude] = useState("");
+	const [UserLatitude2, setUserLatitude2] = useState("");
+	const [Userlongtitude2, setUserlongtitude2] = useState("");
 	
 	
 	const handleChangePickup = (pickUp) => {
@@ -109,27 +117,41 @@ const HomeSearchDrivers = (props) => {
 	const oneTimeLogin = async () => {
 		
 	};
-useEffect(async() => {
-	let result = await SecureStore.getItemAsync("PhoneNum");
-	setphoneNumber(result);
-	
-	
-  const db =getDatabase()
-  onValue(ref(db, `Drivers/${result}/BasicInfo`), (querySnapShot) => {
-		let data = querySnapShot.val() || {};
-		console.log(data)
-		setFullname(data.Fullname)
-		setprofilepic(data.Profilepic)
+	const settingCordinates = () => {
+		let userlat1 = parseFloat(Latitude);
+		let userlong = parseFloat(longtitude);
+		let userlat2 = parseFloat(Latitude2);
+		let userlong2 = parseFloat(longtitude2);
+		setUserLatitude(userlat1);
+		setUserlongtitude(userlong);
+		setUserLatitude2(userlat2);
+		setUserlongtitude2(userlong2);
+	};
 		
-	});
-	onValue(ref(db, `Drivers/${result}/VechileInfo`),(querySnapShot)=>{
-		let data2=querySnapShot.val()||{};
-		console.log(data2)
-		setcarName(data2.Vechilename)
-		setcarplate(data2.Plate)
-	});
-   
+useEffect(() => {
+	const fetch=async()=>{
+		let result = await SecureStore.getItemAsync("PhoneNum");
+		setphoneNumber(result);
 
+		const db = getDatabase();
+		onValue(ref(db, `Drivers/${result}/BasicInfo`), (querySnapShot) => {
+			let data = querySnapShot.val() || {};
+			console.log(data);
+			setFullname(data.Fullname);
+			setprofilepic(data.Profilepic);
+		});
+		onValue(ref(db, `Drivers/${result}/VechileInfo`), (querySnapShot) => {
+			let data2 = querySnapShot.val() || {};
+			console.log(data2);
+			setcarName(data2.Vechilename);
+			setcarplate(data2.Plate);
+		});
+
+	}
+	fetch()
+	
+   
+settingCordinates()
   
 }, [])
 
@@ -149,7 +171,7 @@ useEffect(async() => {
 
 			};
 		const db = getDatabase();
-		   push(ref(db, "/DriverPosts"), {
+		   push(ref(db, "/DriverPosts/" + `${phoneNumber}`), {
 					Pickup: pickUp,
 					Destination: destination,
 					Date: date,
@@ -159,6 +181,10 @@ useEffect(async() => {
 					carName: carName,
 					carplate: carplate,
 					DriverNumber: phoneNumber,
+					Latitude: UserLatitude,
+					longtitude: Userlongtitude,
+					Latitude2: UserLatitude2,
+					longtitude2: Userlongtitude2,
 				});
 		// const newPostKey= push(child(ref(db), 'posts')).key;
 		//   const updates = {};
@@ -317,6 +343,8 @@ useEffect(async() => {
 						</TouchableHighlight>
 
 						<GooglePlacesAutocomplete
+							GooglePlacesDetailsQuery={{ fields: "geometry" }}
+							fetchDetails={true}
 							styles={{
 								container: {
 									marginTop: 10,
@@ -327,6 +355,12 @@ useEffect(async() => {
 								// 'details' is provided when fetchDetails = true
 								console.log(data.description);
 								setpickUp(data.description);
+								console.log(details);
+								let lat3 = JSON.stringify(details.geometry.location.lat);
+								let long3 = JSON.stringify(details.geometry.location.lng);
+
+								setLatitude(lat3);
+								setlongtitude(long3);
 							}}
 							query={{
 								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
@@ -361,6 +395,8 @@ useEffect(async() => {
 						</TouchableHighlight>
 
 						<GooglePlacesAutocomplete
+							GooglePlacesDetailsQuery={{ fields: "geometry" }}
+							fetchDetails={true}
 							styles={{
 								container: {
 									marginTop: 10,
@@ -371,6 +407,12 @@ useEffect(async() => {
 								// 'details' is provided when fetchDetails = true
 								console.log(data.description);
 								setdestination(data.description);
+								let lat2 = JSON.stringify(details.geometry.location.lat);
+								let long2 = JSON.stringify(details.geometry.location.lng);
+								console.log(lat2);
+
+								setLatitude2(lat2);
+								setlongtitude2(long2);
 							}}
 							query={{
 								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",

@@ -1,5 +1,11 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity,Dimensions } from "react-native";
+import React,{Component} from "react";
+import {
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	Dimensions,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { point } from "@turf/helpers";
 import destination from "@turf/destination";
@@ -12,6 +18,8 @@ import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
 import DriverRouteCards from "./DriverRouteCards";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import MapViewDirections from "react-native-maps-directions";
+import maekerpin from "../assets/Marker.png"
 const android = Dimensions.get("window");
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -24,7 +32,8 @@ const firebaseConfig = {
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
-export class UserandDriverLocation extends React.Component {
+
+export class UserPickDropLocation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -35,7 +44,7 @@ export class UserandDriverLocation extends React.Component {
 			east: null,
 			latitude: 33.6555,
 			longitude: 73.1556,
-			markerData:[],
+			markerData: [],
 		};
 	}
 
@@ -48,23 +57,20 @@ export class UserandDriverLocation extends React.Component {
 	}
 
 	async componentDidMount() {
+        let result=await SecureStore.getItemAsync("PhoneNum")
 		const db = getDatabase();
-		
-		onValue(ref(db, "UserPosts/"), (querySnapShot) => {
-			querySnapShot.forEach((childSnapShot)=>{
-				let data = childSnapShot.val() || {};
+		onValue(ref(db, `UserPosts/${result}`), (querySnapShot) => {
+             let data = querySnapShot.val() || {};
 
-				const list = [];
+							const list = [];
 
-				for (let key in data ? data : []) {
-					list.push({ key, ...data[key] });
-				}
-				this.setState({
-					...this.state,
-					markerData: list,
-				});
-
-			})
+							for (let key in data ? data : []) {
+								list.push({ key, ...data[key] });
+							}
+							this.setState({
+								...this.state,
+								markerData: list,
+							});
 			
 		});
 		try {
@@ -79,13 +85,8 @@ export class UserandDriverLocation extends React.Component {
 		}
 	}
 
-
-
-	
 	render() {
-		const data=this.state.markerData;
-		
-		
+        const data = this.state.markerData;
 		return (
 			<View style={styles.container}>
 				<MapView
@@ -100,20 +101,43 @@ export class UserandDriverLocation extends React.Component {
 				>
 					{/* Render markers dynamically using map() */}
 					{data.map((location) => (
-						<Marker
-							key={location.key}
-							coordinate={{
-								latitude: location.Latitude2,
-								longitude: location.longtitude2,
-							}}
-						/>
+						<>
+							<Marker
+								key={location.key}
+								coordinate={{
+									latitude: location.Latitude2,
+									longitude: location.longtitude2,
+								}}
+								image={maekerpin}
+							/>
+							<Marker
+								key={location.key}
+								coordinate={{
+									latitude: location.Latitude,
+									longitude: location.longtitude,
+								}}
+								image={maekerpin}
+							/>
+							<MapViewDirections
+								origin={{
+									latitude: location.Latitude,
+									longitude: location.longtitude,
+								}}
+								destination={{
+									latitude: location.Latitude2,
+									longitude: location.longtitude2,
+								}}
+								apikey="AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw"
+								strokeWidth={3}
+								strokeColor="blue"
+							/>
+						</>
 					))}
 				</MapView>
 			</View>
 		);
 	}
 }
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -146,5 +170,4 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 });
-export default UserandDriverLocation
-
+export default UserPickDropLocation;

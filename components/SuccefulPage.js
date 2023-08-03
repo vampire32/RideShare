@@ -10,6 +10,7 @@ import { getAuth } from "firebase/auth";
 import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
 import { Pressable } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -23,6 +24,7 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const SuccefulPage = () => {
+	const navigation = useNavigation();
 	const [DriverName, setDriverName] = useState("")
 	const [DriverID, setDriverID] = useState("")
 	const [DriverNum, setDriverNum] = useState("")
@@ -34,38 +36,44 @@ const SuccefulPage = () => {
 	 const handleChangeName = (Reviwes) => {
 			setReviwes(Reviwes);
 		};
-	useEffect(async() => {
-		let result= await SecureStore.getItemAsync("PhoneNum") 
-		const db=getDatabase()
-		onValue(ref(db, `TripisEnd/${result}`),(querSnapShot)=>{
-			let data=querSnapShot.val()||{}
-			let data2=querSnapShot.exists()
-			setDriverID(data.Driverid)
-			setIDexist(data2)
-		});
-		onValue(ref(db, "UserPosts/"), (querySnapShot) => {
-			querySnapShot.forEach((childSnapShot) => {
-				let data4 = childSnapShot.child("userPhone").val();
-				if (data4==result) {
-					let data5=childSnapShot.val()||{}
-					setUsername(data5.Fullname)
-					setUsernumber(data5.userPhone)
-					setUserpic(data5.userPic)
-					
-				} else {
-					console.log("user not exist")
-					
-				}
-				
+	useEffect(() => {
+		const fetch=async()=>{
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			const db = getDatabase();
+			onValue(ref(db, `TripisEnd/${result}`), (querSnapShot) => {
+				let data = querSnapShot.val() || {};
+				let data2 = querSnapShot.exists();
+				setDriverID(data.Driverid);
+				setIDexist(data2);
 			});
-		});
+			onValue(ref(db, "UserPosts/"), (querySnapShot) => {
+				querySnapShot.forEach((childSnapShot) => {
+					let data4 = childSnapShot.child("userPhone").val();
+					if (data4 == result) {
+						let data5 = childSnapShot.val() || {};
+						setUsername(data5.Fullname);
+						setUsernumber(data5.userPhone);
+						setUserpic(data5.userPic);
+					} else {
+						console.log("user not exist");
+					}
+				});
+			});
+
+		}
+		fetch()
 	
 	}, [])
 	useEffect(() => {
 		const db = getDatabase();
-	  onValue(ref(db,`DriverPosts/${DriverID}`),(querSnapShot)=>{
-		let data3=querSnapShot.val()
-		setDriverName(data3.Fullname)
+	  onValue(ref(db,`DriverPosts/`),(querSnapShot)=>{
+		querSnapShot.forEach((childSnapShot)=>{
+			let data3=childSnapShot.child(DriverID).val()||{}
+			setDriverName(data3.Fullname);
+
+		})
+		
+		
 	  })
 	}, [IDexist])
 	
@@ -81,10 +89,13 @@ const SuccefulPage = () => {
 			remove(ref(db, `TripisEnd/${Usernumber}`))
 				.then(() => {
 					console.log("Data removed successfully");
+					navigation.navigate("Dashboard")
 				})
 				.catch((error) => {
 					console.error("Error removing data:", error);
 				});
+
+		navigation.navigate("Dashboard");
 	}
 	
   return (

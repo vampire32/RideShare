@@ -52,36 +52,32 @@ const DriverDashboard = (props) => {
 		const [dataExists, setDataExists] = useState(false);
 		const [DriverID, setDriverID] = useState("")
 		const [DriverName, setDriverName] = useState("")
-		useEffect(async() => {
-			let result=await SecureStore.getItemAsync("PhoneNum")
-			const db = getDatabase();
-			// onValue(ref(db,"users/"),(querySnapShot)=>{
-			// 	// let data2=querySnapShot. ||{};
-			// 	// console.log(data2)
-			// 	querySnapShot.forEach((chideSnapshot)=>{
-			// 		let data2=chideSnapshot.val() ||{};
-			// 		console.log(data2)
-			// 	})
-			// })
-			onValue(ref(db, "Seats/"), (querySnapShot)=>{
-				querySnapShot.forEach((chideSnapshot) => {
-					let data2 = chideSnapshot.child("DriverID").val();
-					console.log(data2);
-					setDriverID(data2)
-					console.log(DriverID)
-				});
-			});
-			onValue(ref(db,`DriverPosts/${DriverID}`),(querySnapShot)=>{
-				let data=querySnapShot.exists()
-				console.log(data)
-				setDataExists(data)
-				
-			})
-			onValue(ref(db,`Drivers${result}/BasicInfo`),(querySnapShot)=>{
-				let data=querySnapShot.val()||{}
-				setDriverName(data.Fullname)
+		useEffect(() => {
+			const fetch=async()=>{
+				let result = await SecureStore.getItemAsync("PhoneNum");
+				const db = getDatabase();
 
-			})
+				onValue(ref(db, "Seats/"), (querySnapShot) => {
+					querySnapShot.forEach((chideSnapshot) => {
+						let data2 = chideSnapshot.child("DriverID").val();
+						console.log(data2);
+						setDriverID(data2);
+						console.log(DriverID);
+					});
+				});
+				onValue(ref(db, `DriverPosts/${DriverID}`), (querySnapShot) => {
+					let data = querySnapShot.exists();
+					console.log(data);
+					setDataExists(data);
+				});
+				onValue(ref(db, `Drivers${result}/BasicInfo`), (querySnapShot) => {
+					let data = querySnapShot.val() || {};
+					setDriverName(data.Fullname);
+				});
+
+			}
+			fetch()
+			
 		 
 		}, [])
 		

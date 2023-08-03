@@ -7,6 +7,7 @@ import { getDatabase, ref, set, get, onValue, child } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
+import UserPickDropLocation from './UserPickDropLocation';
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
@@ -24,22 +25,25 @@ const database = getDatabase(app);
 
 const RouteScreen = (props) => {
 	const [tripEnd, settripEnd] = useState(false)
-	useEffect(async() => {
-		let result=await SecureStore.getItemAsync("PhoneNum")
-		const db=getDatabase()
+	useEffect(() => {
+		const fetch=async()=>{
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			const db = getDatabase();
+
+			onValue(ref(db, `TripisEnd/${result}`), (querySnapShot) => {
+				let data = querySnapShot.val();
+				let data2 = querySnapShot.exists();
+				console.log(data);
+				if (data2 == true) {
+					settripEnd(data.tripStatus);
+				} else {
+					settripEnd(false);
+				}
+			});
+
+		}
+		fetch()
 		
-		onValue(ref(db, `TripisEnd/${result}`),(querySnapShot)=>{
-			let data=querySnapShot.val()
-			let data2=querySnapShot.exists()
-			console.log(data)
-			if (data2==true) {
-				settripEnd(data.tripStatus);
-			} else {
-				settripEnd(false)
-				
-			}
-			
-		});
 	
 	}, [])
 	useEffect(() => {
@@ -54,7 +58,7 @@ const RouteScreen = (props) => {
 	
   return (
 		<>
-		<UserandDriverLocation/>
+		<UserPickDropLocation/>
 		<ActionSheet/>
 			
 			

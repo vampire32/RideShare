@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, AppRegistry, NativeModules } from "react-native";
 import {
 	createDrawerNavigator,
 	NavigationContainer,
@@ -13,6 +13,8 @@ import DigitalWallet from "./DigitalWallet";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
 
+
+
 const Drawer = createDrawerNavigator();
 
 const DummyScreen = (props) => (
@@ -25,7 +27,7 @@ const clear= async()=>{
 	await SecureStore.deleteItemAsync("PhoneNum")
 
 }
-
+const startReload = () => RNRestart.Restart(true);
 const DrawerNavigator = (props) => {
 	const navigation = useNavigation();
 	return (
@@ -53,9 +55,13 @@ const DrawerNavigator = (props) => {
 
 			<Drawer.Screen name="Sign Out">
 				{() => {
-					
-						clear()
-						navigation.navigate("Login");
+					try {
+						clear();
+						NativeModules.DevSettings.reload();
+					} catch (error) {
+						console.log(error)
+					}
+						
 						
 					
 						

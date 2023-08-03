@@ -46,45 +46,20 @@ const DriverPosts = (props) => {
 	const [pickUp, setpickUp] = useState();
 	const [destination, setdestination] = useState();
 	const [DataExist, setDataExist] = useState(false)
+	const [keys, setkeys] = useState("")
 	
 	
 
-	useEffect(async() => {
-		let result=await SecureStore.getItemAsync("PhoneNum")
-		console.log(result)
-		const db = getDatabase();
-		
-		// const Ref = getDatabase().ref("Drivers");
-		onValue(ref(db, "DriverPosts/"), (querySnapShot) => {
-			querySnapShot.forEach((childSnapShot)=>{
-				let data = childSnapShot.child("DriverNumber").val();
-				if (data==result) {
-					let data2 = querySnapShot.val();
-					
-					
-					setDataExist(true);
-				} else {
-					console.log("Data not Exisit")
-					setDataExist(false)
-					
-				}
-			})
-
-				
-				
-				
-				
-		});
-				
-		
-		
-		
-	}, []);
 	useEffect(() => {
-		const db = getDatabase();
-	 if (DataExist == true) {
-			onValue(ref(db, "DriverPosts/"), (querySnapShot) => {
+		const fetch=async()=>{
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			console.log(result);
+			const db = getDatabase();
+
+			// const Ref = getDatabase().ref("Drivers");
+			onValue(ref(db, `DriverPosts/${result}`), (querySnapShot) => {
 				let data = querySnapShot.val() || {};
+				console.log(data);
 
 				const list = [];
 
@@ -92,11 +67,18 @@ const DriverPosts = (props) => {
 					list.push({ key, ...data[key] });
 				}
 				setTasksList(list);
+				setDataExist(true);
 			});
-		} else {
-			console.log("DatanotExist");
+
 		}
-	}, [DataExist])
+		fetch()
+		
+			
+		
+		
+		
+	}, []);
+	
 	
 const renderTask = ({ item }) => {
 	return (

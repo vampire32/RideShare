@@ -29,63 +29,71 @@ const database = getDatabase(app);
 const DriverRouteScreen = (props) => {
 	const { navigation, route } = props;
 	 const [tasksList, setTasksList] = useState([]);
-	 const [tasksList2, setTasksList2] = useState({});
+	 const [tasksList2, setTasksList2] = useState("");
 	 const [dataExists, setDataExists] = useState(false);
 
 	 let DriverID2 = route.params.DriverID;
 		console.log(DriverID2);
 	 useEffect(() => {
 		
-		
-			const db = getDatabase();
+		const fetch =async()=>{
+         const db = getDatabase();
 
-			// const Ref = getDatabase().ref("Drivers");
-			onValue(ref(db, "UserPosts/"), (querySnapShot) => {
-				let data = querySnapShot.val() || {};
-
-				const list = [];
-
-				for (let key in data ? data : []) {
-					list.push({ key, ...data[key] });
-				}
-				setTasksList(list);
-			});
-			onValue(ref(db, "Seats/"), (querySnapShot) => {
-				querySnapShot.forEach((chideSnapshot) => {
-					let data2 = chideSnapshot.child("DriverID").val();
-					console.log(data2)
-					
-					if (data2==DriverID2) {
-						let data3=chideSnapshot.child("Phone").val()
-						setTasksList2(data3)
-					
+					// const Ref = getDatabase().ref("Drivers");
+					// onValue(ref(db, "UserPosts/"), (querySnapShot) => {
 						
-					} else {
-						console.log("no data")
-						
-					}
-					
+					// 	let data = querySnapShot.val() || {};
 
+					// 	const list = [];
+
+					// 	for (let key in data ? data : []) {
+					// 		list.push({ key, ...data[key] });
+					// 	}
+					// 	setTasksList(list);
+					// });
+					onValue(ref(db, "Seats/"), (querySnapShot) => {
+						querySnapShot.forEach((chideSnapshot) => {
+							let data2 = chideSnapshot.child("DriverID").val();
+							
+							console.log(data2);
+
+							if (data2 == DriverID2) {
+								let data3 = chideSnapshot.child("Phone").val();
+								setTasksList2(data3)
+								onValue(ref(db, `UserPosts/${data3}`), (querySnapShot) => {
+									querySnapShot.forEach((childSnapshot) => {
+										let data4 = childSnapshot.child("userPhone").val();
+										let data5 = childSnapshot.val();
+										console.log(data5.Latitude);
+										if (data4 == data3) {
+											let data = querySnapShot.val() || {};
+
+											const list = [];
+
+											for (let key in data ? data : []) {
+												list.push({ key, ...data[key] });
+											}
+											setTasksList(list);
+											setDataExists(true)
+										} else {
+											setDataExists(false);
+										}
+									});
+								});
+								
+							} else {
+								console.log("no data");
+							}
+						});
+					});
+		}
+			fetch()
 			
-					
-				});
-
-			});
-			onValue(ref(db,"UserPosts/"),(querySnapShot)=>{
-				querySnapShot.forEach((childSnapshot)=>{
-					let data4=childSnapshot.child("userPhone").val()
-					let data5=childSnapshot.val()
-					console.log(data5.Latitude)
-					if (data4==tasksList2) {
-						setDataExists(true)
-						
-					} else {
-						setDataExists(false)
-						
-					}
-				})
-			})
 		}, []);
+		console.log(dataExists)
+useEffect(() => {
+	
+}, [dataExists])
 
 		
 		const renderTask = ({ item }) => {
@@ -96,7 +104,7 @@ const DriverRouteScreen = (props) => {
 				seatid={()=>{
 					let seatCardid=item.key
 					const db=getDatabase()
-					remove(ref(db, `UserPosts/${seatCardid}`))
+					remove(ref(db, `UserPosts/${item.userPhone}/${seatCardid}`))
 						.then(() => {
 							console.log("Data removed successfully");
 						})
@@ -126,17 +134,20 @@ const DriverRouteScreen = (props) => {
 		<>
 			<UserandDriverLocation />
 			<View style={{ backgroundColor: "#2153CC", flex:1 }}>
-				{dataExists ?(
-					<FlatList
+				{dataExists ?(<FlatList
 					data={tasksList}
 					renderItem={renderTask}
 					keyExtractor={(item) => item.key}
 					
-				/>
+				/>):(
+					<Text style={{textAlign:'center',color:"white",fontSize:28,fontWeight:'bold'}}>User not reserved seat</Text>
 
-				):(
-					<Text style={{color:"white",textAlign:'center',marginTop:20,fontSize:28,fontWeight:'bold'}}>User not reserved seats</Text>
 				)}
+					
+
+				
+				
+				
 				
 			</View>
 		</>
