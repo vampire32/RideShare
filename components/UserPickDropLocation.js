@@ -21,14 +21,17 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import MapViewDirections from "react-native-maps-directions";
 import maekerpin from "../assets/Marker.png"
 const android = Dimensions.get("window");
+import * as LocationGeocoding from "expo-location";
+import Timer from "./Timer";
+
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -45,6 +48,8 @@ export class UserPickDropLocation extends Component {
 			latitude: 33.6555,
 			longitude: 73.1556,
 			markerData: [],
+			location: null,
+			Address: null,
 		};
 	}
 
@@ -57,6 +62,24 @@ export class UserPickDropLocation extends Component {
 	}
 
 	async componentDidMount() {
+			const subscription = Location.watchPositionAsync(
+				{
+					accuracy: Location.Accuracy.High,
+					timeInterval: 1000, // Update every 1 second
+				},
+				async (newLocation) => {
+					const addressResponse = await LocationGeocoding.reverseGeocodeAsync(
+						newLocation.coords
+					);
+
+					this.setState({
+						...this.state,
+						location: newLocation,
+						Address: addressResponse[0],
+					});
+				}
+			);
+			subscription;
         let result=await SecureStore.getItemAsync("PhoneNum")
 		const db = getDatabase();
 		onValue(ref(db, `UserPosts/${result}`), (querySnapShot) => {
@@ -87,53 +110,67 @@ export class UserPickDropLocation extends Component {
 
 	render() {
         const data = this.state.markerData;
+		
 		return (
 			<View style={styles.container}>
-				<MapView
-					style={styles.mapView}
-					showsUserLocation
-					initialRegion={{
-						latitude: this.state.latitude, // Initial map center latitude
-						longitude: this.state.longitude, // Initial map center longitude
-						latitudeDelta: 0.0922,
-						longitudeDelta: 0.0421,
-					}}
-				>
-					{/* Render markers dynamically using map() */}
-					{data.map((location) => (
-						<>
-							<Marker
-								key={location.key}
-								coordinate={{
-									latitude: location.Latitude2,
-									longitude: location.longtitude2,
-								}}
-								image={maekerpin}
-							/>
-							<Marker
-								key={location.key}
-								coordinate={{
-									latitude: location.Latitude,
-									longitude: location.longtitude,
-								}}
-								image={maekerpin}
-							/>
-							<MapViewDirections
-								origin={{
-									latitude: location.Latitude,
-									longitude: location.longtitude,
-								}}
-								destination={{
-									latitude: location.Latitude2,
-									longitude: location.longtitude2,
-								}}
-								apikey="AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw"
-								strokeWidth={3}
-								strokeColor="blue"
-							/>
-						</>
-					))}
-				</MapView>
+				
+				
+				{this.state.location && this.state.location.coords ? (
+					<MapView
+						style={styles.mapView}
+						showsUserLocation
+						initialRegion={{
+							latitude: this.state.location.coords.latitude,
+							longitude: this.state.location.coords.longitude,
+							latitudeDelta: 0.0922,
+							longitudeDelta: 0.0421,
+						}}
+					>
+						
+						{/* Render markers dynamically using map() */}
+						{data.map((location) => (
+							<>
+								<Marker
+									key={location.key}
+									coordinate={{
+										latitude: location.Latitude2,
+										longitude: location.longtitude2,
+									}}
+									image={maekerpin}
+								/>
+								<Marker
+									coordinate={{
+										latitude: location.Latitude,
+										longitude: location.longtitude,
+									}}
+									image={maekerpin}
+								/>
+								<Marker
+									coordinate={{
+										latitude: this.state.location.coords.latitude,
+										longitude: this.state.location.coords.longitude,
+									}}
+								/>
+								<MapViewDirections
+									origin={{
+										latitude: location.Latitude,
+										longitude: location.longtitude,
+									}}
+									destination={{
+										latitude: location.Latitude2,
+										longitude: location.longtitude2,
+									}}
+									apikey="AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw"
+									strokeWidth={3}
+									strokeColor="blue"
+								/>
+							</>
+						))}
+					</MapView>
+				) : (
+					<Text>Map Data is Loading</Text>
+				)}
+				
 			</View>
 		);
 	}

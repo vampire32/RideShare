@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { Pressable, View, StyleSheet, ImageBackground,RefreshControl, ScrollView } from "react-native";
+import { Pressable, View, StyleSheet, ImageBackground,RefreshControl, ScrollView,Text,ActivityIndicator } from "react-native";
 
 import HomeSearch from "./HomeSearch";
 import bg from "../assets/images/bg2.png";
@@ -24,18 +24,20 @@ import {
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import DriversCards from "./DriversCards";
+import * as LocationGeocoding from "expo-location";
+import * as Location from "expo-location";
 
 
 
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -51,6 +53,11 @@ const Dashboard = () => {
 	 const [DriverID, setDriverID] = useState("");
 		const [DriverNum, setDriverNum] = useState("");
 		const [IDexist, setIDexist] = useState(false);
+		const [location, setlocation] = useState(null)
+		const [Address, setAddress] = useState(null)
+		const [livelatitude, setlivelatitude] = useState(null)
+		const [liveLongitude, setliveLongitude] = useState(null)
+
 	 const onRefresh = React.useCallback(() => {
 			setRefreshing(true);
 			setTimeout(() => {
@@ -59,6 +66,21 @@ const Dashboard = () => {
 		}, []);
 	useEffect(() => {
 		const fetch=async()=>{
+			const subscription = Location.watchPositionAsync(
+				{
+					accuracy: Location.Accuracy.High,
+					timeInterval: 1000, // Update every 1 second
+				},
+				async (newLocation) => {
+					const addressResponse = await LocationGeocoding.reverseGeocodeAsync(
+						newLocation.coords
+					);
+
+					setAddress(addressResponse[0].name+addressResponse[0].region)
+					setlocation(newLocation)
+				}
+			);
+			subscription;
 			let result = await SecureStore.getItemAsync("PhoneNum");
 			const db = getDatabase();
 			onValue(ref(db, `UserPosts/${result}`), (querSnapShot) => {
@@ -91,21 +113,33 @@ const Dashboard = () => {
 	};
 
 	return (
-		<View
-			refreshControl={
-				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-			}
-		>
-			<Pressable style={styles.floatTopButton} onPress={openDrawer}>
-				<EvilIcons name="navicon" size={30} color="#2153CC" />
-			</Pressable>
-			<View style={styles.map}>
-				<MapVieww />
-			</View>
-			<View style={styles.bottomContainer}>
-				<HomeSearch />
-			</View>
-		</View>
+		<>
+			{location && location.coords ? (
+				<View>
+					<Pressable style={styles.floatTopButton} onPress={openDrawer}>
+						<EvilIcons name="navicon" size={30} color="#2153CC" />
+					</Pressable>
+					<View style={styles.map}>
+						<MapVieww
+							latitude={location.coords.latitude}
+							longtitude={location.coords.longitude}
+						/>
+					</View>
+					<View style={styles.bottomContainer}>
+						<HomeSearch Address={Address} />
+					</View>
+				</View>
+			) : (
+				<View
+					style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
+				>
+					<Text style={{ textAlign: "center", fontSize: 22 }}>
+						RideShare......
+					</Text>
+					<ActivityIndicator size={70} color="#0000ff" />
+				</View>
+			)}
+		</>
 	);
 };
 

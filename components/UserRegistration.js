@@ -27,13 +27,13 @@ import { Pressable } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 
 const app = firebase.initializeApp(firebaseConfig)
@@ -51,19 +51,22 @@ const UserRegistration = (props) => {
 	const [Name, setName] = useState("");
 	const [Email, setEmail] = useState("");
 	const [Gender, setGender] = useState("");
-	const [Phone, setPhone] = useState(route.params.Phone);
-	const [image, setImage] = useState(null);
+	const [Phone, setPhone] = useState("");
+	const [image, setImage] = useState(
+		"https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-High-Quality-Image.png"
+	);
 	useEffect(() => {
 		const FecthData = async () => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
+			setPhone(result)
 			const db = getDatabase();
 			onValue(ref(db, `users/${result}`), (querySnapShot) => {
 				let data = querySnapShot.exists();
-				if (data=true) {
+				if (data==true) {
 					navigation.replace("Dashboard");
 					
 				} else {
-					console.log("Data not Exist")
+					console.log("Data not Exisi")
 					
 				}
 				

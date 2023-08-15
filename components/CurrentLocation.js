@@ -12,6 +12,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 const GOOGLE_MAPS_APIKEY = "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw";
 import MapViewDirections from "react-native-maps-directions";
 import * as SecureStore from "expo-secure-store";
+import * as LocationGeocoding from 'expo-location';
 export default class MapVieww extends React.Component {
 	constructor (props) {
 		super(props);
@@ -25,8 +26,12 @@ export default class MapVieww extends React.Component {
 			longitude: null,
 			latitude2: null,
 			longitude2: null,
+			liveLongitude:null,
+			livelatitude:null,
 			show:false,
 			show2:false,
+			location:null,
+			Address:null,
 		};
 	}
 	
@@ -42,7 +47,34 @@ export default class MapVieww extends React.Component {
 	}
 
 	async componentDidMount() {
+		let { status } = await Location.requestForegroundPermissionsAsync();
+		if (status !== "granted") {
+			return;
+		}
+		const subscription = Location.watchPositionAsync(
+			{
+				accuracy: Location.Accuracy.High,
+				timeInterval: 1000, // Update every 1 second
+			},
+			async (newLocation) => {
+				const addressResponse = await LocationGeocoding.reverseGeocodeAsync(
+			newLocation.coords
+		);
+				
+			  this.setState({
+				...this.state,
+				location:newLocation,
+				Address:addressResponse[0],
+				
+			
+			  })
+			}
+		);
+		subscription;
+		
 	
+		
+		  
 		let lat1 = parseFloat( await SecureStore.getItemAsync("lat3"));
 		let long1 = parseFloat(await SecureStore.getItemAsync("long3"));
 		let lat2 = parseFloat( await SecureStore.getItemAsync("lat2"));
@@ -89,6 +121,9 @@ export default class MapVieww extends React.Component {
 		} catch (error) {
 			console.log(error);
 		}
+		// if (this.state.latitude2 != null && this.state.longitude2 != null) {
+		// 	this.forceUpdate();
+		// }
 	}
 
 	// setModalVisible(visible) {
@@ -96,19 +131,29 @@ export default class MapVieww extends React.Component {
 	// }
 
 	render() {
+		
+		
+		
+		
+		
 		return (
 			<View style={styles.container}>
-				<MapView style={styles.mapView} showsUserLocation>
-					
-					
-						<Marker
-							coordinate={{
-								latitude: 33.5555,
-								longitude: 73.6555,
-							}}
-						/>
-				
-					
+				<MapView
+					style={styles.mapView}
+					showsUserLocation
+					initialRegion={{
+						latitude: this.props.latitude,
+						longitude: this.props.longtitude, // Initial map center longitude
+						latitudeDelta: 0.0922,
+						longitudeDelta: 0.0421,
+					}}
+				>
+					<Marker
+						coordinate={{
+							latitude: this.props.latitude,
+							longitude: this.props.longtitude,
+						}}
+					/>
 				</MapView>
 			</View>
 		);

@@ -10,13 +10,13 @@ import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -26,9 +26,15 @@ const VechlieInfo = (props) => {
     const { navigation, route } = props;
 	const [Name, setName] = useState("");
 	const [Plate, setPlate] = useState("");
-	const [image, setImage] = useState(null);
-	const [image2, setImage2] = useState(null);
-	const [image3, setImage3] = useState(null);
+	const [image, setImage] = useState(
+		"https://www.pngitem.com/pimgs/m/285-2855837_your-car-you-transparent-car-vector-png-png.png"
+	);
+	const [image2, setImage2] = useState(
+		"https://cdn-icons-png.flaticon.com/512/3000/3000745.png"
+	);
+	const [image3, setImage3] = useState(
+		"https://cdn-icons-png.flaticon.com/512/3000/3000745.png"
+	);
 		const [phoneNumber, setphoneNumber] = useState("");
 
 	const pickImage = async () => {
@@ -174,7 +180,7 @@ const VechlieInfo = (props) => {
 					Photo Of Vechlie
 				</Text>
 				<Pressable onPress={pickImage}>
-					<Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
+					<Image source={{ uri: image }} style={{ width: 300, height: 100 }} />
 				</Pressable>
 			</View>
 

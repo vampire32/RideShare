@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { View, Text } from "react-native";
+import { View, Text,StyleSheet } from "react-native";
 import ActionSheet from './ActionSheet';
 import UserandDriverLocation from './UserandDriverLocation';
 import firebase from "firebase/compat/app";
@@ -8,15 +8,16 @@ import { getAuth } from "firebase/auth";
 import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
 import UserPickDropLocation from './UserPickDropLocation';
+import Timer from './Timer';
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -58,15 +59,51 @@ const RouteScreen = (props) => {
 	
   return (
 		<>
-		<UserPickDropLocation/>
-		<ActionSheet/>
-			
-			
-		
-			
-			
+			<View>
+				<Timer />
+				<View style={styles.map}>
+					<UserPickDropLocation />
+					<ActionSheet />
+				</View>
+			</View>
 		</>
 	);
 }
+const styles = StyleSheet.create({
+	map: {
+		height: "100%",
+		// marginBottom: -10,
+	},
+	bottomContainer: {
+		height: "100%",
+		borderTopStartRadius: 15,
+		borderTopEndRadius: 15,
+	},
+	floatTopButton: {
+		position: "absolute",
+		top: 50,
+		left: 20,
+		padding: 10,
+		borderRadius: 50,
+		backgroundColor: "#fff",
+		zIndex: 4,
+		justifyContent: "center",
+		alignItems: "center",
 
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 3,
+		},
+		shadowOpacity: 0.29,
+		shadowRadius: 4.65,
+
+		elevation: 7,
+	},
+	transparentBox: {
+		backgroundColor: "rgba(255, 0, 0, 0.5)", // Red color with 50% opacity
+		padding: 20,
+		borderRadius: 10,
+	},
+});
 export default RouteScreen

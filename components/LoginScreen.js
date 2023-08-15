@@ -15,13 +15,13 @@ import OTPBG from "../assets/otpbg.png";
 
 try {
 	firebase.initializeApp({
-		apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-		authDomain: "carsharing-10784.firebaseapp.com",
-		projectId: "carsharing-10784",
-		storageBucket: "carsharing-10784.appspot.com",
-		messagingSenderId: "1059995999394",
-		appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-		measurementId: "G-WXGTPM42JS",
+		apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+		authDomain: "carsharing2-d254d.firebaseapp.com",
+		projectId: "carsharing2-d254d",
+		storageBucket: "carsharing2-d254d.appspot.com",
+		messagingSenderId: "450530782923",
+		appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+		measurementId: "G-VVEWZZGFBT",
 	});
 } catch (err) {
 	// ignore app already initialized error in snack
@@ -118,7 +118,6 @@ const phoneInput = useRef(null);
 								// 		screen: "Profile",
 								// 		params: { Phone: phoneNumber },
 								// 	});
-								
 
 								// let result = await SecureStore.getItemAsync("PhoneNum");
 								// console.log(result);
@@ -152,6 +151,12 @@ const phoneInput = useRef(null);
 									marginTop: 50,
 								}}
 							>
+								<Pressable onPress={()=>{
+									setmodalVisiable(false)
+								}}>
+									<Text>close</Text>
+								</Pressable>
+
 								<Text
 									style={{
 										marginStart: 10,
@@ -174,7 +179,7 @@ const phoneInput = useRef(null);
 								>
 									We have sent a verification code to your mobile
 								</Text>
-							
+
 								<TextInput
 									label=" Enter OTP"
 									style={styles.input}
@@ -338,16 +343,9 @@ const styles = StyleSheet.create({
 		width: android.width * 0.94,
 		height: 60,
 		borderTopRightRadius: 20,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 3,
-		},
-		shadowOpacity: 0.29,
-		shadowRadius: 4.65,
-		color: "#fff",
-
-		elevation: 7,
+		borderColor:"#000fff",
+		textAlign:'center',
+		backgroundColor:"#000fff32"
 	},
 });
 

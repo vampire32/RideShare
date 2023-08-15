@@ -29,13 +29,13 @@ import { useNavigation } from "@react-navigation/native";
 
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -160,13 +160,19 @@ settingCordinates()
 		console.log(phoneNumber)
 	
 		  const postData = {
-			Pickup:pickUp,
-			Destination:destination,
-			Date:date,
-			Time:time,
-			DriverNumber:phoneNumber,
-			Fullname:Fullname,
-			Profilepic:profilepic,
+			Pickup: pickUp,
+					Destination: destination,
+					Date: date,
+					Time: time,
+					Fullname: Fullname,
+					Profilepic: profilepic,
+					carName: carName,
+					carplate: carplate,
+					DriverNumber: phoneNumber,
+					Latitude: UserLatitude,
+					longtitude: Userlongtitude,
+					Latitude2: UserLatitude2,
+					longtitude2: Userlongtitude2,
 			
 
 			};
@@ -281,7 +287,7 @@ settingCordinates()
 						onPress={() => {
 							// navigation.replace("Dashboard");
 							try {
-								Submit();
+								settingCordinates()
 								//  navigation.replace("Dashboard");
 								setmodelVisable(true);
 							} catch (error) {
@@ -308,6 +314,7 @@ settingCordinates()
 							<Text style={{ color: "white" }}>Your request has send</Text>
 							<TouchableHighlight
 								onPress={() => {
+									Submit()
 									setmodelVisable(false);
 									navigation.navigate("DriverDashboard");
 								}}

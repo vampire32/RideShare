@@ -32,19 +32,21 @@ import {
 } from "firebase/database";
 import * as SecureStore from "expo-secure-store";
 import MapVieww from "./CurrentLocation";
+import * as LocationGeocoding from "expo-location";
+import * as Location from "expo-location";
 // import * as Location from "expo-location";
 // navigator.geolocation = require('@react-native-community/geolocation');
 // navigator.geolocation = require('react-native-geolocation-service');
 
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -70,7 +72,11 @@ const HomeSearch = (props) => {
 		const [Userlongtitude, setUserlongtitude] = useState("");
 		const [UserLatitude2, setUserLatitude2] = useState("");
 		const [Userlongtitude2, setUserlongtitude2] = useState("");
+		const [AddressText, setAddressText] = useState("");
 		const [RidePrice, setRidePrice] = useState("")
+		const [location, setlocation] = useState(null)
+		
+		
 		const deg2rad = (angle) => {
 			return angle * (Math.PI / 180);
 		};
@@ -112,6 +118,24 @@ const HomeSearch = (props) => {
 		
 	useEffect(() => {
 		const fetch=async()=>{
+			const subscription = Location.watchPositionAsync(
+				{
+					accuracy: Location.Accuracy.High,
+					timeInterval: 1000, // Update every 1 second
+				},
+				async (newLocation) => {
+					const addressResponse = await LocationGeocoding.reverseGeocodeAsync(
+						newLocation.coords
+					);
+
+					setlocation(newLocation)
+					
+					setAddressText(props.Address)
+					setLatitude(newLocation.coords.latitude)
+					setlongtitude(newLocation.coords.longitude)
+				}
+			);
+			subscription
 			
 		let result = await SecureStore.getItemAsync("PhoneNum");
 
@@ -140,7 +164,7 @@ const HomeSearch = (props) => {
 	  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 	  const [modalVisible, setmodalVisible] = useState(false)
 	  const [modalVisible2, setmodalVisible2] = useState(false);
-	  const [AddressText, setAddressText] = useState("")
+	  
 	  const [Destination, setDestination] = useState("")
 	  const [modelVisable3, setmodelVisable3] = useState(false)
 	
@@ -206,9 +230,7 @@ if (AddressText==""&&Destination=="") {
 
 	return (
 		<>
-			
-				
-			
+		
 			<View style={styles.container}>
 				{/* <View style={styles.flexCenter}>
 						<View style={styles.horizontalClip} />
@@ -288,17 +310,14 @@ if (AddressText==""&&Destination=="") {
 					</View>
 					<TouchableHighlight
 						onPress={async() => {
-							if (AddressText==""&&Destination=="") {
+							if (Destination=="") {
 								alert("Please Provide Pickup and Dropoff ")
 
 								
 							} else {
 								calculateDistance();
 
-								await SecureStore.setItemAsync("lat3", Latitude);
-								await SecureStore.setItemAsync("long3", longtitude);
-								await SecureStore.setItemAsync("lat2", Latitude2);
-								await SecureStore.setItemAsync("long2", longtitude2);
+								
 								settingCordinates();
 
 								setmodelVisable3(true);
@@ -406,6 +425,7 @@ if (AddressText==""&&Destination=="") {
 								console.log(JSON.stringify(details.geometry.location));
 								let lat2 = JSON.stringify(details.geometry.location.lat);
 								let long2 = JSON.stringify(details.geometry.location.lng);
+								
 								console.log(lat2);
 								
 								setLatitude2(lat2);
@@ -443,6 +463,12 @@ if (AddressText==""&&Destination=="") {
 					</View>
 				</Modal>
 			</View>
+
+		
+			
+				
+			
+			
 		</>
 	);
 };

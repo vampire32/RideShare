@@ -6,13 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-     "fonts": [
-    {
-      "family": "OpenSans-Regular",
-      "asset": "./assets/fonts/OpenSans-Regular.ttf",
-    },
-  ],
-     "plugins": [
+    "plugins": [
       [
         "expo-image-picker",
         {
@@ -20,7 +14,6 @@
         }
       ]
     ],
-    
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -34,20 +27,25 @@
     ],
     "ios": {
       "supportsTablet": true,
-      
       "bundleIdentifier": "com.moiz210.cabApp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-       
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.moiz210.cabApp"
+      "package": "com.moiz210.cabApp",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "49c701d1-3ff6-4915-8d4f-91ccfcaf75d2"
+      }
     }
-  
   }
 }

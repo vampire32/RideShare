@@ -28,13 +28,13 @@ import OTPBG from "../assets/otpbg.png"
 
 try {
 	firebase.initializeApp({
-		apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-		authDomain: "carsharing-10784.firebaseapp.com",
-		projectId: "carsharing-10784",
-		storageBucket: "carsharing-10784.appspot.com",
-		messagingSenderId: "1059995999394",
-		appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-		measurementId: "G-WXGTPM42JS",
+		apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+		authDomain: "carsharing2-d254d.firebaseapp.com",
+		projectId: "carsharing2-d254d",
+		storageBucket: "carsharing2-d254d.appspot.com",
+		messagingSenderId: "450530782923",
+		appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+		measurementId: "G-VVEWZZGFBT",
 	});
 } catch (err) {
 	// ignore app already initialized error in snack

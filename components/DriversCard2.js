@@ -135,13 +135,13 @@ const DriversCard2 = ({
 			>
 				{Destination}
 			</Text>
-			<TouchableHighlight
+			{/* <TouchableHighlight
 				
 			>
 				<View style={styles.button}>
 					<Text style={{ fontWeight: "bold" }}>Delete Post</Text>
 				</View>
-			</TouchableHighlight>
+			</TouchableHighlight> */}
 			
 		</Pressable>
 	);

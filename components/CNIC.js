@@ -8,13 +8,13 @@ import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -23,8 +23,12 @@ const database = getDatabase(app);
 const CNIC = (props) => {
 	const { navigation, route } = props;
 	const [CnicNumber, setCnic] = useState("");
-	const [image, setImage] = useState(null);
-	const [image2, setImage2] = useState(null);
+	const [image, setImage] = useState(
+		"https://www.incpak.com/wp-content/uploads/2017/04/NADRA.jpg"
+	);
+	const [image2, setImage2] = useState(
+		"https://online.theunitedinsurance.com/Admin_files/Images/cnic-back-side.jpg"
+	);
 	const [phoneNumber, setphoneNumber] = useState("");
 	const handleChangeName = (CnicNumbers) => {
 		setCnic(CnicNumbers);
@@ -159,7 +163,7 @@ const CNIC = (props) => {
 					<Text
 						style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}
 					>
-						Front Side
+						Back Side
 					</Text>
 					<Pressable onPress={pickImage2}>
 						<Text
@@ -184,7 +188,7 @@ const CNIC = (props) => {
 						let result = await SecureStore.getItemAsync("PhoneNum");
 						setphoneNumber(result);
 						Submit();
-						// navigation.navigate("DriverReg");
+						navigation.navigate("DriverReg");
 					} catch (error) {
 						console.log(error)
 						

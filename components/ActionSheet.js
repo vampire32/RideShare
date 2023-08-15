@@ -14,13 +14,13 @@ import { useNavigation } from "@react-navigation/native";
 import Reviews from "./Reviews";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -38,38 +38,40 @@ const ActionSheet = (props) => {
 	const RBRef = React.useRef();
 	useEffect(() => {
 		const fetch=async()=>{
-			 let result = await SecureStore.getItemAsync("PhoneNum");
-			 
-			 let result2 = await SecureStore.getItemAsync("DriverID");
-			 console.log(result2)
+			let result = await SecureStore.getItemAsync("DriverPhone2");
 
-				const db = getDatabase();
+			let result2 = await SecureStore.getItemAsync("DriverID");
+			console.log(result);
 
-				// const Ref = getDatabase().ref("Drivers");
-				onValue(ref(db, `DriverPosts/${result}/${result2}`), (querySnapShot) => {
-					
-						let data = querySnapShot.val() || {};
-						console.log(data)
+			const db = getDatabase();
+				onValue(
+					ref(db, `DriverPosts/${result}/${result2}`),
+					(querySnapShot) => {
+						let data = querySnapShot.val()  ;
+						
 						setDriverName(data.Fullname);
 						setCarName(data.carName);
 						setCarplate(data.carplate);
 						setDriverpic(data.Profilepic);
 						setpickUp(data.Pickup);
 						setDriverNumber(data.DriverNumber);
-					
-				});
-				onValue(ref(db, "Reviws/"), (querySnapShot) => {
-					querySnapShot.forEach((childSnapShot) => {
-						let DriverID = childSnapShot.child("DriverID").val();
-						if (DriverID == result2) {
-							settripEnd(true);
-						} else {
-							settripEnd(false);
-							console.log("Drivernotexist");
-						}
-					});
-				});
+					}
+				);
 
+			
+			// const Ref = getDatabase().ref("Drivers");
+
+			onValue(ref(db, "Reviws/"), (querySnapShot) => {
+				querySnapShot.forEach((childSnapShot) => {
+					let DriverID = childSnapShot.child("DriverID").val();
+					if (DriverID == result2) {
+						settripEnd(true);
+					} else {
+						settripEnd(false);
+						console.log("Drivernotexist");
+					}
+				});
+			});
 		}
 		fetch()
 	 
@@ -132,9 +134,11 @@ const renderTask = ({ item }) => {
 							color: "#fff",
 							marginTop: 25,
 
-							marginLeft: 50,
+							marginLeft: 15,
 							fontWeight: "bold",
+							
 						}}
+						numberOfLines={2}
 					>
 						{DriverName}
 					</Text>

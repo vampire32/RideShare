@@ -15,142 +15,178 @@ import bg from "../assets/images/bg2.png";
 import user from "../assets/images/avatar2.jpeg";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from 'react-native-paper';
+import * as SecureStore from "expo-secure-store";
 
-const DriversCards = ({profilepic,Driverid,DriverNumber,carname,Pickup,Destination,carplate}) => {
+const DriversCards = ({
+	profilepic,
+	Driverid,
+	DriverNumber,
+	carname,
+	Pickup,
+	Destination,
+	carplate,
+	DriverNum,
+	Date,
+	Time
+}) => {
 	const navigation = useNavigation();
 	// const [Driverid2, setDriverid] = useState();
 	const [address, setaddress] = useState();
 	// useEffect(() => {
-	// console.log(Driverid())
+	// console.log(DriverNum)
+	// const fetch =async()=>{
+	// 	await SecureStore.setItemAsync("DriverPhone",DriverNum)
+
+
+	// }
 	// }, [])
-	
-	
 
 	return (
-		
-			<Pressable  style={styles.box}>
-				<Image
-					source={{ uri: profilepic }}
-					style={{
-						width: 50,
-						height: 50,
-						borderRadius: 90,
-						marginLeft: 25,
-						marginTop: 10,
-					}}
-				/>
+		<Pressable style={styles.box} >
+			<Image
+				source={{ uri: profilepic }}
+				style={{
+					width: 50,
+					height: 50,
+					borderRadius: 90,
+					marginLeft: 25,
+					marginTop: 10,
+				}}
+			/>
 
-				<Text
-					style={{
-						textAlign: "center",
+			<Text
+				style={{
+					textAlign: "center",
 
-						fontSize: 20,
-						color: "#2153CC",
-						marginTop: 25,
+					fontSize: 20,
+					color: "#2153CC",
+					marginTop: 25,
 
-						marginLeft: 50,
-						fontWeight: "bold",
-					}}
-				>
-					{DriverNumber}
-				</Text>
-				<Text
-					style={{
-						textAlign: "center",
-						fontSize: 20,
-						color: "#2153CC",
+					marginLeft: 50,
+					fontWeight: "bold",
+				}}
+			>
+				{DriverNumber}
+			</Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 20,
+					color: "#2153CC",
 
-						marginLeft: 50,
-						fontWeight: "bold",
-					}}
-				></Text>
-				<Text
-					style={{
-						textAlign: "center",
-						fontSize: 18,
-						color: "#2153CC",
+					marginLeft: 50,
+					fontWeight: "bold",
+				}}
+			></Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 18,
+					color: "#2153CC",
 
-						marginLeft: 125,
-					}}
-				>
-					{carname}
-				</Text>
-				<Text
-					style={{
-						textAlign: "center",
-						fontSize: 20,
-						color: "#2153CC",
+					marginLeft: 125,
+				}}
+			>
+				{carname}
+			</Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 20,
+					color: "#2153CC",
 
-						marginLeft: 50,
-						fontWeight: "bold",
-					}}
-				></Text>
-				<Text
-					style={{
-						textAlign: "center",
-						fontSize: 18,
-						color: "#2153CC",
+					marginLeft: 50,
+					fontWeight: "bold",
+				}}
+			></Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 18,
+					color: "#2153CC",
 
-						marginLeft: 125,
-					}}
-				>
-					{carplate}
-				</Text>
-				<Text
-					style={{
-						textAlign: "center",
-						fontSize: 20,
-						color: "#2153CC",
+					marginLeft: 125,
+				}}
+			>
+				{carplate}
+			</Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 18,
+					color: "#2153CC",
 
-						marginLeft: 50,
-						fontWeight: "bold",
-					}}
-				></Text>
-				<Text
-					style={{
-						textAlign: "center",
-						fontSize: 18,
-						color: "#2153CC",
+					marginLeft: 125,
+				}}
+			>
+				{Date}
+			</Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 18,
+					color: "#2153CC",
 
-						marginLeft: 125,
-					}}
-					numberOfLines={1}
-				>
-					{Pickup}
-				</Text>
-				<Text
-					style={{
-						textAlign: "center",
-						fontSize: 18,
-						color: "#2153CC",
+					marginLeft: 125,
+				}}
+			>
+				{Time}
+			</Text>
 
-						marginLeft: 125,
-					}}
-					numberOfLines={1}
-				>
-					{Destination}
-				</Text>
-				<TouchableHighlight
-					onPress={() => {
-						navigation.navigate("Dashboard");
-					}}
-				>
-					<View style={styles.button}>
-						<Text style={{ fontWeight: "bold" }}>Cancel</Text>
-					</View>
-				</TouchableHighlight>
-				<TouchableHighlight
-					onPress={() => {
-						Driverid()
-						navigation.navigate("SelectSeat");
-					}}
-				>
-					<View style={styles.button2}>
-						<Text style={{ color: "white", fontWeight: "bold" }}>Select</Text>
-					</View>
-				</TouchableHighlight>
-			</Pressable>
-		
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 20,
+					color: "#2153CC",
+
+					marginLeft: 50,
+					fontWeight: "bold",
+				}}
+			></Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 18,
+					color: "#2153CC",
+
+					marginLeft: 125,
+				}}
+				numberOfLines={1}
+			>
+				{Pickup}
+			</Text>
+			<Text
+				style={{
+					textAlign: "center",
+					fontSize: 18,
+					color: "#2153CC",
+
+					marginLeft: 125,
+				}}
+				numberOfLines={1}
+			>
+				{Destination}
+			</Text>
+			<TouchableHighlight
+				onPress={() => {
+					navigation.navigate("Dashboard");
+				}}
+			>
+				<View style={styles.button}>
+					<Text style={{ fontWeight: "bold" }}>Cancel</Text>
+				</View>
+			</TouchableHighlight>
+			<TouchableHighlight
+				onPress={() => {
+					Driverid()
+					navigation.navigate("SelectSeat");
+				}}
+			>
+				<View style={styles.button2}>
+					<Text style={{ color: "white", fontWeight: "bold" }}>Select</Text>
+				</View>
+			</TouchableHighlight>
+		</Pressable>
 	);
 };
 const android = Dimensions.get("window");

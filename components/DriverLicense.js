@@ -8,13 +8,13 @@ import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -24,8 +24,12 @@ const database = getDatabase(app);
 const DriverLicense = (props) => {
 	const { navigation, route } = props;
 		const [linceseNumber, setlinceseNumber] = useState("");
-		const [image, setImage] = useState(null);
-		const [image2, setImage2] = useState(null);
+		const [image, setImage] = useState(
+			"https://media.istockphoto.com/id/1073597286/vector/driver-license-with-male-photo-identification-or-id-card-template-vector-illustration.jpg?s=612x612&w=0&k=20&c=WkW7yo2wPw9HEfLAqyXqiDMX4Apditfd-bDuf8ENXcU="
+		);
+		const [image2, setImage2] = useState(
+			"https://media.istockphoto.com/id/1196944884/vector/man-driver-license-plastic-card-template-id-card-vector-stock-illustration.jpg?s=612x612&w=0&k=20&c=JnnPv1rNuuWycfHy_f81dC4DEXs_1xmNOBHMH5O0GaY="
+		);
 		const [phoneNumber, setphoneNumber] = useState("");
 		 const handleChangeName = (linceseNumbers) => {
 				setlinceseNumber(linceseNumbers)
@@ -162,7 +166,7 @@ const DriverLicense = (props) => {
 					<Text
 						style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}
 					>
-						Front Side
+						Back Side
 					</Text>
 					<Pressable onPress={pickImage2}>
 						<Text
@@ -185,7 +189,7 @@ const DriverLicense = (props) => {
 				<Pressable
 					onPress={() => {
 						Submit();
-						// navigation.navigate("DriverReg");
+						navigation.navigate("DriverReg");
 					}}
 				>
 					<Text style={styles.button}>Next</Text>

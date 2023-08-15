@@ -19,27 +19,31 @@ import { getDatabase, ref, set, get, onValue,child } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
+import { useNavigation } from "@react-navigation/native";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDIA92OSKTB-lKS-xiBoS_EKDrGHlpVJ_Q",
-	authDomain: "carsharing-10784.firebaseapp.com",
-	projectId: "carsharing-10784",
-	storageBucket: "carsharing-10784.appspot.com",
-	messagingSenderId: "1059995999394",
-	appId: "1:1059995999394:web:f6bc2c89ea71eed547cbfb",
-	measurementId: "G-WXGTPM42JS",
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
 };
 const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 const FindingDrivers = (props) => {
+	const navigation = useNavigation();
 	//  const { navigation, route } = props;
-	 const [tasksList, setTasksList] = useState([]);
+	 const [tasksList, setTasksList] = useState([],[]);
+	
 	 const [selectedId, setSelectedId] = useState();
+	 const [Driverphone, setDriverphone] = useState()
 	const [pickUp, setpickUp] = useState();
 	const [destination, setdestination] = useState();
 	
-	
+	const list = [];
 
 	useEffect(() => {
 		const db = getDatabase();
@@ -48,13 +52,16 @@ const FindingDrivers = (props) => {
 		onValue(ref(db, "DriverPosts/"), (querySnapShot) => {
 			querySnapShot.forEach((chidSnapshot)=>{
 					let data = chidSnapshot.val() || {};
+					
+					
 
-					const list = [];
+					
 
 					for (let key in data ? data : []) {
 						list.push({ key, ...data[key] });
 					}
-					setTasksList(list);
+					
+					setTasksList(list ,list);
 					
 
 			})
@@ -76,9 +83,15 @@ const renderTask = ({ item }) => {
 			profilepic={item.Profilepic}
 			carname={item.carName}
 			carplate={item.carplate}
+			DriverNum={item.DriverNumber}
+			Date={item.Date}
+			Time={item.Time}
 			
-			Driverid={async() => {setSelectedId(item.key)
-				await SecureStore.setItemAsync("DriverID",selectedId)
+			Driverid={async() => {setSelectedId(item.key);
+				setDriverphone(item.DriverNumber);
+				await SecureStore.setItemAsync("DriverID",item.key)
+				await SecureStore.setItemAsync("DriverPhone2",item.DriverNumber)
+				
 			
 			}
 			
@@ -90,7 +103,7 @@ const renderTask = ({ item }) => {
 	
 };
 	
-console.log(selectedId);
+console.log(list);
 // const databaseRef = firebase.database().ref("DriverPost/");
 	// databaseRef.on("value", (snapshot) => {
 	// 	const data = snapshot.val();
