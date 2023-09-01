@@ -1,17 +1,12 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity,Dimensions } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { point } from "@turf/helpers";
-import destination from "@turf/destination";
+
 import * as Location from "expo-location";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import firebase from "firebase/compat/app";
 import { getDatabase, ref, set, get, onValue, child } from "firebase/database";
-import { getAuth } from "firebase/auth";
-import DriversCards from "./DriversCards";
-import * as SecureStore from "expo-secure-store";
-import DriverRouteCards from "./DriverRouteCards";
-import { useNavigation, useRoute } from "@react-navigation/native";
+
 const android = Dimensions.get("window");
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",

@@ -230,7 +230,6 @@ if (AddressText==""&&Destination=="") {
 
 	return (
 		<>
-		
 			<View style={styles.container}>
 				{/* <View style={styles.flexCenter}>
 						<View style={styles.horizontalClip} />
@@ -253,6 +252,7 @@ if (AddressText==""&&Destination=="") {
 						onTouchStart={() => {
 							setmodalVisible(true);
 						}}
+						numberOfLines={1}
 					/>
 					<Text
 						style={{
@@ -270,61 +270,25 @@ if (AddressText==""&&Destination=="") {
 						onTouchStart={() => {
 							setmodalVisible2(true);
 						}}
+						numberOfLines={1}
 					/>
 					<View
 						style={{
 							flexDirection: "row",
 							justifyContent: "space-around",
 						}}
-					>
-						<TouchableHighlight onPress={showDatePicker}>
-							<View style={styles.Datebutton}>
-								<Text style={{ color: "#2153CC", fontWeight: "bold" }}>
-									{" "}
-									Set Date
-								</Text>
-								<DateTimePickerModal
-									isVisible={isDatePickerVisible}
-									mode="date"
-									onConfirm={handleConfirm}
-									onCancel={hideDatePicker}
-									style={{ width: 30 }}
-								/>
-							</View>
-						</TouchableHighlight>
-						<TouchableHighlight onPress={showTimePicker}>
-							<View style={styles.Datebutton}>
-								<Text style={{ color: "#2153CC", fontWeight: "bold" }}>
-									{" "}
-									Set Time
-								</Text>
-								<DateTimePickerModal
-									isVisible={isTimePickerVisible}
-									mode="time"
-									onConfirm={handleConfirm}
-									onCancel={hideTimePicker}
-									style={{ width: 30 }}
-								/>
-							</View>
-						</TouchableHighlight>
-					</View>
+					></View>
 					<TouchableHighlight
-						onPress={async() => {
-							if (Destination=="") {
-								alert("Please Provide Pickup and Dropoff ")
-
-								
+						onPress={async () => {
+							if (Destination == "") {
+								alert("Please Provide Pickup and Dropoff ");
 							} else {
 								calculateDistance();
 
-								
 								settingCordinates();
 
 								setmodelVisable3(true);
-								
 							}
-							
-							
 						}}
 					>
 						<View style={styles.button}>
@@ -373,7 +337,7 @@ if (AddressText==""&&Destination=="") {
 								console.log(JSON.stringify(details.geometry.location));
 								let lat3 = JSON.stringify(details.geometry.location.lat);
 								let long3 = JSON.stringify(details.geometry.location.lng);
-								
+
 								setLatitude(lat3);
 								setlongtitude(long3);
 							}}
@@ -425,9 +389,9 @@ if (AddressText==""&&Destination=="") {
 								console.log(JSON.stringify(details.geometry.location));
 								let lat2 = JSON.stringify(details.geometry.location.lat);
 								let long2 = JSON.stringify(details.geometry.location.lng);
-								
+
 								console.log(lat2);
-								
+
 								setLatitude2(lat2);
 								setlongtitude2(long2);
 							}}
@@ -454,7 +418,6 @@ if (AddressText==""&&Destination=="") {
 								onPress={() => {
 									setmodelVisable3(false);
 									Submit();
-									
 								}}
 							>
 								<Text style={styles.button2}>Close</Text>
@@ -463,12 +426,6 @@ if (AddressText==""&&Destination=="") {
 					</View>
 				</Modal>
 			</View>
-
-		
-			
-				
-			
-			
 		</>
 	);
 };
@@ -494,7 +451,7 @@ const styles = StyleSheet.create({
 		borderBottomRightRadius: 20,
 
 		backgroundColor: "white",
-		height: 60,
+		height: 40,
 		borderTopRightRadius: 20,
 		shadowColor: "#000",
 		// shadowOffset: {
@@ -518,14 +475,14 @@ const styles = StyleSheet.create({
 
 		elevation: 7,
 
-		width: android.width * 0.94,
+		width: 120,
 		borderTopLeftRadius: 20,
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
 		borderTopRightRadius: 20,
 
 		marginTop: 20,
-		marginLeft: 10,
+		marginLeft: "30%",
 	},
 	Datebutton: {
 		alignItems: "center",

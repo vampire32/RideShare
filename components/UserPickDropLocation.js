@@ -7,22 +7,20 @@ import {
 	Dimensions,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { point } from "@turf/helpers";
-import destination from "@turf/destination";
+
 import * as Location from "expo-location";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import firebase from "firebase/compat/app";
 import { getDatabase, ref, set, get, onValue, child } from "firebase/database";
-import { getAuth } from "firebase/auth";
-import DriversCards from "./DriversCards";
+
 import * as SecureStore from "expo-secure-store";
-import DriverRouteCards from "./DriverRouteCards";
-import { useNavigation, useRoute } from "@react-navigation/native";
+
 import MapViewDirections from "react-native-maps-directions";
 import maekerpin from "../assets/Marker.png"
+import DriverPin from '../assets/DriverPin.png'
 const android = Dimensions.get("window");
 import * as LocationGeocoding from "expo-location";
-import Timer from "./Timer";
+
 
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
@@ -50,6 +48,8 @@ export class UserPickDropLocation extends Component {
 			markerData: [],
 			location: null,
 			Address: null,
+			DriverLatitude:null,
+			DriverLongitude:null,
 		};
 	}
 
@@ -96,6 +96,20 @@ export class UserPickDropLocation extends Component {
 							});
 			
 		});
+		let DriverPhone = await SecureStore.getItemAsync("DriverPhone2");
+
+			let DriverID = await SecureStore.getItemAsync("DriverID");
+			onValue(ref(db, `DriverPosts/${DriverPhone}/${DriverID}`), (querySnapShot) => {
+				let data = querySnapShot.val();
+				this.setState({
+					...this.state,
+					DriverLatitude: data.Latitude,
+					DriverLongitude: data.longtitude,
+				});
+			
+
+				
+			});
 		try {
 			let { status } = await Location.requestForegroundPermissionsAsync();
 			if (status !== "granted") {
@@ -113,8 +127,6 @@ export class UserPickDropLocation extends Component {
 		
 		return (
 			<View style={styles.container}>
-				
-				
 				{this.state.location && this.state.location.coords ? (
 					<MapView
 						style={styles.mapView}
@@ -126,7 +138,6 @@ export class UserPickDropLocation extends Component {
 							longitudeDelta: 0.0421,
 						}}
 					>
-						
 						{/* Render markers dynamically using map() */}
 						{data.map((location) => (
 							<>
@@ -151,6 +162,13 @@ export class UserPickDropLocation extends Component {
 										longitude: this.state.location.coords.longitude,
 									}}
 								/>
+								<Marker
+									coordinate={{
+										latitude: this.state.DriverLatitude,
+										longitude: this.state.DriverLongitude,
+									}}
+									image={DriverPin}
+								/>
 								<MapViewDirections
 									origin={{
 										latitude: location.Latitude,
@@ -170,7 +188,6 @@ export class UserPickDropLocation extends Component {
 				) : (
 					<Text>Map Data is Loading</Text>
 				)}
-				
 			</View>
 		);
 	}

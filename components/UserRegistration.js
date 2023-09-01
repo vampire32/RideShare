@@ -12,19 +12,20 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-import DropDownPicker from "react-native-dropdown-picker";
-import Logo from "../assets/logo.png";
-import { LinearGradient } from "expo-linear-gradient";
+
 import { BlurView } from "expo-blur";
-import bg from "../assets/images/bg2.png";
+
 import { TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import firebase from "firebase/compat/app";
-import { getDatabase, onValue, ref, set } from "firebase/database";
-import user from "../assets/images/avatar2.jpeg";
+// import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import { Pressable } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { dataValidationUser, dataSubmitUser } from "./UserRegistrationData";
+import uuid from "react-native-uuid";
+
 
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
@@ -37,7 +38,7 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig)
-const database = getDatabase(app);
+
 
 const UserRegistration = (props) => {
 	
@@ -59,18 +60,19 @@ const UserRegistration = (props) => {
 		const FecthData = async () => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
 			setPhone(result)
-			const db = getDatabase();
-			onValue(ref(db, `users/${result}`), (querySnapShot) => {
-				let data = querySnapShot.exists();
-				if (data==true) {
-					navigation.replace("Dashboard");
-					
-				} else {
-					console.log("Data not Exisi")
-					
-				}
+			const data=dataValidationUser(result)
+			console.log(data)
+			if (data==true) 
+			{
+				navigation.navigate("Dashboard");
 				
-			});
+			} else {
+				console.log("data not exist")
+
+				
+			}
+
+			
 		};
 		FecthData();
 
@@ -80,18 +82,49 @@ const UserRegistration = (props) => {
 	
 	const pickImage = async () => {
 		// No permissions request is necessary for launching the image library
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			allowsEditing: true,
-			aspect: [4, 3],
-			quality: 1,
-		});
+		try {
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.All,
+				allowsEditing: true,
+				aspect: [4, 3],
+				quality: 1,
+			});
+			if (!result.canceled) {
+				const localUri = result.uri;
+				const filename = localUri.split("/").pop();
 
-		console.log(result);
+				const response = await fetch(localUri);
+				const blob = await response.blob();
+				// console.log(filename)
+				const storage = getStorage();
+				const storageRef = ref(storage, uuid.v4());
+				uploadBytes(storageRef, blob).then(async(snapshot) => {
+					console.log("Uploaded a blob or file!");
+					const imageurl = await getDownloadURL(storageRef);
+				 setImage(imageurl);
+				console.log(image);
+				});
+				
 
-		if (!result.canceled) {
-			setImage(result.assets[0].uri);
+				// const reff = firebase.storage().ref().child(`Drivers/${filename}`);
+				// await reff.put(blob);
+
+				// const downloadURL = await ref.getDownloadURL();
+				// console.log("Image URL:", downloadURL);
+
+				// const imageUrl =  URL.createObjectURL(result.assets[0].uri);
+				// console.log(imageUrl)
+
+				// setImage(imageBlob.data.name);
+				// console.log(imageBlob.data.name)
+				// console.log(result.uri)
+				// console.log(imageBlob.data.name)
+			}
+		} catch (error) {
+			console.log(error);
 		}
+
+		
 	};
 	  const handleChangeName = (name) => {
 			setName(name);
@@ -115,14 +148,15 @@ const UserRegistration = (props) => {
 		// console.log(Email);
 		// console.log(Gender)
 		const Submit=()=>{
-			const db = getDatabase();
-			set(ref(db, "users/" +Phone), {
-				Fullname: Name,
-				Email: Email,
-				Gender: Gender,
-				Phone:Phone,
-				Profilepic:image,
-			});
+			// const db = getDatabase();
+			// set(ref(db, "users/" +Phone), {
+			// 	Fullname: Name,
+			// 	Email: Email,
+			// 	Gender: Gender,
+			// 	Phone:Phone,
+			// 	Profilepic:image,
+			// });
+			dataSubmitUser(Name,Email,Gender,image,Phone)
 		}
 	return (
 		<>

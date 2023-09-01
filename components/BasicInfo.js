@@ -3,9 +3,13 @@ import { Image, TouchableHighlight, View,Text,StyleSheet,Dimensions,Pressable } 
 import { TextInput } from 'react-native-paper'
 import Logo from "../assets/person-icon-5.png"
 import firebase from "firebase/compat/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase,  set } from "firebase/database";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
+import dataSubmit from './BasicInfoData';
+// import { ImagePicker, URL } from "expo";
+import uuid from "react-native-uuid";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
@@ -18,7 +22,7 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
-const database = getDatabase(app);
+
 
 const BasicInfo = (props) => {
     const { navigation, route } = props;
@@ -40,30 +44,73 @@ const BasicInfo = (props) => {
 		};
 		   const pickImage = async () => {
 					// No permissions request is necessary for launching the image library
-					let result = await ImagePicker.launchImageLibraryAsync({
+					try {
+						let result = await ImagePicker.launchImageLibraryAsync({
 						mediaTypes: ImagePicker.MediaTypeOptions.All,
 						allowsEditing: true,
 						aspect: [4, 3],
 						quality: 1,
+						
+						
 					});
-
-					console.log(result);
-
 					if (!result.canceled) {
-						setImage(result.assets[0].uri);
+						const localUri = result.uri;
+						const filename = localUri.split("/").pop();
+
+						const response = await fetch(localUri);
+						const blob = await response.blob();
+						// console.log(filename)
+						const storage = getStorage();
+						const storageRef = ref(storage, uuid.v4());
+						uploadBytes(storageRef, blob).then(async(snapshot) => {
+							console.log("Uploaded a blob or file!");
+							const imageurl=await getDownloadURL(storageRef)
+						setImage(imageurl)
+						console.log(image)
+							
+						
+						});
+						
+
+
+						// const reff = firebase.storage().ref().child(`Drivers/${filename}`);
+						// await reff.put(blob);
+
+						// const downloadURL = await ref.getDownloadURL();
+						// console.log("Image URL:", downloadURL);
+
+						// const imageUrl =  URL.createObjectURL(result.assets[0].uri);
+						// console.log(imageUrl)
+
+						// setImage(imageBlob.data.name);
+						// console.log(imageBlob.data.name)
+						// console.log(result.uri)
+						// console.log(imageBlob.data.name)
 					}
+						
+					} catch (error) {
+						console.log(error)
+						
+					}
+					
+
+					
+
+					 
 				};
 		const Submit = async() => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
 		setphoneNumber(result);
 		console.log(result)
-			const db = getDatabase();
-			set(ref(db, "Drivers/"+`${result}/` + "BasicInfo/"), {
-				Fullname: Name,
-				Email: Email,
-				DOB: DOB,
-				Profilepic:image,
-			});
+		dataSubmit(Name,Email,DOB,image,result)
+		// 	const db = getDatabase();
+			
+		// 	set(ref(db, "Drivers/" + `${result}/` + "BasicInfo/"), {
+		// 		Fullname: Name,
+		// 		Email: Email,
+		// 		DOB: DOB,
+		// 		Profilepic: image,
+		// 	});
 		};
 	
   return (
@@ -91,7 +138,7 @@ const BasicInfo = (props) => {
 					}}
 				>
 					<Image
-						source={{ uri: image }}
+						source={{uri:image}}
 						style={{ width: 80, height: 80 }}
 					></Image>
 				</View>

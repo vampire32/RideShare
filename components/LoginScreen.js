@@ -1,6 +1,6 @@
 import React, { useState,useRef } from 'react';
 import { StyleSheet, View, Image, ImageBackground, Text,TextInput,Button,Dimensions,TouchableHighlight,Pressable,Modal,TouchableOpacity } from "react-native";
-import auth from '@react-native-firebase/auth';
+
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -10,6 +10,7 @@ import Logo from "../assets/loginbg.png";
 import PhoneInput from "react-native-phone-number-input";
 import * as SecureStore from "expo-secure-store";
 import OTPBG from "../assets/otpbg.png";
+
 
 
 
@@ -29,6 +30,7 @@ try {
 //  navigationOptions = ({ navigation }) => SetNavOptions('Topics', navigation)
 
 const LoginScreen = (props) => {
+	
   const { navigation, route } = props;
   const recaptchaVerifier = React.useRef(null);
 	const [phoneNumber, setPhoneNumber] = React.useState();
@@ -104,27 +106,13 @@ const phoneInput = useRef(null);
 
 					<Pressable
 						onPress={async () => {
-							// The FirebaseRecaptchaVerifierModal ref implements the
-							// FirebaseAuthApplicationVerifier interface and can be
-							// passed directly to `verifyPhoneNumber`.
+							
 							try {
 								const phoneProvider = new firebase.auth.PhoneAuthProvider();
 								await phoneProvider
 									.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current)
 									.then(setVerificationId);
-								//   console.log(verificationId)
-
-								//   props.navigation.navigate("Account", {
-								// 		screen: "Profile",
-								// 		params: { Phone: phoneNumber },
-								// 	});
-
-								// let result = await SecureStore.getItemAsync("PhoneNum");
-								// console.log(result);
-								// props.navigation.navigate("Verification", {
-								// 	verificationID: verificationId,
-								// 	Phone: phoneNumber,
-								// });
+							
 								setmodalVisiable(true);
 							} catch (err) {
 								showMessage({
@@ -206,6 +194,7 @@ const phoneInput = useRef(null);
 											navigation.navigate("UserRegistration", {
 												Phone: phoneNumber,
 											});
+											setmodalVisiable(false)
 										} catch (err) {
 											console.log(err);
 										}

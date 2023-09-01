@@ -52,6 +52,7 @@ const DriverDashboard = (props) => {
 		const [dataExists, setDataExists] = useState(false);
 		const [DriverID, setDriverID] = useState("")
 		const [DriverName, setDriverName] = useState("")
+		
 		useEffect(() => {
 			const fetch=async()=>{
 				let result = await SecureStore.getItemAsync("PhoneNum");
@@ -74,6 +75,18 @@ const DriverDashboard = (props) => {
 					let data = querySnapShot.val() || {};
 					setDriverName(data.Fullname);
 				});
+				onValue(ref(db, `DriversConfirmation/${result}/`), (snapshot) => {
+					let data2 = snapshot.child("confirmStatus").val();
+					if (data2==undefined) {
+						alert("Documents on the processing please wait")
+						navigation.navigate("Dashboard")
+						
+					} else {
+						console.log("COnfirmed")
+						
+					}
+					
+				});
 
 			}
 			fetch()
@@ -90,87 +103,87 @@ const DriverDashboard = (props) => {
 		};
 
 		const navigationView = () => (
-			<View style={styles.container}>
-				<View style={styles.blackContainer}>
-					<View
-						style={{
-							marginBottom: 30,
-							flexDirection: "row",
-							alignItems: "center",
-						}}
-					>
-						<View style={styles.userIconContainer}>
-							<FontAwesome name="user" size={28} color={Colors.blackGrey} />
-						</View>
-						<View>
-							<Text style={styles.nameText}>{DriverName}</Text>
-							
+			<>
+			
+				<View style={styles.container}>
+					<View style={styles.blackContainer}>
+						<View
+							style={{
+								marginBottom: 30,
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							<View style={styles.userIconContainer}>
+								<FontAwesome name="user" size={28} color={Colors.blackGrey} />
+							</View>
+							<View>
+								<Text style={styles.nameText}>{DriverName}</Text>
+							</View>
 						</View>
 					</View>
-
-					
+					<Pressable
+						onPress={() => {
+							navigation.replace("DriverDashboard");
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								Home
+							</Text>
+						</View>
+					</Pressable>
+					<Pressable
+						onPress={() => {
+							navigation.replace("DigitalWallet");
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								DigitalWallet
+							</Text>
+						</View>
+					</Pressable>
+					<Pressable
+						onPress={() => {
+							navigation.replace("DriverProfile");
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								Setting
+							</Text>
+						</View>
+					</Pressable>
 				</View>
-				<Pressable
-					onPress={() => {
-						navigation.replace("DriverDashboard");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							Home
-						</Text>
-					</View>
-				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("DigitalWallet");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							DigitalWallet
-						</Text>
-					</View>
-				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("DriverProfile");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							Setting
-						</Text>
-					</View>
-				</Pressable>
+
+			
 				
-				
-				
-			</View>
+			</>
 		);
 		const Item = ({ title, component }) => (
 			<View style={styles.item}>
@@ -179,23 +192,29 @@ const DriverDashboard = (props) => {
 		);
 	return (
 		<>
-			<DrawerLayoutAndroid
-				ref={drawer}
-				drawerWidth={300}
-				drawerPosition={drawerPosition}
-				renderNavigationView={navigationView}
-			>
-				<View style={{ flex: 0.25 }}>
-					<View style={styles.floatTopButton}>
-						<Pressable onPress={() => drawer.current.openDrawer()}>
-							<EvilIcons name="navicon" size={30} color="#1F4690" />
-						</Pressable>
-						<Text style={{marginLeft:"30%",fontSize:20,fontWeight:"bold"}}>Driver Post</Text>
+			
+				<DrawerLayoutAndroid
+					ref={drawer}
+					drawerWidth={300}
+					drawerPosition={drawerPosition}
+					renderNavigationView={navigationView}
+				>
+					<View style={{ flex: 0.25 }}>
+						<View style={styles.floatTopButton}>
+							<Pressable onPress={() => drawer.current.openDrawer()}>
+								<EvilIcons name="navicon" size={30} color="#1F4690" />
+							</Pressable>
+							<Text
+								style={{ marginLeft: "30%", fontSize: 20, fontWeight: "bold" }}
+							>
+								Driver Post
+							</Text>
+						</View>
 					</View>
-				</View>
-				
-				<DriverPosts />
-			</DrawerLayoutAndroid>
+
+					<DriverPosts />
+				</DrawerLayoutAndroid>
+		
 		</>
 	);
 };

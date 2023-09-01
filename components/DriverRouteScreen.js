@@ -31,6 +31,8 @@ const DriverRouteScreen = (props) => {
 	 const [tasksList, setTasksList] = useState([]);
 	 const [tasksList2, setTasksList2] = useState("");
 	 const [dataExists, setDataExists] = useState(false);
+	 const [UserSeat, setUserSeat] = useState("")
+	 const [userGender, setuserGender] = useState("")
 
 	 let DriverID2 = route.params.DriverID;
 		console.log(DriverID2);
@@ -54,11 +56,15 @@ const DriverRouteScreen = (props) => {
 					onValue(ref(db, "Seats/"), (querySnapShot) => {
 						querySnapShot.forEach((chideSnapshot) => {
 							let data2 = chideSnapshot.child("DriverID").val();
+							let data4=chideSnapshot.val()||{}
 							
 							console.log(data2);
 
 							if (data2 == DriverID2) {
 								let data3 = chideSnapshot.child("Phone").val();
+								setUserSeat(data4.SeatNumber)
+								setuserGender(data4.Gender)
+								
 								setTasksList2(data3)
 								onValue(ref(db, `UserPosts/${data3}`), (querySnapShot) => {
 									querySnapShot.forEach((childSnapshot) => {
@@ -98,9 +104,10 @@ useEffect(() => {
 		
 		const renderTask = ({ item }) => {
 			
+			
 			return (
 
-				<DriverRouteCards userName={item.Fullname} userdropff={item.dropoff} ridePrice={item.RidePrice} userPic={item.userPic} userPhone={item.userPhone} userSeat={item.UserSeat} 
+				<DriverRouteCards userName={item.Fullname} userdropff={item.dropoff} ridePrice={item.RidePrice} userPic={item.userPic} userPhone={item.userPhone} userSeat={UserSeat} userGender={userGender}  
 				seatid={()=>{
 					let seatCardid=item.key
 					const db=getDatabase()
@@ -117,6 +124,8 @@ useEffect(() => {
 								set(ref(db, `TripisEnd/${item.userPhone}`),{
 									Driverid:DriverID2,
 									UserPhone:item.userPhone,
+									userName:item.Fullname,
+									userPic:item.userPic,
 									tripStatus:true,
 									
 								});

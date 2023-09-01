@@ -30,6 +30,7 @@ import * as Location from "expo-location";
 
 
 
+
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
 	authDomain: "carsharing2-d254d.firebaseapp.com",
@@ -66,12 +67,23 @@ const Dashboard = () => {
 		}, []);
 	useEffect(() => {
 		const fetch=async()=>{
+			try {
+				let { status } = await Location.requestForegroundPermissionsAsync();
+				if (status !== "granted") {
+					return;
+				}
+				let location = await Location.getCurrentPositionAsync({});
+				this.updateState(location);
+			} catch (error) {
+				console.log(error);
+			}
 			const subscription = Location.watchPositionAsync(
 				{
 					accuracy: Location.Accuracy.High,
 					timeInterval: 1000, // Update every 1 second
 				},
 				async (newLocation) => {
+					
 					const addressResponse = await LocationGeocoding.reverseGeocodeAsync(
 						newLocation.coords
 					);
@@ -85,12 +97,23 @@ const Dashboard = () => {
 			const db = getDatabase();
 			onValue(ref(db, `UserPosts/${result}`), (querSnapShot) => {
 				let data2 = querSnapShot.exists();
-				if (data2 == true) {
+				onValue(ref(db, `TripisEnd/${result}`), (querySnapShot) => {
+					let data3 = querySnapShot.val();
+					let data4 = querySnapShot.exists();
+					console.log(data3);
+					if (data2 == true) {
 					navigation.navigate("RouteScreen");
-				} else {
-					navigation.navigate("Dashboard");
+				} if (data4==true) {
+					navigation.navigate("SuccefulPage");
 				}
+				else {
+					navigation.navigate("Dashboard");
+
+				}
+				});
+				
 			});
+			
 			let lat11 = await SecureStore.getItemAsync("lat");
 			let long11 = await SecureStore.getItemAsync("long");
 			let lat22 = await SecureStore.getItemAsync("lat2");
@@ -145,11 +168,11 @@ const Dashboard = () => {
 
 const styles = StyleSheet.create({
 	map: {
-		height: "40%",
+		height: "60%",
 		// marginBottom: -10,
 	},
 	bottomContainer: {
-		height: "75%",
+		height: "45%",
 		borderTopStartRadius: 15,
 		borderTopEndRadius: 15,
 	},

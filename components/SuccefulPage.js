@@ -42,23 +42,39 @@ const SuccefulPage = () => {
 			const db = getDatabase();
 			onValue(ref(db, `TripisEnd/${result}`), (querSnapShot) => {
 				let data = querSnapShot.val() || {};
+				setUsername(data.userName);
+							setUsernumber(data.UserPhone);
+							setUserpic(data.userPic);
 				let data2 = querSnapShot.exists();
-				setDriverID(data.Driverid);
-				setIDexist(data2);
+				console.log(data2);
+				if (data2 == true) {
+					onValue(ref(db, `DriverPosts/`), (querSnapShot) => {
+						querSnapShot.forEach((childSnapShot) => {
+							let data3 = childSnapShot.child(data.Driverid).val() || {};
+							setDriverName(data3.Fullname);
+							setDriverID(data.Driverid)
+						});
+					});
+				} else {
+					console.log("Data is not Exist");
+				}
+
+				// setDriverID(data.Driverid);
+				// setIDexist(data2);
 			});
-			onValue(ref(db, "UserPosts/"), (querySnapShot) => {
-				querySnapShot.forEach((childSnapShot) => {
-					let data4 = childSnapShot.child("userPhone").val();
-					if (data4 == result) {
-						let data5 = childSnapShot.val() || {};
-						setUsername(data5.Fullname);
-						setUsernumber(data5.userPhone);
-						setUserpic(data5.userPic);
-					} else {
-						console.log("user not exist");
-					}
-				});
-			});
+			// onValue(ref(db, "UserPosts/"), (querySnapShot) => {
+			// 	querySnapShot.forEach((childSnapShot) => {
+			// 		let data4 = childSnapShot.child("userPhone").val();
+			// 		if (data4 == result) {
+			// 			let data5 = childSnapShot.val() || {};
+			// 			setUsername(data5.Fullname);
+			// 			setUsernumber(data5.userPhone);
+			// 			setUserpic(data5.userPic);
+			// 		} else {
+			// 			console.log("user not exist");
+			// 		}
+			// 	});
+			// });
 
 		}
 		fetch()
@@ -66,15 +82,7 @@ const SuccefulPage = () => {
 	}, [])
 	useEffect(() => {
 		const db = getDatabase();
-	  onValue(ref(db,`DriverPosts/`),(querSnapShot)=>{
-		querSnapShot.forEach((childSnapShot)=>{
-			let data3=childSnapShot.child(DriverID).val()||{}
-			setDriverName(data3.Fullname);
-
-		})
-		
-		
-	  })
+	 
 	}, [IDexist])
 	
 	const Submit=()=>{

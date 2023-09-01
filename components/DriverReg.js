@@ -9,6 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import * as SecureStore from "expo-secure-store";
 
+
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
 	authDomain: "carsharing2-d254d.firebaseapp.com",
@@ -24,6 +25,7 @@ const database = getDatabase(app);
 const android = Dimensions.get("window");
 const DriverReg = (props) => {
 	const { navigation, route } = props;
+	
 	useEffect(() => {
 		const FecthData = async () => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
@@ -36,6 +38,7 @@ const DriverReg = (props) => {
 					console.log("Data not Exist");
 				}
 			});
+			
 		};
 		FecthData();
 	 
@@ -43,135 +46,143 @@ const DriverReg = (props) => {
 	
 
   return (
-		<View style={styles.container}>
-			<Text
-				style={{
-					marginTop: "15%",
-					textAlign: "center",
-					fontSize: 28,
-					fontWeight: "bold",
-					color:"white"
-				}}
-			>
-				Welcome To Driver Mode
-			</Text>
+		<>
+		
+			<View style={styles.container}>
+				<Text
+					style={{
+						marginTop: "15%",
+						textAlign: "center",
+						fontSize: 28,
+						fontWeight: "bold",
+						color: "white",
+					}}
+				>
+					Welcome To Driver Mode
+				</Text>
 
-			<View
-				style={{
-					backgroundColor: "#ffff",
-					elevation: 7,
-					borderRadius: 20,
-					paddingBottom: 20,
-					marginTop: 50,
-				}}
-			>
-				<Pressable
-					onPress={() => {
-						navigation.replace("BasicInfo");
+				<View
+					style={{
+						backgroundColor: "#ffff",
+						elevation: 7,
+						borderRadius: 20,
+						paddingBottom: 20,
+						marginTop: 50,
 					}}
 				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
+					<Pressable
+						onPress={() => {
+							navigation.replace("BasicInfo");
 						}}
 					>
-						<Icon name="info" color="#2153CC" size={40} />
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							Basic Information
-						</Text>
-					</View>
-				</Pressable>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Icon name="info" color="#2153CC" size={40} />
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								Basic Information
+							</Text>
+						</View>
+					</Pressable>
+					<Pressable
+						onPress={() => {
+							navigation.replace("VechlieInfo");
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Icon name="drive-eta" color="#2153CC" size={40} />
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								Vechlie Information
+							</Text>
+						</View>
+					</Pressable>
+					<Pressable
+						onPress={() => {
+							navigation.replace("IdConfrim");
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Icon name="badge" color="#2153CC" size={40} />
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								ID Confirmation
+							</Text>
+						</View>
+					</Pressable>
+					<Pressable
+						onPress={() => {
+							navigation.replace("DriverLicense");
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Icon name="badge" color="#2153CC" size={40} />
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								Driver Licence
+							</Text>
+						</View>
+					</Pressable>
+					<Pressable
+						onPress={() => {
+							navigation.replace("CNIC");
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								marginTop: 20,
+								marginLeft: 10,
+								borderBottomWidth: 1,
+								borderColor: "#808080",
+							}}
+						>
+							<Icon name="badge" color="#2153CC" size={40} />
+							<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
+								CNIC
+							</Text>
+						</View>
+					</Pressable>
+				</View>
 				<Pressable
 					onPress={() => {
-						navigation.replace("VechlieInfo");
+						navigation.replace("DriverDashboard");
 					}}
 				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Icon name="drive-eta" color="#2153CC" size={40} />
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							Vechlie Information
-						</Text>
-					</View>
-				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("IdConfrim");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Icon name="badge" color="#2153CC" size={40} />
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							ID Confirmation
-						</Text>
-					</View>
-				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("DriverLicense");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Icon name="badge" color="#2153CC" size={40} />
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							Driver Licence
-						</Text>
-					</View>
-				</Pressable>
-				<Pressable
-					onPress={() => {
-						navigation.replace("CNIC");
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 20,
-							marginLeft: 10,
-							borderBottomWidth: 1,
-							borderColor: "#808080",
-						}}
-					>
-						<Icon name="badge" color="#2153CC" size={40} />
-						<Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-							CNIC
-						</Text>
-					</View>
+					<Text style={styles.button}>Confirm</Text>
 				</Pressable>
 			</View>
-			<Pressable onPress={()=>{
-				navigation.replace("DriverDashboard");
-			}}>
-				<Text style={styles.button}>Confirm</Text>
-			</Pressable>
-		</View>
+
+		
+			
+		</>
 	);
 }
 const styles = StyleSheet.create({

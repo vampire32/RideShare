@@ -15,15 +15,11 @@ import {
 	ImageBackground,
 } from "react-native";
 import { TextInput } from "react-native-paper";
-import bg from "../assets/images/bg2.png";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
+
 import OTPBG from "../assets/otpbg.png"
 
 try {

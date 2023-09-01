@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Pressable, View, Text, Image, ScrollView } from "react-native";
+import { Pressable, View, Text, Image, ScrollView,Linking } from "react-native";
 import UserandDriverLocation from "./UserandDriverLocation";
 import { Card } from "react-native-paper";
 import user from "../assets/images/avatar2.jpeg";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const DriverRouteCards = ({
 	userName,
@@ -12,7 +14,9 @@ const DriverRouteCards = ({
 	userPhone,
 	userSeat,
 	seatid,
+	userGender,
 }) => {
+	const navigation = useNavigation();
 	return (
 		<Pressable>
 			<ScrollView>
@@ -65,12 +69,57 @@ const DriverRouteCards = ({
 								<Text style={{ fontWeight: "bold" }}>Seat Number:</Text>
 								{userSeat}
 							</Text>
+							<Text style={{ fontSize: 15 }}>
+								<Text style={{ fontWeight: "bold" }}>Gender:</Text>
+								{userGender}
+							</Text>
 
 							<Text style={{ fontSize: 15 }}>
 								<Text style={{ fontWeight: "bold" }}>Ride Fare:</Text>
 								{ridePrice}
 							</Text>
 						</View>
+						<View style={{flexDirection:"row"}}>
+							<Pressable
+								onPress={() => {
+									Linking.openURL(`tel:${userPhone}`);
+								}}
+							>
+								<Icon
+									name="call"
+									size={20}
+									color="#ffff"
+									style={{
+										marginTop: 12,
+										backgroundColor: "#2153cc",
+										padding: 15,
+										borderRadius: 90,
+										marginLeft: 15,
+										width: 50,
+									}}
+								/>
+							</Pressable>
+							<Pressable
+								onPress={() => {
+									navigation.navigate("ChatScreen");
+								}}
+							>
+								<Icon
+									name="message"
+									size={20}
+									color="#ffff"
+									style={{
+										marginTop: 12,
+										backgroundColor: "#2153cc",
+										padding: 15,
+										borderRadius: 90,
+										marginLeft: 15,
+										width: 50,
+									}}
+								/>
+							</Pressable>
+						</View>
+
 						<Pressable onPress={seatid}>
 							<Text
 								style={{

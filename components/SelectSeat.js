@@ -61,7 +61,7 @@ function SelectSeat(props) {
 	const [Email, setEmail] = useState("");
 	const [Gender, setGender] = useState("");
 	const [Phone, setPhone] = useState("");
-	const [Seat, setSeat] = useState("")
+	const [Seat, setSeat] = useState([])
 	const [DriverID, setDriverID] = useState("")
 	useEffect(() => {
 		const fetch=async()=>{
@@ -103,7 +103,9 @@ const handleChangeSeat3 = () => {
 const handleChangeSeat4 = () => {
 	setSeat(Seat4);
 };
+
 	const Submit = () => {
+		console.log(Seat)
 		const db = getDatabase();
 		set(ref(db, "Seats/" + Phone), {
 			Fullname: Name,
@@ -156,6 +158,7 @@ const handleChangeSeat4 = () => {
 							onPress={() => {
 								changeColor();
 								handleChangeSeat1();
+								
 							}}
 						>
 							<View style={[styles.rect, containerStyle]}>

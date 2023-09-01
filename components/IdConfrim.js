@@ -2,9 +2,13 @@ import React, {useState} from 'react'
 import { FlatList, Image, View,Text,StyleSheet,Dimensions,Pressable } from 'react-native'
 import Logo from '../assets/der.jpg'
 import firebase from "firebase/compat/app";
-import { getDatabase, ref, set } from "firebase/database";
+// import { getDatabase, ref, set } from "firebase/database";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
+import uuid from "react-native-uuid";
+import dataSubmit from './BasicInfoData';
+import dataSubmitDriverID from './IDData';
 
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
@@ -16,7 +20,7 @@ const firebaseConfig = {
 	measurementId: "G-VVEWZZGFBT",
 };
 const app = firebase.initializeApp(firebaseConfig);
-const database = getDatabase(app);
+
 
 
 const IdConfrim = (props) => {
@@ -27,27 +31,41 @@ const IdConfrim = (props) => {
    	const [phoneNumber, setphoneNumber] = useState("");
    const pickImage = async () => {
 			// No permissions request is necessary for launching the image library
+		try {
 			let result = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.All,
 				allowsEditing: true,
 				aspect: [4, 3],
 				quality: 1,
 			});
-
-			console.log(result);
-
 			if (!result.canceled) {
-				setImage(result.assets[0].uri);
-				
+				const localUri = result.uri;
+				const filename = localUri.split("/").pop();
+
+				const response = await fetch(localUri);
+				const blob = await response.blob();
+				// console.log(filename)
+				const storage = getStorage();
+				const storageRef = ref(storage, uuid.v4());
+				uploadBytes(storageRef, blob).then(async (snapshot) => {
+					console.log("Uploaded a blob or file!");
+					const imageurl = await getDownloadURL(storageRef);
+					setImage(imageurl);
+					console.log(image);
+				});
 			}
+		} catch (error) {
+			console.log(error);
+		}
 		};
 		const Submit = async() => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
 		setphoneNumber(result);
-			const db = getDatabase();
-			set(ref(db, "Drivers/" + `${result}/` + "idconfirm/"), {
-				picofViechile: image,
-			});
+		dataSubmitDriverID(image,result)
+			// const db = getDatabase();
+			// set(ref(db, "Drivers/" + `${result}/` + "idconfirm/"), {
+			// 	picofViechile: image,
+			// });
 		};
   return (
 		<View style={styles.container}>

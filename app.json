@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "cabApp",
+    "name": "RideShare",
     "slug": "cabApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logoicon.png",
     "userInterfaceStyle": "light",
     "plugins": [
       [
@@ -15,9 +15,9 @@
       ]
     ],
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/RideShareSplash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2532fc"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

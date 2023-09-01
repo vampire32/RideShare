@@ -3,9 +3,12 @@ import { Text, View,Dimensions,StyleSheet ,TextInput,Image, Pressable} from 'rea
 import { ScrollView } from 'react-native-gesture-handler';
 import Card from '../assets/card2.jpg'
 import firebase from "firebase/compat/app";
-import { getDatabase, ref, set } from "firebase/database";
+
 import * as ImagePicker from "expo-image-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as SecureStore from "expo-secure-store";
+import uuid from "react-native-uuid";
+import dataSubmitDriverCNIC from './CNICData';
 
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
@@ -18,7 +21,7 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
-const database = getDatabase(app);
+
 
 const CNIC = (props) => {
 	const { navigation, route } = props;
@@ -35,43 +38,76 @@ const CNIC = (props) => {
 	};
 	const pickImage = async () => {
 		// No permissions request is necessary for launching the image library
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			allowsEditing: true,
-			aspect: [4, 3],
-			quality: 1,
-		});
+		try {
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.All,
+				allowsEditing: true,
+				aspect: [4, 3],
+				quality: 1,
+			});
+			if (!result.canceled) {
+				const localUri = result.uri;
+				const filename = localUri.split("/").pop();
 
-		console.log(result);
+				const response = await fetch(localUri);
+				const blob = await response.blob();
+				// console.log(filename)
+				const storage = getStorage();
+				const storageRef = ref(storage, uuid.v4());
+				uploadBytes(storageRef, blob).then(async (snapshot) => {
+					console.log("Uploaded a blob or file!");
+					const imageurl = await getDownloadURL(storageRef);
+					setImage(imageurl);
+					console.log(image);
+				});
 
-		if (!result.canceled) {
-			setImage(result.assets[0].uri);
+				
+			}
+		} catch (error) {
+			console.log(error);
 		}
 	};
 	const pickImage2 = async () => {
 		// No permissions request is necessary for launching the image library
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			allowsEditing: true,
-			aspect: [4, 3],
-			quality: 1,
-		});
+		try {
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.All,
+				allowsEditing: true,
+				aspect: [4, 3],
+				quality: 1,
+			});
+			if (!result.canceled) {
+				const localUri = result.uri;
+				const filename = localUri.split("/").pop();
 
-		console.log(result);
+				const response = await fetch(localUri);
+				const blob = await response.blob();
+				// console.log(filename)
+				const storage = getStorage();
+				const storageRef = ref(storage, uuid.v4());
+				uploadBytes(storageRef, blob).then(async (snapshot) => {
+					console.log("Uploaded a blob or file!");
+					const imageurl = await getDownloadURL(storageRef);
+					setImage2(imageurl);
+					console.log(image);
+				});
 
-		if (!result.canceled) {
-			setImage2(result.assets[0].uri);
+			
+			}
+		} catch (error) {
+			console.log(error);
 		}
 	};
 	const Submit = async () => {
 			let result = await SecureStore.getItemAsync("PhoneNum");
-		const db = getDatabase();
+			dataSubmitDriverCNIC(CnicNumber,image2,image,result)
+		// const db = getDatabase();
 
-		set(ref(db, "Drivers/" + `${result}/` + "CINCinfo/"), {
-			DriverCnic: CnicNumber,
-			frottimg: image,
-			backimg: image2,
-		});
+		// set(ref(db, "Drivers/" + `${result}/` + "CINCinfo/"), {
+		// 	DriverCnic: CnicNumber,
+		// 	frottimg: image,
+		// 	backimg: image2,
+		// });
 	};
   return (
 		<View style={styles.container}>

@@ -118,7 +118,7 @@ function Profile(props) {
 					backgroundColor: "#2153CC",
 					borderRadius: 50,
 					padding: 3,
-					marginTop:10,
+					marginTop: 10,
 				}}
 			>
 				<Icon name="person" size={40} color="#fff" />
@@ -223,6 +223,12 @@ function Profile(props) {
 				}}
 			>
 				<View style={styles.centeredView}>
+					<Pressable onPress={()=>{
+						setModalVisible(false)
+					}}>
+						<Text>close</Text>
+					</Pressable>
+
 					<Text
 						style={{
 							textAlign: "center",
@@ -272,7 +278,7 @@ function Profile(props) {
 							</Text>
 							<TextInput
 								value={Name}
-								label="Enter Tour Name"
+								label="Enter Your Name"
 								style={styles.input}
 								placeholder="Ahmed Ali"
 								onChangeText={handleChangeName}
@@ -372,7 +378,6 @@ function Profile(props) {
 						</View> */}
 				</View>
 			</Modal>
-			
 		</View>
 	);
 }
