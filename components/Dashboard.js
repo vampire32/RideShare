@@ -97,13 +97,15 @@ const Dashboard = () => {
 			const db = getDatabase();
 			onValue(ref(db, `UserPosts/${result}`), (querSnapShot) => {
 				let data2 = querSnapShot.exists();
+				console.log(data2)
 				onValue(ref(db, `TripisEnd/${result}`), (querySnapShot) => {
 					let data3 = querySnapShot.val();
 					let data4 = querySnapShot.exists();
 					console.log(data3);
 					if (data2 == true) {
 					navigation.navigate("RouteScreen");
-				} if (data4==true) {
+				} 
+				else if (data4==true) {
 					navigation.navigate("SuccefulPage");
 				}
 				else {

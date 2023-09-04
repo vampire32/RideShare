@@ -32,16 +32,55 @@ import DriverRouteScreen from "./DriverRouteScreen";
 import CreatingPost from "./CreatingPost";
 import DriverPosts from "./DriverPosts";
 import DriverProfile from "./DriverProfile";
+import { Button,View } from "react-native";
+import { Text } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import firebase from "firebase/compat/app";
+import {
+	getDatabase,
+	ref,
+	set,
+	get,
+	onValue,
+	child,
+	remove,
+} from "firebase/database";
+const firebaseConfig = {
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 const Stack = createNativeStackNavigator();
 
 const MainStackNavigator = () => {
+	const CancelRide= async()=>{
+		let result = await SecureStore.getItemAsync("PhoneNum");
+		const db=getDatabase()
+		remove(ref(db, `UserPosts/${result}`)).then(() => {
+			console.log("Data removed successfully");
+		}).catch((error)=>{
+			console.log(error)
+		});
+		remove(ref(db, `Seats/${result}`))
+			.then(() => {
+				console.log("Data removed successfully");
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
 	return (
-		<Stack.Navigator initialRouteName="SplashScreen" >
+		<Stack.Navigator initialRouteName="SplashScreen">
 			<Stack.Screen
 				name="SplashScreen"
 				component={SplashScreen}
 				options={{ headerShown: false }}
-				
 			/>
 			<Stack.Screen
 				name="Login"
@@ -83,7 +122,19 @@ const MainStackNavigator = () => {
 			<Stack.Screen
 				name="RouteScreen"
 				component={RouteScreen}
-				options={{ headerShown: true }}
+				options={{
+					title: "Route Screen",
+					headerRight: (props) => (
+						<Button
+						title="Cancel"
+							{...props}
+							onPress={() => {
+								// Do something
+								CancelRide()
+							}}
+						/>
+					),
+				}}
 			/>
 			<Stack.Screen
 				name="SuccefulPage"

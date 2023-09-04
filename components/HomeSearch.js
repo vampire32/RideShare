@@ -142,6 +142,7 @@ const HomeSearch = (props) => {
 		const db = getDatabase();
 		onValue(ref(db, `users/${result}`), (querySnapShot) => {
 			let data = querySnapShot.val() || {};
+			console.log(data)
 			setUserName(data.Fullname);
 			setUserPic(data.Profilepic);
 		});
@@ -344,6 +345,7 @@ if (AddressText==""&&Destination=="") {
 							query={{
 								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
 								language: "en",
+								components: "country:PK",
 							}}
 						/>
 					</View>
@@ -398,6 +400,7 @@ if (AddressText==""&&Destination=="") {
 							query={{
 								key: "AIzaSyDpYM_2b7YZqKmsDv__NEYzkiwJHyWIVMw",
 								language: "en",
+								components: "country:PK",
 							}}
 						/>
 					</View>

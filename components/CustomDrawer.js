@@ -13,6 +13,7 @@ import { getAuth } from "firebase/auth";
 import DriversCards from "./DriversCards";
 import * as SecureStore from "expo-secure-store";
 import Reviews from "./Reviews";
+import { Image } from "react-native";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
@@ -27,16 +28,20 @@ const app = firebase.initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const CustomDrawer = (props) => {
 	const [UserName, setUserName] = useState("")
+	const [UserPic, setUserPic] = useState("");
 	useEffect(() => {
 		const fetch= async()=>{
 			let result = await SecureStore.getItemAsync("PhoneNum");
 			const db = getDatabase();
 			onValue(ref(db, `users/${result}`), (querySnapShot) => {
 				let data = querySnapShot.val() || {};
+				console.log(data.Profilepic);
 				setUserName(data.Fullname);
+				setUserPic(data.Profilepic);
 			});
 
 		}
+		fetch()
 		
 	 
 	}, [])
@@ -53,7 +58,7 @@ const CustomDrawer = (props) => {
 					}}
 				>
 					<View style={styles.userIconContainer}>
-						<FontAwesome name="user" size={28} color={Colors.blackGrey} />
+						<Image source={{uri:UserPic}}  />
 					</View>
 					<View>
 						<Text style={styles.nameText}>{UserName}</Text>

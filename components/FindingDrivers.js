@@ -60,7 +60,7 @@ const FindingDrivers = (props) => {
 					for (let key in data ? data : []) {
 						list.push({ key, ...data[key] });
 					}
-					
+					console.log(list)
 					setTasksList(list ,list);
 					
 
