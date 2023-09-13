@@ -39,24 +39,39 @@ const ActionSheet = (props) => {
 	useEffect(() => {
 		const fetch=async()=>{
 			let result = await SecureStore.getItemAsync("DriverPhone2");
+			let UserPHone= await SecureStore.getItemAsync("PhoneNum")
+			
 
 			let result2 = await SecureStore.getItemAsync("DriverID");
 			console.log(result);
 
+
 			const db = getDatabase();
-				onValue(
-					ref(db, `DriverPosts/${result}/${result2}`),
-					(querySnapShot) => {
-						let data = querySnapShot.val()  ;
-						
-						setDriverName(data.Fullname);
-						setCarName(data.carName);
-						setCarplate(data.carplate);
-						setDriverpic(data.Profilepic);
-						setpickUp(data.Pickup);
-						setDriverNumber(data.DriverNumber);
-					}
-				);
+			onValue(ref(db,`Seats/${UserPHone}/`),(querySnapShot)=>{
+				let data = querySnapShot.exists();
+				console.log(data)
+				if (data==true) {
+					let DID = querySnapShot.child("DriverID").val();
+					onValue(
+						ref(db, `DriverPosts/${result}/${DID}`),
+						(querySnapShot) => {
+							let data = querySnapShot.val();
+
+							setDriverName(data.Fullname);
+							setCarName(data.carName);
+							setCarplate(data.carplate);
+							setDriverpic(data.Profilepic);
+							setpickUp(data.Pickup);
+							setDriverNumber(data.DriverNumber);
+						}
+					);
+					
+				} else {
+					console.log("failed")
+					
+				}
+			})
+				
 
 			
 			// const Ref = getDatabase().ref("Drivers");

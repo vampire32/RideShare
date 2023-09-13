@@ -99,17 +99,27 @@ export class UserPickDropLocation extends Component {
 		let DriverPhone = await SecureStore.getItemAsync("DriverPhone2");
 
 			let DriverID = await SecureStore.getItemAsync("DriverID");
-			onValue(ref(db, `DriverPosts/${DriverPhone}/${DriverID}`), (querySnapShot) => {
-				let data = querySnapShot.val();
-				this.setState({
-					...this.state,
-					DriverLatitude: data.Latitude,
-					DriverLongitude: data.longtitude,
-				});
+			onValue(ref(db,`Seats/${result}/`),(querySnapShot)=>{
+				let data = querySnapShot.child("DriverID").exists();
+				if(data==true){
+					let DID = querySnapShot.child("DriverID").val();
+					onValue(
+						ref(db, `DriverPosts/${DriverPhone}/${DID}`),
+						(querySnapShot) => {
+							let data = querySnapShot.val();
+							this.setState({
+								...this.state,
+								DriverLatitude: data.Latitude,
+								DriverLongitude: data.longtitude,
+							});
+						}
+					);
+				}else{
+					console.log("failed")
+				}
+				console.log(data)
+			})
 			
-
-				
-			});
 		try {
 			let { status } = await Location.requestForegroundPermissionsAsync();
 			if (status !== "granted") {

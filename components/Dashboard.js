@@ -67,6 +67,7 @@ const Dashboard = () => {
 		}, []);
 	useEffect(() => {
 		const fetch=async()=>{
+			
 			try {
 				let { status } = await Location.requestForegroundPermissionsAsync();
 				if (status !== "granted") {
@@ -93,9 +94,10 @@ const Dashboard = () => {
 				}
 			);
 			subscription;
+			
 			let result = await SecureStore.getItemAsync("PhoneNum");
 			const db = getDatabase();
-			onValue(ref(db, `UserPosts/${result}`), (querSnapShot) => {
+			onValue(ref(db, `Seats/${result}`), (querSnapShot) => {
 				let data2 = querSnapShot.exists();
 				console.log(data2)
 				onValue(ref(db, `TripisEnd/${result}`), (querySnapShot) => {

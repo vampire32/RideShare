@@ -26,10 +26,16 @@ const database = getDatabase(app);
 
 const RouteScreen = (props) => {
 	const [tripEnd, settripEnd] = useState(false)
+	const [SeatData, setSeatData] = useState(false)
 	useEffect(() => {
 		const fetch=async()=>{
 			let result = await SecureStore.getItemAsync("PhoneNum");
 			const db = getDatabase();
+			onValue(ref(db,`Seats/${result}/`),(querySnapShot)=>{
+				let data=querySnapShot.exists()
+				console.log(data)
+				setSeatData(data)
+			})
 
 			onValue(ref(db, `TripisEnd/${result}`), (querySnapShot) => {
 				let data = querySnapShot.val();
@@ -59,6 +65,7 @@ const RouteScreen = (props) => {
 	
   return (
 		<>
+		{SeatData ?(
 			<View>
 				<Timer />
 				<View style={styles.map}>
@@ -66,6 +73,11 @@ const RouteScreen = (props) => {
 					<ActionSheet />
 				</View>
 			</View>
+
+		):(
+			console.log("failed")
+		)}
+			
 		</>
 	);
 }
