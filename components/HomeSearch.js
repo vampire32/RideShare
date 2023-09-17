@@ -55,6 +55,18 @@ const database = getDatabase(app);
 
 
 const HomeSearch = (props) => {
+	const [selected, setSelected] = useState(false);
+
+	const toggleSelection = () => {
+		setSelected2(false);
+		setSelected(!selected);
+	};
+	const [selected2, setSelected2] = useState(false);
+
+	const toggleSelection2 = () => {
+		setSelected(false)
+		setSelected2(!selected2);
+	};
 	const [UserInput, setUserInput] = useState("")
 	
 
@@ -97,7 +109,7 @@ const HomeSearch = (props) => {
 
 			const distance = R * c;
 			console.log(distance)
-			const PetPricePerKM=5;
+			const PetPricePerKM=10;
 			const MaintainceCOst=5;
 			const DriverProfit=5;
 			const KMPrice=Math.round( distance*(PetPricePerKM+MaintainceCOst+DriverProfit))
@@ -197,11 +209,13 @@ const HomeSearch = (props) => {
 				};
 				
 
+	
+
 				
 const Submit = async () => {
 	let result = await SecureStore.getItemAsync("PhoneNum");
-if (AddressText==""&&Destination=="") {
-	alert("Please provide the pick and drop deatils")
+if (AddressText==""&&Destination=="" && selected==false||selected2==false) {
+	alert("Please provide the pick and drop deatils and select payment option")
 	
 } else {
 	const db = getDatabase();
@@ -212,7 +226,8 @@ if (AddressText==""&&Destination=="") {
 		RidePrice: RidePrice,
 		userPic: UserPic,
 		userPhone: result,
-
+        DigitalWallet:selected2,
+		Cash:selected,
 		Latitude: UserLatitude,
 		longtitude: Userlongtitude,
 		Latitude2: UserLatitude2,
@@ -416,11 +431,38 @@ if (AddressText==""&&Destination=="") {
 					<View style={styles.centeredView2}>
 						<View style={styles.modalView2}>
 							<Text style={{ color: "white" }}>Request Sent</Text>
-							<Text style={{ color: "white" }}>Your request has send</Text>
+							<Text style={{ color: "white" }}>Please Select the Payment Option</Text>
+							<TouchableOpacity
+								style={[
+									styles.button3,
+									selected ? styles.selectedButton : null,
+								]}
+								onPress={toggleSelection}
+							>
+								<Text style={styles.buttonText}>Cash</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={[
+									styles.button3,
+									selected2 ? styles.selectedButton : null,
+								]}
+								onPress={toggleSelection2}
+							>
+								<Text style={styles.buttonText}>Digital Wallet</Text>
+							</TouchableOpacity>
 							<TouchableHighlight
 								onPress={() => {
 									setmodelVisable3(false);
-									Submit();
+									if (selected2==true) {
+										Submit();
+									} 
+									if (selected==true) {
+										Submit();
+										
+									} else{
+										console.log("failed")
+									}
+									
 								}}
 							>
 								<Text style={styles.button2}>Close</Text>
@@ -534,12 +576,12 @@ const styles = StyleSheet.create({
 		width: 150,
 		alignItems: "flex-end",
 		justifyContent: "flex-end",
-		backgroundColor: "#fcc200",
+		backgroundColor: "#ffff",
 		paddingHorizontal: 18,
 		paddingVertical: 12,
 		borderRadius: 20,
 		textAlign: "center",
-		color: "#fff",
+		color: "#2153cc",
 		fontSize: 18,
 		fontWeight: "500",
 		marginTop: 15,
@@ -642,6 +684,21 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
+	},
+	button3: {
+		backgroundColor: "gray",
+		padding: 10,
+		borderRadius: 5,
+		width: 140,
+		marginTop: 10,
+	},
+	selectedButton: {
+		backgroundColor: "#ffff",
+	},
+	buttonText: {
+		color: "#2153cc",
+		fontWeight: "bold",
+		textAlign: "center",
 	},
 });
 

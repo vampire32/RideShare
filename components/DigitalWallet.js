@@ -1,16 +1,110 @@
-import React, { useCallback, useRef, useMemo ,useState} from "react";
+import React, { useCallback, useRef, useMemo ,useState,useEffect} from "react";
 import { View, Text, Dimensions, StyleSheet, Pressable,Modal, TextInput } from "react-native";
 
 import { BottomSheet } from "react-native-btr";
+import firebase from "firebase/compat/app";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import * as SecureStore from "expo-secure-store";
 
+const firebaseConfig = {
+	apiKey: "AIzaSyC-tsScYuvKuNwGFpFEBQhBft-FZBhzRww",
+	authDomain: "carsharing2-d254d.firebaseapp.com",
+	projectId: "carsharing2-d254d",
+	storageBucket: "carsharing2-d254d.appspot.com",
+	messagingSenderId: "450530782923",
+	appId: "1:450530782923:web:43786c1b9a42666e40b54e",
+	measurementId: "G-VVEWZZGFBT",
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
 const DigitalWallet = () => {
 	 const [visible, setVisible] = useState(false);
      const [ModelVisible, setModelVisible] = useState(false)
      const [ModelVisible2, setModelVisible2] = useState(false);
+	 const [AccountNumber, setAccountNumber] = useState("")
+	 const [Email, setEmail] = useState("")
+	 const [Amount, setAmount] = useState()
+	 const [DBAmount, setDBAmount] = useState()
+	 const [userName, setuserName] = useState("")
+	 const [userPhone, setuserPhone] = useState("")
+	 const [userPic, setuserPic] = useState("")
+	 useEffect(() => {
+		const fetch=async()=>{
+			let result = await SecureStore.getItemAsync("PhoneNum");
+			 const db = getDatabase();
+			 onValue(ref(db,`users/${result}/`),(querSnapShot)=>{
+				let data=querSnapShot.val()
+				setuserName(data.Fullname)
+				setuserPhone(data.Phone)
+				setuserPic(data.Profilepic)
+			 })
+			 onValue(ref(db, `DigitalWallet/${result}/`), (querSnapShot) => {
+				 let data=querSnapShot.val()||{}
+				 setDBAmount(data.Amount)
+				 console.log(data)
+					
+				});
 
+			
+
+		}
+		fetch()
+	   
+	 }, [])
+	 
+	  const handleChangeAccountNum = (Number) => {
+			setAccountNumber(Number);
+		};
+		 const handleChangeEmail = (email) => {
+				setEmail(email);
+			};
+			 const handleChangeAmount = (amount) => {
+					setAmount(amount);
+				};
+let fixAmount=parseFloat(Amount)
+ let intAmount=parseFloat(DBAmount+fixAmount)
+ let out=parseFloat(DBAmount-fixAmount)
 		const toggleBottomNavigationView = () => {
-			//Toggling the visibility state of the bottom sheet
+			
 			setVisible(!visible);
+		};
+	const Submit=async()=>{
+		let result = await SecureStore.getItemAsync("PhoneNum");
+
+		const db = getDatabase();
+		push(ref(db, "/WalletLogs/"+`${result}/`), {
+			userName: userName,
+			userPhone: userPhone,
+			userPhone: userPhone,
+			AccountNumber: AccountNumber,
+			Email: Email,
+			TotalAmount: intAmount,
+			AddAmount:Amount,
+		});
+		set(ref(db,"/DigitalWallet/"+`${result}/`),{
+			AccountNumber:AccountNumber,
+			Email:Email,
+			Amount:intAmount,
+		})
+	}
+		const Submit2 = async () => {
+			let result = await SecureStore.getItemAsync("PhoneNum");
+
+			const db = getDatabase();
+			push(ref(db, "/WalletLogs/" + `${result}/`), {
+				userName: userName,
+				userPhone: userPhone,
+				userPhone: userPhone,
+				AccountNumber: AccountNumber,
+				Email: Email,
+				TotalAmount: out,
+				CashOutAmount: Amount,
+			});
+			set(ref(db, "/DigitalWallet/" + `${result}/`), {
+				AccountNumber: AccountNumber,
+				Email: Email,
+				Amount: out,
+			});
 		};
 	return (
 		<View style={styles.container}>
@@ -42,7 +136,7 @@ const DigitalWallet = () => {
 						color: "#2153CC",
 					}}
 				>
-					Amount :0.00
+					Amount :{DBAmount}
 				</Text>
 			</View>
 			<View style={{ marginTop: 30, marginLeft: 5 }}>
@@ -57,6 +151,11 @@ const DigitalWallet = () => {
 			</View>
 			<Pressable onPress={toggleBottomNavigationView}>
 				<Text style={styles.button}>TopUp</Text>
+			</Pressable>
+			<Pressable onPress={()=>{
+				setModelVisible2(true)
+			}}>
+				<Text style={styles.button}>Withdrawal</Text>
 			</Pressable>
 			<View style={styles.centeredView}>
 				<Modal
@@ -91,6 +190,8 @@ const DigitalWallet = () => {
 								}}
 								placeholder="Account number"
 								keyboardType="number-pad"
+								value={AccountNumber}
+								onChangeText={handleChangeAccountNum}
 							/>
 							<Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
 								Amount
@@ -107,6 +208,8 @@ const DigitalWallet = () => {
 								}}
 								placeholder="500"
 								keyboardType="number-pad"
+								value={Amount}
+								onChangeText={handleChangeAmount}
 							/>
 							<Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
 								Email
@@ -122,9 +225,16 @@ const DigitalWallet = () => {
 									elevation: 5,
 								}}
 								placeholder="500"
+								value={Email}
+								onChangeText={handleChangeEmail}
 							/>
 							<View style={{ flexDirection: "row", marginTop: 30 }}>
-								<Pressable>
+								<Pressable
+									onPress={() => {
+										Submit();
+										setModelVisible(false);
+									}}
+								>
 									<Text
 										style={{
 											borderColor: "#2153CC",
@@ -176,10 +286,10 @@ const DigitalWallet = () => {
 					<View style={styles.centeredView}>
 						<View style={styles.modalView}>
 							<Text style={{ fontSize: 22, fontWeight: "bold" }}>
-								JazzCash
+								EasyPaisa
 							</Text>
 							<Text style={{ marginTop: 5, fontWeight: "500" }}>
-								Please Enter a valid JazzCash Mobile number and email and top
+								Please Enter a valid EasyPaisa Mobile number and email and top
 								up the amount
 							</Text>
 							<Text style={{ marginTop: 20, fontSize: 15, fontWeight: "bold" }}>
@@ -197,6 +307,8 @@ const DigitalWallet = () => {
 								}}
 								placeholder="Account number"
 								keyboardType="number-pad"
+								value={AccountNumber}
+								onChangeText={handleChangeAccountNum}
 							/>
 							<Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
 								Amount
@@ -213,6 +325,8 @@ const DigitalWallet = () => {
 								}}
 								placeholder="500"
 								keyboardType="number-pad"
+								value={Amount}
+								onChangeText={handleChangeAmount}
 							/>
 							<Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
 								Email
@@ -228,9 +342,16 @@ const DigitalWallet = () => {
 									elevation: 5,
 								}}
 								placeholder="500"
+								value={Email}
+								onChangeText={handleChangeEmail}
 							/>
 							<View style={{ flexDirection: "row", marginTop: 30 }}>
-								<Pressable>
+								<Pressable
+									onPress={() => {
+										Submit2();
+										setModelVisible2(false);
+									}}
+								>
 									<Text
 										style={{
 											borderColor: "#2153CC",
@@ -270,6 +391,7 @@ const DigitalWallet = () => {
 					</View>
 				</Modal>
 			</View>
+
 			<BottomSheet
 				visible={visible}
 				//setting the visibility state of the bottom shee
@@ -291,18 +413,6 @@ const DigitalWallet = () => {
 							EasyPaisa
 						</Text>
 					</Pressable>
-					<Pressable onPress={() => setModelVisible2(true)}>
-						<Text
-							style={{
-								fontSize: 24,
-								fontWeight: "bold",
-								marginTop: 30,
-								color: "#2153CC",
-							}}
-						>
-							JazzCash
-						</Text>
-					</Pressable>
 				</View>
 			</BottomSheet>
 		</View>
@@ -319,7 +429,7 @@ const styles = StyleSheet.create({
 	bottomNavigationView: {
 		backgroundColor: "#fff",
 		width: "100%",
-		height: 150,
+		height: 100,
 
 		alignItems: "center",
 	},

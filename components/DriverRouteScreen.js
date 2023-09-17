@@ -53,6 +53,7 @@ const DriverRouteScreen = (props) => {
 					// 	}
 					// 	setTasksList(list);
 					// });
+					
 					onValue(ref(db, "Seats/"), (querySnapShot) => {
 						querySnapShot.forEach((chideSnapshot) => {
 							let data2 = chideSnapshot.child("DriverID").val();
@@ -108,16 +109,37 @@ useEffect(() => {
 			return (
 
 				<DriverRouteCards userName={item.Fullname} userdropff={item.dropoff} ridePrice={item.RidePrice} userPic={item.userPic} userPhone={item.userPhone} userSeat={UserSeat} userGender={userGender}  
-				seatid={()=>{
+				seatid={ async()=>{
 					let seatCardid=item.key
-					const db=getDatabase()
-					remove(ref(db, `UserPosts/${item.userPhone}/${seatCardid}`))
-						.then(() => {
-							console.log("Data removed successfully");
+					let AccountNumber
+					let Email
+					let Amount
+					const db = getDatabase();
+					if(item.DigitalWallet==true){
+						onValue(ref(db,`DigitalWallet/${item.userPhone}`),(querySnapShot)=>{
+							let data=querySnapShot.val();
+							
+							AccountNumber=data.AccountNumber;
+							Email=data.Email;
+							Amount=data.Amount
+							
 						})
-						.catch((error) => {
-							console.error("Error removing data:", error);
+						
+						let NewAmou=parseFloat(item.RidePrice)
+						let NewAmount=parseFloat(Amount+NewAmou)
+						let result = await SecureStore.getItemAsync("PhoneNum");
+						console.log(AccountNumber);
+
+						set(ref(db,"/DigitalWallet/" + `${result}/`), {
+							AccountNumber: AccountNumber,
+							Email: Email,
+							Amount: NewAmount,
 						});
+
+					}
+					
+					
+					
 						remove(ref(db, `Seats/${item.userPhone}`))
 							.then(() => {
 								console.log("Data removed successfully");

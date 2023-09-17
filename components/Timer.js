@@ -68,7 +68,7 @@ const Timer = () => {
 					const month = currentDate.getMonth();
 					const day = currentDate.getDate();
                     const timeDate = new Date(year, month, day, parseInt(hours), parseInt(minutes));
-                    console.log(timeDate)
+                    
 
 					const timeDifference = timeDate - currentTime;
 

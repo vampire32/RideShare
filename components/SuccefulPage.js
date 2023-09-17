@@ -33,6 +33,10 @@ const SuccefulPage = () => {
 	const [Username, setUsername] = useState("")
 	const [Usernumber, setUsernumber] = useState("")
 	const [Userpic, setUserpic] = useState("")
+	const [NewAmou, setNewAmou] = useState("")
+	const [AccountNumber, setAccountNumber] = useState("")
+	const [Email, setEmail] = useState("")
+	const [RideFare, setRideFare] = useState("")
 	 const handleChangeName = (Reviwes) => {
 			setReviwes(Reviwes);
 		};
@@ -40,6 +44,33 @@ const SuccefulPage = () => {
 		const fetch=async()=>{
 			let result = await SecureStore.getItemAsync("PhoneNum");
 			const db = getDatabase();
+			
+			onValue(ref(db,`UserPosts/${result}`),(querSnapShot)=>{
+				querSnapShot.forEach((childSnapShot)=>{
+					let data = childSnapShot.child("DigitalWallet").val();
+					let data2 = childSnapShot.child("RidePrice").val();
+					setRideFare(data2)
+					if (data==true) {
+						onValue(ref(db, `DigitalWallet/${result}/`), (querSnapShot) => {
+							let data3 = querSnapShot.val();
+							let Amount=parseFloat(data3.Amount)
+							let RideFare=parseFloat(data2)
+							let NewAmount=Amount-RideFare
+							console.log(NewAmount)
+							setNewAmou(NewAmount)
+							setAccountNumber(data3.AccountNumber)
+							setEmail(data3.Email)
+						
+						});
+
+						
+					} else {
+						console.log("Digigtal false")
+						
+					}
+				})
+				
+			})
 			onValue(ref(db, `TripisEnd/${result}`), (querSnapShot) => {
 				let data = querSnapShot.val() || {};
 				setUsername(data.userName);
@@ -87,6 +118,22 @@ const SuccefulPage = () => {
 	
 	const Submit=()=>{
 			const db = getDatabase();
+			push(ref(db, "RideLogs"), {
+				DriverID: DriverID,
+				DriverName: DriverName,
+				Username: Username,
+				Userpic: Userpic,
+				Usernumber: Usernumber,
+				AccountNumber: AccountNumber,
+				Email: Email,
+				WalletAmount: NewAmou,
+				RideFare:RideFare,
+			});
+			set(ref(db, "/DigitalWallet/" + `${Usernumber}/`), {
+				AccountNumber: AccountNumber,
+				Email: Email,
+				Amount: NewAmou,
+			});
 			push(ref(db, "Reviws/"), {
 				DriverID:DriverID,
 				Username:Username,
@@ -94,6 +141,13 @@ const SuccefulPage = () => {
 				Usernumber:Usernumber,
 				Reviwes:Reviwes
 			});
+			remove(ref(db, `UserPosts/${Usernumber}`))
+				.then(() => {
+					console.log("Data removed successfully");
+				})
+				.catch((error) => {
+					console.error("Error removing data:", error);
+				});
 			remove(ref(db, `TripisEnd/${Usernumber}`))
 				.then(() => {
 					console.log("Data removed successfully");
